@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>moodle.sync</groupId>
+		<artifactId>moodle-sync</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
+	<artifactId>moodle-sync-package-archive</artifactId>
+	<packaging>pom</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<package.dir>${package.name}-${os.name}</package.dir>
+		<package.bundle.dir>${package.name}-bundle-${os.name}</package.bundle.dir>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.3.0</version>
+				<executions>
+					<execution>
+						<id>default</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>assembly.xml</descriptor>
+							</descriptors>
+							<finalName>${package.name}-${package.version}-${os.name}</finalName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>bundle</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>assembly-bundle.xml</descriptor>
+							</descriptors>
+							<finalName>${package.name}-bundle-${package.version}-${os.name}</finalName>
+						</configuration>
+					</execution>
+				</executions>
+				<configuration>
+					<appendAssemblyId>false</appendAssemblyId>
+					<outputDirectory>${project.parent.build.directory}</outputDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -1,0 +1,5 @@
+.text-input:error {
+    -fx-border-insets: 0;
+    -fx-border-width: 2px;
+    -fx-border-color: red;
+}
