@@ -7,7 +7,7 @@ of the fact that the process to upload and manage data via the browser view of M
 consuming, the objective of this project was to develop a desktop application used for file
 synchronization between a local directory and the learning platform Moodle. Futhermore a Moodle plugin was developed.
 
-Works with following plugin for Moodle: https://github.com/lectureStudio/moodle-local_sync_service.
+Works with following plugin for Moodle: https://github.com/MoodleSync/sync-plugin.
 
 ## Screenshot
 ![Main view](https://github.com/MoodleSync/sync-app/blob/main/doc/images/mainpage.png)
