@@ -121,6 +121,8 @@ public class UploadHighlightTableCell <U, B> extends TextFieldTableCell<syncTabl
             setEditable(getTableRow().getItem().selectedProperty().get());
             if(getTableRow().getItem().selectedProperty().get()){
                 setText(getTableRow().getItem().getExistingFileName());
+            } else{
+                setText(null);
             }
             //setVisible(getTableRow().getItem().selectedProperty().get());
             /*if(getTableRow().getItem().selectedProperty().get()) {
