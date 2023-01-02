@@ -4,17 +4,20 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
+
+import javafx.util.converter.DefaultStringConverter;
 import moodle.sync.core.util.MoodleAction;
 import moodle.sync.javafx.model.syncTableElement;
+
 import org.controlsfx.control.PopOver;
 import org.lecturestudio.javafx.control.SvgIcon;
 
 /**
  * Class used to display the Name of a Section/ Module including different styles/background colors inside a cell.
  */
-public class UploadHighlightTableCell <U, B> extends TableCell<syncTableElement, String> {
-
+public class UploadHighlightTableCell <U, B> extends TextFieldTableCell<syncTableElement, String> {
     private Listener listener = new Listener();
     private PopOver popOver;
 
@@ -23,7 +26,11 @@ public class UploadHighlightTableCell <U, B> extends TableCell<syncTableElement,
 
         super.updateItem(item, empty);
 
-        if(getTableRow().getItem() != null) getTableRow().getItem().selectedProperty().removeListener(listener);
+        this.setConverter(new DefaultStringConverter());
+
+        if(getTableRow().getItem() != null){
+            getTableRow().getItem().selectedProperty().removeListener(listener);
+        }
 
         if(popOver != null){
             popOver = null;
@@ -38,10 +45,11 @@ public class UploadHighlightTableCell <U, B> extends TableCell<syncTableElement,
         setVisible(true);
         getTableRow().getStyleClass().remove("headerstyle");
 
-        if (empty || item == null || getTableRow() == null || getTableRow().getItem() == null) {
+        if (empty || getTableRow() == null || getTableRow().getItem() == null) {
             setText(null);
             setEditable(false);
         } else if(getTableRow().getItem().getAction() == MoodleAction.ExistingSection ){
+            setEditable(false);
             if(!(getTableRow().getItem().getModuleType().replaceAll("\\<.*?>", "")).isEmpty()){
                 Label textArea = new Label();
                 textArea.setText(getTableRow().getItem().getModuleType().replaceAll("\\<.*?>", ""));
@@ -77,11 +85,10 @@ public class UploadHighlightTableCell <U, B> extends TableCell<syncTableElement,
             if((getTableRow().getItem().getAction() == MoodleAction.MoodleUpload && getTableRow().getItem() != null) ||
                     (getTableRow().getItem().getAction() == MoodleAction.FTPUpload && getTableRow().getItem() != null)) {
                 if(!getTableRow().getItem().selectedProperty().get()){
-                   setText(null);
+                    setText(null);
                 }
                 getTableRow().getItem().selectedProperty().addListener(listener);
-            }
-            else {
+            } else{
                 setText(null);
             }
         }
@@ -104,7 +111,7 @@ public class UploadHighlightTableCell <U, B> extends TableCell<syncTableElement,
                 default -> icon.getStyleClass().add("other-icon");
             }
             setGraphic(icon);
-            setText(item.replaceAll("\\u00a0\\n|&nbsp;\\r\\n", ""));
+            setText(this.getText().replaceAll("\\u00a0\\n|&nbsp;\\r\\n", ""));
         }
     }
 
@@ -112,8 +119,18 @@ public class UploadHighlightTableCell <U, B> extends TableCell<syncTableElement,
         @Override
         public void changed(ObservableValue observableValue, Object o, Object t1) {
             setEditable(getTableRow().getItem().selectedProperty().get());
-            if(getTableRow().getItem().selectedProperty().get()) setText(getTableRow().getItem().getExistingFileName());
-            setVisible(getTableRow().getItem().selectedProperty().get());
+            if(getTableRow().getItem().selectedProperty().get()){
+                setText(getTableRow().getItem().getExistingFileName());
+            }
+            //setVisible(getTableRow().getItem().selectedProperty().get());
+            /*if(getTableRow().getItem().selectedProperty().get()) {
+                setText(getTableRow().getItem().getExistingFileName());
+                setEditable(true);
+                setVisible(true);
+            } else{
+                setVisible(false);
+                setEditable(false);
+            }*/
         }
     }
 

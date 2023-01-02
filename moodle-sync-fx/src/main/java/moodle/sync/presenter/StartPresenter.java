@@ -173,6 +173,7 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
      */
     private List<Course> courses() {
         url = config.getMoodleUrl();
+        token = config.getMoodleToken();
         //Security checks to prevent unwanted behaviour.
         //Todo überprüfen neu
         if (!VerifyDataService.validateString(url) || !VerifyDataService.validateString(token)) {
@@ -181,6 +182,9 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
         List<Course> courses = List.of();
         try {
             courses = moodleService.getEnrolledCourses(token, moodleService.getUserId(token));
+            if(config.recentCourseProperty() != null){
+                course = config.getRecentCourse();
+            }
         }
         catch (Exception e) {
             logException(e, "Sync failed");
@@ -296,7 +300,8 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
 
     private ObservableList<syncTableElement> setData() {
         token = config.getMoodleToken();
-        if (isNull(courseContent) || isNull(course))
+        section = config.getRecentSection();
+        if (/*isNull(courseContent)||*/ isNull(course))
             return FXCollections.observableArrayList();
 
         try {

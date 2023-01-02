@@ -91,7 +91,7 @@
                     </DynamicResizePolicy>
                 </columnResizePolicy>
                 <columns>
-                    <TableColumn fx:id="courseViewTableColumn" text="Moodle">
+                    <TableColumn fx:id="courseViewTableColumn" editable="true" text="Moodle">
                     <cellFactory>
                             <HighlightSectionCellFactory/>
                         </cellFactory>
