@@ -74,7 +74,6 @@ public class UploadHighlightTableCell <U, B> extends TextFieldTableCell<syncTabl
             setText(getTableRow().getItem().getModuleName());
             setStyle("-fx-font-weight: bold");
 
-
             getTableRow().getStyleClass().add("headerstyle");
 
         }
@@ -120,6 +119,7 @@ public class UploadHighlightTableCell <U, B> extends TextFieldTableCell<syncTabl
         public void changed(ObservableValue observableValue, Object o, Object t1) {
             setEditable(getTableRow().getItem().selectedProperty().get());
             if(getTableRow().getItem().selectedProperty().get()){
+                setStyle("-fx-font-weight: normal");
                 setText(getTableRow().getItem().getExistingFileName());
             } else{
                 setText(null);
