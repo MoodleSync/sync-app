@@ -262,7 +262,7 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
                     else if (courseData.getAction() == MoodleAction.FTPUpload) {
                         SetModuleService.publishFileserverResource(moodleService, courseData, course, token);
                     }
-                    else if (courseData.getModuleType().equals("folder")) {
+                    else if (courseData.getModuleType().equals("folder") && courseData.getAction() != MoodleAction.ExistingFile) {
                         SetModuleService.handleFolderUpload(moodleService, courseData, course, url, token);
                     }
                     else if (courseData.getAction() != MoodleAction.UploadSection) {
