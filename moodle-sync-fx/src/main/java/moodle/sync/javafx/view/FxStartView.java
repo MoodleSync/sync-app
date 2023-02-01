@@ -44,6 +44,12 @@ public class FxStartView extends VBox implements StartView, FxView {
     private Button folderButton;
 
     @FXML
+    private Label sectionidlabel;
+
+    @FXML
+    private Label courseidlabel;
+
+    @FXML
     private CheckBox allSelected;
 
     @FXML
@@ -108,6 +114,17 @@ public class FxStartView extends VBox implements StartView, FxView {
     public void setOnFolder(Action action) {
         FxUtils.bindAction(folderButton, action);
     }
+
+    @Override
+    public void setCourseId(String string){
+        courseidlabel.setText(string);
+    }
+
+    @Override
+    public void setSectionId(String string){
+        sectionidlabel.setText(string);
+    }
+
     /**
      * Method to set the elements of the Course-Combobox.
      *

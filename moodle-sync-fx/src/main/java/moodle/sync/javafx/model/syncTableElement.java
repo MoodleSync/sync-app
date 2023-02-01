@@ -6,6 +6,8 @@ import moodle.sync.core.util.MoodleAction;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.Objects;
 
 public class syncTableElement {
 
@@ -39,6 +41,10 @@ public class syncTableElement {
 
     private BooleanProperty delete = new SimpleBooleanProperty(false);
 
+    private ObjectProperty<List<Path>> content;
+
+    private IntegerProperty contextId;
+
     public syncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType, Path existingFile, Boolean selectable, Boolean selected, MoodleAction action, Boolean visible){
         this.moduleName = new SimpleStringProperty(moduleName);
         this.cmid = new SimpleIntegerProperty(cmid);
@@ -71,6 +77,30 @@ public class syncTableElement {
         this.beforemod = new SimpleIntegerProperty(beforemod);
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(new TimeDateElement(null, null));
+    }
+
+    public syncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,
+                            String moduleType, Path existingFile, Boolean selectable, Boolean selected,
+                            MoodleAction action, Boolean visible, Integer beforemod,
+                            TimeDateElement availabilityDateTime, List<Path> content,
+                            Integer contextId){
+        this.moduleName = new SimpleStringProperty(moduleName);
+        this.cmid = new SimpleIntegerProperty(cmid);
+        this.section = new SimpleIntegerProperty(section);
+        this.sectionId = new SimpleIntegerProperty(sectionId);
+        this.oldPos = new SimpleIntegerProperty(oldPos);
+        this.moduleType = new SimpleStringProperty(moduleType);
+        this.existingFile = new SimpleStringProperty(existingFile.toString());
+        this.existingFileName = new SimpleStringProperty(existingFile.getFileName().toString());
+        this.selectable = new SimpleBooleanProperty(selectable);
+        this.selected = new SimpleBooleanProperty(selected);
+        this.action = action;
+        this.beforemod = new SimpleIntegerProperty(beforemod);
+        this.visible = new SimpleBooleanProperty(visible);
+        this.availabilityDateTime = new SimpleObjectProperty(Objects.requireNonNullElseGet(availabilityDateTime,
+                () -> new TimeDateElement(null, null)));
+        this.content = new SimpleObjectProperty<List<Path>>(content);
+        this.contextId = new SimpleIntegerProperty(contextId);
     }
 
     public syncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,String moduleType, Path existingFile, Boolean selectable, Boolean selected, MoodleAction action, Boolean visible, TimeDateElement availabilityDateTime){
@@ -519,5 +549,52 @@ public class syncTableElement {
      * @param value the new message.
      */
     public void setDelete(boolean value) { this.delete.set(value);
+    }
+
+    public ObjectProperty<List<Path>> contentProperty() {
+        return content;
+    }
+
+    /**
+     * Providing the files message as a String.
+     *
+     * @return the files message as a String.
+     */
+    public List<Path> getContent() {
+        return this.content.get();
+    }
+
+    /**
+     * Sets a new message.
+     *
+     * @param value the new message.
+     */
+    public void setContent(List<Path> value) { this.content.set(value);
+    }
+
+    /**
+     * Providing the messageProperty.
+     *
+     * @return the messageProprty.
+     */
+    public IntegerProperty contextIdProperty() {
+        return contextId;
+    }
+
+    /**
+     * Providing the files message as a String.
+     *
+     * @return the files message as a String.
+     */
+    public Integer getContextId() {
+        return this.contextId.get();
+    }
+
+    /**
+     * Sets a new message.
+     *
+     * @param value the new message.
+     */
+    public void setContextId(Integer value) { this.contextId.set(value);
     }
 }

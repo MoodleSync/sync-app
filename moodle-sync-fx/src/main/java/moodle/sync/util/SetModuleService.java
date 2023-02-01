@@ -77,9 +77,41 @@ public final class SetModuleService {
     public static void createSection(MoodleService moodleService, syncTableElement courseData, Course course,
                                      String token) throws Exception {
         moodleService.setSection(token, course.getId(), courseData.getModuleName(), courseData.getSection());
-        if (!courseData.getExistingFileName().split("_", 2)[0].matches("\\d+")) {
-            File temp = new File(courseData.getExistingFile());
-            temp.renameTo(new File(Path.of(courseData.getExistingFile()).getParent().toString() + "/" + courseData.getSection() + "_" + courseData.getExistingFileName()));
+    }
+
+    public static void handleFolderUpload(MoodleService moodleService, syncTableElement courseData, Course course,
+                                          String url ,String token) throws Exception {
+        if(courseData.getAction() == MoodleAction.FolderUpload){
+            if (courseData.getUnixTimeStamp() > System.currentTimeMillis() / 1000L) {
+                moodleService.setFolder(token, course.getId(), courseData.getSection(), uploadFile(courseData, url,
+                        token), courseData.getModuleName(), courseData.getUnixTimeStamp(),
+                        courseData.getVisible(), courseData.getBeforemod());
+            }
+            else {
+                moodleService.setFolder(token, course.getId(), courseData.getSection(), uploadFile(courseData, url,
+                        token), courseData.getModuleName(), null, courseData.getVisible(), courseData.getBeforemod());
+            }
         }
+        else if (courseData.getAction() == MoodleAction.FolderSynchronize) {
+            moodleService.addFilesToFolder(token, course.getId(), uploadFile(courseData, url,
+                    token), courseData.getContextId());
+        }
+    }
+
+    private static Long uploadFile(syncTableElement courseData, String url, String token) {
+        Long result = 0L;
+        if(courseData.getContent().size() > 0) {
+            MoodleUploadTemp uploader = new MoodleUploadTemp();
+            MoodleUpload upload = uploader.upload(courseData.getContent().get(0).getFileName().toString(), courseData.getContent().get(0).toString(), url, token);
+            result = upload.getItemid();
+            if (courseData.getContent().size() > 1) {
+                for (int i = 1; i < courseData.getContent().size(); i++) {
+                    uploader.upload(courseData.getContent().get(i).getFileName().toString(),
+                            courseData.getContent().get(i).toString(), url, token,
+                            result);
+                }
+            }
+        }
+        return result;
     }
 }

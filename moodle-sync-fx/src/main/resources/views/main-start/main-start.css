@@ -91,3 +91,14 @@
     -fx-text-fill: black;
 }
 
+.table-cell .time-picker > .box > .fields-box > .time-field {
+    -fx-text-fill: black;
+}
+
+.table-row-cell .time-picker > .box > .fields-box > .time-field {
+    -fx-text-fill: black;
+}
+
+.table-row-cell .time-picker > .box > .fields-box > .separator {
+    -fx-text-fill: black;
+}

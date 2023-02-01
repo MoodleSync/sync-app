@@ -29,6 +29,10 @@ public interface StartView extends View {
 
     void setSelectAll(BooleanProperty selectAll);
 
+    void setCourseId(String string);
+
+    void setSectionId(String string);
+
     void setCourses(List<Course> courses);
 
     void setCourse(ObjectProperty<Course> course);

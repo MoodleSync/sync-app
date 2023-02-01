@@ -188,13 +188,14 @@ public class MoodleService {
      * @param beforemod The course-module id of the course-module at the supposed position. If beforemod ist null,
      *                  the course-module will be moved to the bottom of the course-section.
      */
-    public void setFolder(String token, int courseid, int section, Long itemid, String name, Long time, int beforemod) {
+    public void setFolder(String token, int courseid, int section, Long itemid, String name, Long time, boolean visible,
+                          int beforemod) {
         if (beforemod == -1) {
             moodleClient.setFolder("json", token, "local_course_add_new_course_module_directory", courseid, section,
-                    itemid, name, time, null);
+                    itemid, name, time, visible, null);
         } else {
             moodleClient.setFolder("json", token, "local_course_add_new_course_module_directory", courseid, section,
-                    itemid, name, time, beforemod);
+                    itemid, name, time, visible, beforemod);
         }
     }
 

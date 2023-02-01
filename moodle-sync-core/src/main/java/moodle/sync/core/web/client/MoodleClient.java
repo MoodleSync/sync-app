@@ -147,7 +147,7 @@ public interface MoodleClient {
                    @QueryParam("wsfunction") String function, @QueryParam("courseid") int courseid,
                    @QueryParam("sectionnum") int sectionnum, @QueryParam("itemid") long itemid,
                    @QueryParam("displayname") String displayname, @QueryParam("time") Long time,
-                   @QueryParam("beforemod") Integer beforemod);
+                   @QueryParam("visible") boolean visible, @QueryParam("beforemod") Integer beforemod);
 
     /**
      * Add a file or several files to an existing folder.
@@ -159,6 +159,8 @@ public interface MoodleClient {
      * @param itemid             The id of the prior uploaded files, which should be presented by the course-module.
      * @param contextid          The contextid of the folder the files should be added to.
      */
+    @POST
+    @Path("")
     void addFilesToFolder(@QueryParam("moodlewsrestformat") String moodlewsrestformat,
                           @QueryParam("wstoken") String token, @QueryParam("wsfunction") String function,
                           @QueryParam("courseid") int courseid, @QueryParam("itemid") long itemid,

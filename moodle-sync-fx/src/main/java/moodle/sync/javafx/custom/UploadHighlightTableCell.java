@@ -80,6 +80,8 @@ public class UploadHighlightTableCell <U, B> extends TextFieldTableCell<syncTabl
         else if(getTableRow().getItem().getAction() == MoodleAction.MoodleUpload ||
                 getTableRow().getItem().getAction() == MoodleAction.FTPUpload ||
                 getTableRow().getItem().getAction() == MoodleAction.UploadSection ||
+                getTableRow().getItem().getAction() == MoodleAction.FolderUpload ||
+                getTableRow().getItem().getAction() == MoodleAction.FolderSynchronize ||
                 getTableRow().getItem().getAction() == MoodleAction.DatatypeNotKnown) {
             if((getTableRow().getItem().getAction() == MoodleAction.MoodleUpload && getTableRow().getItem() != null) ||
                     (getTableRow().getItem().getAction() == MoodleAction.FTPUpload && getTableRow().getItem() != null)) {
@@ -87,7 +89,8 @@ public class UploadHighlightTableCell <U, B> extends TextFieldTableCell<syncTabl
                     setText(null);
                 }
                 getTableRow().getItem().selectedProperty().addListener(listener);
-            } else{
+            }
+            else {
                 setText(null);
             }
         }
@@ -121,18 +124,11 @@ public class UploadHighlightTableCell <U, B> extends TextFieldTableCell<syncTabl
             if(getTableRow().getItem().selectedProperty().get()){
                 setStyle("-fx-font-weight: normal");
                 setText(getTableRow().getItem().getExistingFileName());
-            } else{
+            }
+            else{
                 setText(null);
             }
-            //setVisible(getTableRow().getItem().selectedProperty().get());
-            /*if(getTableRow().getItem().selectedProperty().get()) {
-                setText(getTableRow().getItem().getExistingFileName());
-                setEditable(true);
-                setVisible(true);
-            } else{
-                setVisible(false);
-                setEditable(false);
-            }*/
+
         }
     }
 
