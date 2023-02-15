@@ -4,7 +4,7 @@ import moodle.sync.core.model.json.*;
 import moodle.sync.core.model.json.Module;
 import moodle.sync.javafx.model.ReturnValue;
 import moodle.sync.javafx.model.TimeDateElement;
-import moodle.sync.javafx.model.syncTableElement;
+import moodle.sync.javafx.model.SyncTableElement;
 import moodle.sync.core.util.MoodleAction;
 import org.apache.commons.io.FilenameUtils;
 
@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static java.util.Objects.isNull;
-
 /**
  * Class implementing several methods in terms of file handling and comparison.
  *
@@ -30,11 +28,8 @@ import static java.util.Objects.isNull;
  */
 public class FileService {
 
-
     /**
      * Secures that a directory given in a given path exists. Therefore the directory could be created.
-     *
-     * @param p Path of the directory.
      */
     public static void directoryManager(Path p) throws Exception {
         Files.createDirectories(p);
@@ -42,9 +37,6 @@ public class FileService {
 
     /**
      * Method for numbering a sections directory to its position in a moodle course.
-     * @param sectionList
-     * @param section
-     * @return
      */
     public static List<Path> formatSectionFolder(List<Path> sectionList, Section section) {
         int remove = -1;
@@ -63,6 +55,9 @@ public class FileService {
         return sectionList;
     }
 
+    /**
+     * Method used to create  a list of Paths inside a directory.
+     */
     public static List<Path> getPathsInDirectory(Path p) throws IOException {
         List<Path> result = new ArrayList<>();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(p)) {
@@ -76,6 +71,9 @@ public class FileService {
         return result;
     }
 
+    /**
+     * Method used to find a course module inside a List of paths. Returns the position of the file inside the List.
+     */
     public static int findModuleInList(List<Path> list, Module module){
         for(int i = 0; i < list.size(); i++){
             if(list.get(i).getFileName().toString().equals(module.getName())){
@@ -85,9 +83,13 @@ public class FileService {
         return -1;
     }
 
+    /**
+     * Method to identify a course-module "resource" and search for the corresponding local file. Then a
+     * SyncTableElement is created it will be returned in combination with an updated fileList.
+     */
     public static ReturnValue findResourceInFiles(List<Path> fileList, Module module, int sectionNum, int sectionId,
                                                 int position /* Substitute data.size()*/) throws Exception {
-        syncTableElement element = null;
+        SyncTableElement element = null;
         boolean found = false;
         for (int i = 0; i < fileList.size(); i++) {
             if (fileList.get(i).getFileName().toString().equals(module.getContents().get(0).getFilename())) {
@@ -102,16 +104,16 @@ public class FileService {
                         LocalDateTime time =
                                 LocalDateTime.ofInstant(Instant.ofEpochMilli(JsonB.fromJson(module.getAvailability().replaceAll("\\\\", ""),
                                         ModuleAvailability.class).getTimeDateCondition().getT() * 1000L), ZoneId.systemDefault());
-                        element = new syncTableElement(module.getName(), module.getId(), sectionNum, sectionId,
+                        element = new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId,
                                 position, module.getModname(), fileList.get(i), true, false,
                                 MoodleAction.MoodleSynchronize, getPriorityVisibility(module.getVisible() == 1,
                                 JsonB.fromJson(module.getAvailability().replaceAll("\\\\", ""),
                                         ModuleAvailability.class).getConditionVisibility()),
-                                new TimeDateElement(time.toLocalDate(), time.toLocalTime()), module.getId());
+                                new TimeDateElement(time.toLocalDate(), time.toLocalTime()), module.getId(), true);
                     } else {
-                        element = new syncTableElement(module.getName(), module.getId(), sectionNum, sectionId,
+                        element = new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId,
                                 position, module.getModname(), fileList.get(i), true, false,
-                                MoodleAction.MoodleSynchronize, module.getVisible() == 1, module.getId());
+                                MoodleAction.MoodleSynchronize, module.getVisible() == 1, module.getId(), true);
                     }
                     fileList.remove(i);
                     break;
@@ -122,17 +124,17 @@ public class FileService {
                         LocalDateTime time =
                                 LocalDateTime.ofInstant(Instant.ofEpochMilli(JsonB.fromJson(module.getAvailability().replaceAll("\\\\", ""),
                                         ModuleAvailability.class).getTimeDateCondition().getT() * 1000L), ZoneId.systemDefault());
-                        element = new syncTableElement(module.getName(), module.getId(), sectionNum, sectionId,
+                        element = new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId,
                                 position, module.getModname(), fileList.get(i), false, false,
                                 MoodleAction.ExistingFile, getPriorityVisibility(module.getVisible() == 1,
                                 JsonB.fromJson(module.getAvailability().replaceAll("\\\\", ""),
                                         ModuleAvailability.class).getConditionVisibility()),
-                                new TimeDateElement(time.toLocalDate(), time.toLocalTime()));
+                                new TimeDateElement(time.toLocalDate(), time.toLocalTime()), true);
                     }
                     else {
-                        element = new syncTableElement(module.getName(), module.getId(), sectionNum, sectionId,
+                        element = new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId,
                                 position, module.getModname(), fileList.get(i), false, false,
-                                MoodleAction.ExistingFile, module.getVisible() == 1);
+                                MoodleAction.ExistingFile, module.getVisible() == 1, true);
                     }
                     fileList.remove(i);
                     break;
@@ -140,15 +142,19 @@ public class FileService {
             }
         }
         if (!found) {
-            element = new syncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
-                    module.getModname(), false, false, MoodleAction.NotLocalFile, module.getVisible() == 1);
+            element = new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
+                    module.getModname(), false, false, MoodleAction.NotLocalFile, module.getVisible() == 1, true);
         }
 
         return new ReturnValue(fileList, element);
     }
 
-    public static syncTableElement checkDirectoryForUpdates(Path path, Module module, int sectionNum, int sectionId,
-                                                      int position, String formatsMoodle) throws Exception{
+    /**
+     * Checks a course module "folder" for updates. Therefore, first of all it is checked if the files inside the
+     * directory are up-to-date. Afterwards, it is checked if there are new files which should be added to the folder.
+     */
+    public static SyncTableElement checkDirectoryForUpdates(Path path, Module module, int sectionNum, int sectionId,
+                                                            int position, String formatsMoodle) throws Exception{
         List<Path> newContent = new ArrayList<>(List.of());
         List<Path> localContent = FileService.getPathsInDirectory(path);
         for(Path localFile : localContent){
@@ -178,31 +184,37 @@ public class FileService {
                         LocalDateTime.ofInstant(Instant.ofEpochMilli(JsonB.fromJson(module.getAvailability().replaceAll("\\\\", ""),
                                 ModuleAvailability.class).getTimeDateCondition().getT() * 1000L), ZoneId.systemDefault());
                 availability = new TimeDateElement(time.toLocalDate(), time.toLocalTime());
-                return new syncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
+                return new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
                         module.getModname(),path,true, false, MoodleAction.FolderSynchronize,
                         FileService.getPriorityVisibility(module.getVisible() == 1, JsonB.fromJson(module.getAvailability().replaceAll("\\\\", ""),
                                 ModuleAvailability.class).getConditionVisibility()) ,
-                        module.getId(), availability, newContent, module.getContextid());
+                        module.getId(), availability, newContent, module.getContextid(), true);
             } else {
-                return new syncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
+                return new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
                         module.getModname(),path,true, false, MoodleAction.FolderSynchronize,module.getVisible() == 1,
-                        module.getId(), availability, newContent, module.getContextid());
+                        module.getId(), availability, newContent, module.getContextid(), true);
             }
         }
         else {
-            return new syncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
+            return new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
                     module.getModname(), path, false, false, MoodleAction.ExistingFile,
-                    module.getVisible() == 1);
+                    module.getVisible() == 1, true);
         }
     }
 
-
+    /**
+     * Method used to determine a modules visibility depending on their visibility and availability.
+     */
     public static Boolean getPriorityVisibility(Boolean visible, Boolean availability) {
         if (!visible || !availability) {
             return false;
         }
         return true;
     }
+
+    /**
+     * Method used to create a List of 4 Lists containing files depending on their format.
+     */
 
     public static List<List<Path>> sortDirectoryFiles(List<Path> directoryFiles, String formatsMoodle,
                                                 String formatsFileserver) {

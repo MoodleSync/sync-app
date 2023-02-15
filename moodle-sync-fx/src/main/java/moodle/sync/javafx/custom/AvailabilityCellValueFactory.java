@@ -5,18 +5,18 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
-import moodle.sync.javafx.model.syncTableElement;
+import moodle.sync.javafx.model.SyncTableElement;
 
 /**
  * Class used for determining the state of a CheckBox inside the "sync-page"-table.
  *
  * @author Daniel Schröter
  */
-public class AvailabilityCellValueFactory implements Callback<TableColumn.CellDataFeatures<syncTableElement,Boolean>, ObservableValue<Boolean>> {
+public class AvailabilityCellValueFactory implements Callback<TableColumn.CellDataFeatures<SyncTableElement,Boolean>, ObservableValue<Boolean>> {
     @Override
-    public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<syncTableElement, Boolean> param)
+    public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<SyncTableElement, Boolean> param)
     {
-        syncTableElement elem = param.getValue();
+        SyncTableElement elem = param.getValue();
         //selectedProperty should be used to determine the state.
         param.getValue().visibleProperty();
         SimpleBooleanProperty booleanProp= (SimpleBooleanProperty) elem.visibleProperty();

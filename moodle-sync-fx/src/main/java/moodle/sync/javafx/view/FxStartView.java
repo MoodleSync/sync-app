@@ -3,7 +3,7 @@ package moodle.sync.javafx.view;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import moodle.sync.core.model.json.Course;
-import moodle.sync.javafx.model.syncTableElement;
+import moodle.sync.javafx.model.SyncTableElement;
 import moodle.sync.core.model.json.Section;
 import org.lecturestudio.core.beans.BooleanProperty;
 import org.lecturestudio.core.beans.ObjectProperty;
@@ -59,7 +59,7 @@ public class FxStartView extends VBox implements StartView, FxView {
     private ComboBox<Section> sectionCombo;
 
     @FXML
-    private TableView<syncTableElement> syncTable;
+    private TableView<SyncTableElement> syncTable;
 
 
     public FxStartView() {
@@ -68,7 +68,7 @@ public class FxStartView extends VBox implements StartView, FxView {
 
 
     @Override
-    public void setData(ObservableList<syncTableElement> data) {
+    public void setData(ObservableList<SyncTableElement> data) {
         FxUtils.invoke(() -> {
             syncTable.getItems().clear();
             syncTable.setItems(data);

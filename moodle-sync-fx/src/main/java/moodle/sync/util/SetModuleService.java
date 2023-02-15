@@ -2,18 +2,19 @@ package moodle.sync.util;
 
 import moodle.sync.core.model.json.Course;
 import moodle.sync.core.model.json.MoodleUpload;
-import moodle.sync.javafx.model.syncTableElement;
 import moodle.sync.core.util.MoodleAction;
 import moodle.sync.core.web.service.MoodleService;
 import moodle.sync.core.web.service.MoodleUploadTemp;
-
-import java.io.File;
-import java.nio.file.Path;
+import moodle.sync.javafx.model.SyncTableElement;
 
 
 public final class SetModuleService {
 
-    public static void publishResource(MoodleService moodleService, syncTableElement courseData, Course course,
+    /**
+     * Method to publish/ update a course-module "resource". Helps to adjust the API-Call regarding visibility and
+     * availability.
+     */
+    public static void publishResource(MoodleService moodleService, SyncTableElement courseData, Course course,
                                        String url, String token) throws Exception {
         if (courseData.getAction() == MoodleAction.MoodleUpload) {
             MoodleUploadTemp uploader = new MoodleUploadTemp();
@@ -56,9 +57,15 @@ public final class SetModuleService {
         }
     }
 
-    public static void publishFileserverResource(MoodleService moodleService, syncTableElement courseData,
+    /**
+     *  Method used to publish a course-Module "url". Helps to adjust the API-Call regarding visibility and
+     *  availability.
+     *
+     *  NOT FUNCTIONAL -> LINK IS NOT CORRECT.
+     */
+    public static void publishFileserverResource(MoodleService moodleService, SyncTableElement courseData,
                                                  Course course, String token) throws Exception {
-        //TODO: konkreter fileserver upload hinzufügen
+        //TODO: Implement dynamic URLs, depends on fileserver
         // url = fileservice.....
         String url = "https://wikipedia.org";
         if (courseData.getUnixTimeStamp() > System.currentTimeMillis() / 1000L) {
@@ -70,17 +77,27 @@ public final class SetModuleService {
         }
     }
 
-    public static void moveResource(MoodleService moodleService, syncTableElement courseData, String token) throws Exception {
+    /**
+     * Method used to move a course-module.
+     */
+    public static void moveResource(MoodleService moodleService, SyncTableElement courseData, String token) throws Exception {
         moodleService.setMoveModule(token, courseData.getCmid(), courseData.getSectionId(), courseData.getBeforemod());
     }
 
-    public static void createSection(MoodleService moodleService, syncTableElement courseData, Course course,
+    /**
+     * Method used to create a new course-section. Section is added to the bottom of the course.
+     */
+    public static void createSection(MoodleService moodleService, SyncTableElement courseData, Course course,
                                      String token) throws Exception {
         moodleService.setSection(token, course.getId(), courseData.getModuleName(), courseData.getSection());
     }
 
-    public static void handleFolderUpload(MoodleService moodleService, syncTableElement courseData, Course course,
-                                          String url ,String token) throws Exception {
+    /**
+     * Method to publish/ update a course-module "folder". Helps to adjust the API-Call regarding visibility and
+     * availability. Furthermore, handles file-upload to Moodle.
+     */
+    public static void handleFolderUpload(MoodleService moodleService, SyncTableElement courseData, Course course,
+                                          String url , String token) throws Exception {
         if(courseData.getAction() == MoodleAction.FolderUpload){
             if (courseData.getUnixTimeStamp() > System.currentTimeMillis() / 1000L) {
                 moodleService.setFolder(token, course.getId(), courseData.getSection(), uploadFile(courseData, url,
@@ -98,7 +115,10 @@ public final class SetModuleService {
         }
     }
 
-    private static Long uploadFile(syncTableElement courseData, String url, String token) {
+    /**
+     * Method used to upload files to Moodle. Returns one itemid which represents all files.
+     */
+    private static Long uploadFile(SyncTableElement courseData, String url, String token) {
         Long result = 0L;
         if(courseData.getContent().size() > 0) {
             MoodleUploadTemp uploader = new MoodleUploadTemp();

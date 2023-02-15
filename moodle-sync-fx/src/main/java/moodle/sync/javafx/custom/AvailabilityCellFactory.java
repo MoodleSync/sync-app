@@ -4,17 +4,17 @@ import javafx.geometry.Pos;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
-import moodle.sync.javafx.model.syncTableElement;
+import moodle.sync.javafx.model.SyncTableElement;
 
 /**
  * Class implementing a Checkbox as the content of a TableCell.
  *
  * @author Daniel Schröter
  */
-public class AvailabilityCellFactory implements Callback<TableColumn<syncTableElement, Boolean>, TableCell<syncTableElement, Boolean>> {
+public class AvailabilityCellFactory implements Callback<TableColumn<SyncTableElement, Boolean>, TableCell<SyncTableElement, Boolean>> {
     @Override
-    public TableCell<syncTableElement, Boolean> call(TableColumn<syncTableElement, Boolean> p) {
-        AvailabilityCheckBoxCell <syncTableElement, Boolean> cell = new AvailabilityCheckBoxCell<syncTableElement, Boolean>();
+    public TableCell<SyncTableElement, Boolean> call(TableColumn<SyncTableElement, Boolean> p) {
+        AvailabilityCheckBoxCell <SyncTableElement, Boolean> cell = new AvailabilityCheckBoxCell<SyncTableElement, Boolean>();
         cell.setAlignment(Pos.CENTER);
         cell.setStyle("-fx-alignment: CENTER;");
 

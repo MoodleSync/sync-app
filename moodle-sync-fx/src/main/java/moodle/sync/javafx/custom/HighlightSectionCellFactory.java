@@ -5,17 +5,17 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 
-import moodle.sync.javafx.model.syncTableElement;
+import moodle.sync.javafx.model.SyncTableElement;
 
 /**
  * Class implementing a text field with different styles as the content of a TableCell.
  */
-public class HighlightSectionCellFactory implements Callback<TableColumn<syncTableElement, String>,
-        TextFieldTableCell<syncTableElement, String>> {
+public class HighlightSectionCellFactory implements Callback<TableColumn<SyncTableElement, String>,
+        TextFieldTableCell<SyncTableElement, String>> {
 
     @Override
-    public TextFieldTableCell<syncTableElement, String> call(TableColumn<syncTableElement, String> p) {
-        UploadHighlightTableCell<syncTableElement, String> cell = new UploadHighlightTableCell<syncTableElement,
+    public TextFieldTableCell<SyncTableElement, String> call(TableColumn<SyncTableElement, String> p) {
+        UploadHighlightTableCell<SyncTableElement, String> cell = new UploadHighlightTableCell<SyncTableElement,
                 String>();
         cell.setAlignment(Pos.CENTER);
         return cell;

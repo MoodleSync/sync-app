@@ -22,6 +22,7 @@ public class Module {
     private Integer instance;
     private Integer contextid;
     private Integer visible;
+    private Boolean uservisible;
     private String modname;
     private String availability;
     private List<Content> contents;

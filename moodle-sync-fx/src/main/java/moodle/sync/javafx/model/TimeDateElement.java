@@ -8,6 +8,9 @@ import java.time.LocalTime;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Class used to parse between UNIX-Timestamps and the Moodle availability.
+ */
 public class TimeDateElement {
     private ObjectProperty<LocalDate> localDate;
     private ObjectProperty<LocalTime> localTime;

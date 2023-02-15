@@ -6,7 +6,7 @@ import javafx.scene.control.TableCell;
 
 import javafx.scene.layout.VBox;
 import moodle.sync.core.util.MoodleAction;
-import moodle.sync.javafx.model.syncTableElement;
+import moodle.sync.javafx.model.SyncTableElement;
 
 import org.controlsfx.control.PopOver;
 import org.lecturestudio.javafx.control.SvgIcon;
@@ -14,7 +14,7 @@ import org.lecturestudio.javafx.control.SvgIcon;
 /**
  * Class used to change the background color of a TableCell.
  */
-public class StatusTableCell <U, B> extends TableCell<syncTableElement, String> {
+public class StatusTableCell <U, B> extends TableCell<SyncTableElement, String> {
 
     private PopOver popOver;
 

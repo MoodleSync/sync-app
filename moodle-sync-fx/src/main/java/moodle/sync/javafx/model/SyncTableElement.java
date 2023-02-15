@@ -9,7 +9,10 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
 
-public class syncTableElement {
+/**
+ * Class used to represent a course module/ section or a local file/ folder.
+ */
+public class SyncTableElement {
 
     private StringProperty moduleName;
 
@@ -37,6 +40,8 @@ public class syncTableElement {
 
     private BooleanProperty visible;
 
+    private BooleanProperty userVisible;
+
     private ObjectProperty<TimeDateElement> availabilityDateTime;
 
     private BooleanProperty delete = new SimpleBooleanProperty(false);
@@ -45,7 +50,10 @@ public class syncTableElement {
 
     private IntegerProperty contextId;
 
-    public syncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType, Path existingFile, Boolean selectable, Boolean selected, MoodleAction action, Boolean visible){
+
+    public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,
+                            String moduleType, Path existingFile, Boolean selectable, Boolean selected,
+                            MoodleAction action, Boolean visible, Boolean userVisible){
         this.moduleName = new SimpleStringProperty(moduleName);
         this.cmid = new SimpleIntegerProperty(cmid);
         this.section = new SimpleIntegerProperty(section);
@@ -60,9 +68,11 @@ public class syncTableElement {
         this.beforemod = new SimpleIntegerProperty(-1);
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(new TimeDateElement(null, null));
+        this.userVisible = new SimpleBooleanProperty(userVisible);
     }
 
-    public syncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType, Path existingFile, Boolean selectable, Boolean selected, MoodleAction action, Boolean visible, Integer beforemod){
+    public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,
+                            String moduleType, Path existingFile, Boolean selectable, Boolean selected, MoodleAction action, Boolean visible, Integer beforemod , Boolean userVisible){
         this.moduleName = new SimpleStringProperty(moduleName);
         this.cmid = new SimpleIntegerProperty(cmid);
         this.section = new SimpleIntegerProperty(section);
@@ -77,13 +87,14 @@ public class syncTableElement {
         this.beforemod = new SimpleIntegerProperty(beforemod);
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(new TimeDateElement(null, null));
+        this.userVisible = new SimpleBooleanProperty(userVisible);
     }
 
-    public syncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,
+    public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,
                             String moduleType, Path existingFile, Boolean selectable, Boolean selected,
                             MoodleAction action, Boolean visible, Integer beforemod,
                             TimeDateElement availabilityDateTime, List<Path> content,
-                            Integer contextId){
+                            Integer contextId, Boolean userVisible){
         this.moduleName = new SimpleStringProperty(moduleName);
         this.cmid = new SimpleIntegerProperty(cmid);
         this.section = new SimpleIntegerProperty(section);
@@ -101,9 +112,11 @@ public class syncTableElement {
                 () -> new TimeDateElement(null, null)));
         this.content = new SimpleObjectProperty<List<Path>>(content);
         this.contextId = new SimpleIntegerProperty(contextId);
+        this.userVisible = new SimpleBooleanProperty(userVisible);
     }
 
-    public syncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,String moduleType, Path existingFile, Boolean selectable, Boolean selected, MoodleAction action, Boolean visible, TimeDateElement availabilityDateTime){
+    public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType,
+                            Path existingFile, Boolean selectable, Boolean selected, MoodleAction action, Boolean visible, TimeDateElement availabilityDateTime, Boolean userVisible){
         this.moduleName = new SimpleStringProperty(moduleName);
         this.cmid = new SimpleIntegerProperty(cmid);
         this.section = new SimpleIntegerProperty(section);
@@ -118,9 +131,12 @@ public class syncTableElement {
         this.beforemod = new SimpleIntegerProperty(-1);
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(availabilityDateTime);
+        this.userVisible = new SimpleBooleanProperty(userVisible);
     }
 
-    public syncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType, Path existingFile, Boolean selectable, Boolean selected, MoodleAction action, Boolean visible, TimeDateElement availabilityDateTime, Integer beforemod){
+    public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType,
+                            Path existingFile, Boolean selectable, Boolean selected, MoodleAction action, Boolean visible, TimeDateElement availabilityDateTime,
+                            Integer beforemod, Boolean userVisible){
         this.moduleName = new SimpleStringProperty(moduleName);
         this.cmid = new SimpleIntegerProperty(cmid);
         this.section = new SimpleIntegerProperty(section);
@@ -135,9 +151,11 @@ public class syncTableElement {
         this.beforemod = new SimpleIntegerProperty(beforemod);
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(availabilityDateTime);
+        this.userVisible = new SimpleBooleanProperty(userVisible);
     }
 
-    public syncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType, Boolean selectable, Boolean selected, MoodleAction action, Boolean visible){
+    public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType,
+                            Boolean selectable, Boolean selected, MoodleAction action, Boolean visible, Boolean userVisible){
         this.moduleName = new SimpleStringProperty(moduleName);
         this.cmid = new SimpleIntegerProperty(cmid);
         this.section = new SimpleIntegerProperty(section);
@@ -152,9 +170,12 @@ public class syncTableElement {
         this.beforemod = new SimpleIntegerProperty(-1);
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(new TimeDateElement(null, null));
+        this.userVisible = new SimpleBooleanProperty(userVisible);
     }
 
-    public syncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType, Path existingFile, Boolean selectable, Boolean selected, MoodleAction action, Integer beforemod, Boolean visible){
+    public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType,
+                            Path existingFile, Boolean selectable, Boolean selected, MoodleAction action, Integer beforemod,
+                            Boolean visible, Boolean userVisible){
         this.moduleName = new SimpleStringProperty(moduleName);
         this.cmid = new SimpleIntegerProperty(cmid);
         this.section = new SimpleIntegerProperty(section);
@@ -169,8 +190,14 @@ public class syncTableElement {
         this.beforemod = new SimpleIntegerProperty(beforemod);
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(new TimeDateElement(null, null));
+        this.userVisible = new SimpleBooleanProperty(userVisible);
     }
 
+    /**
+     * Method used to provide the availability of a course module as a UNIX-Timestamp.
+     *
+     * @return UNIX-Timestamp.
+     */
     public long getUnixTimeStamp(){
         LocalDateTime time = null;
         try{
@@ -181,6 +208,11 @@ public class syncTableElement {
         return time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()/1000L;
     }
 
+    /**
+     * Providing the MoodleAction.
+     *
+     * @return the MoodleAction.
+     */
     public MoodleAction getAction(){ return action;}
 
     /**
@@ -474,29 +506,55 @@ public class syncTableElement {
     }
 
     /**
-     * Providing the messageProperty.
+     * Providing the visibleProperty.
      *
-     * @return the messageProprty.
+     * @return the visibleProprty.
      */
     public BooleanProperty visibleProperty() {
         return visible;
     }
 
     /**
-     * Providing the files message as a String.
+     * Providing the visible as a boolean.
      *
-     * @return the files message as a String.
+     * @return the visible as a boolean.
      */
     public boolean getVisible() {
         return this.visible.get();
     }
 
     /**
-     * Sets a new message.
+     * Sets a new visible.
      *
-     * @param value the new message.
+     * @param value the new visible.
      */
     public void setVisible(boolean value) { this.visible.set(value);
+    }
+
+    /**
+     * Providing the userVisibleProperty.
+     *
+     * @return the userVisibleProprty.
+     */
+    public BooleanProperty userVisibleProperty() {
+        return userVisible;
+    }
+
+    /**
+     * Providing the userVisible a boolean.
+     *
+     * @return the userVisible as a boolean.
+     */
+    public boolean getUserVisible() {
+        return this.userVisible.get();
+    }
+
+    /**
+     * Sets a new userVisible.
+     *
+     * @param value the new userVisible.
+     */
+    public void setUserVisible(boolean value) { this.userVisible.set(value);
     }
 
     /**
