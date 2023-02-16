@@ -116,8 +116,7 @@ public class MoodleService {
         if (beforemod == -1) {
             moodleClient.setMoveModule("json", token, "local_course_move_module_to_specific_position", cmid,
                     sectionid, null);
-        }
-        else {
+        } else {
             moodleClient.setMoveModule("json", token, "local_course_move_module_to_specific_position", cmid,
                     sectionid, beforemod);
         }
@@ -137,8 +136,7 @@ public class MoodleService {
         if (beforemod == -1) {
             moodleClient.setUrl("json", token, "local_course_add_new_course_module_url", courseid, section, urlname,
                     url, time, visible, null);
-        }
-        else {
+        } else {
             moodleClient.setUrl("json", token, "local_course_add_new_course_module_url", courseid, section, urlname,
                     url, time, visible, beforemod);
         }
@@ -161,8 +159,7 @@ public class MoodleService {
         if (beforemod == -1) {
             moodleClient.setResource("json", token, "local_course_add_new_course_module_resource", courseid, section,
                     itemid, time, visible, name, null);
-        }
-        else {
+        } else {
             moodleClient.setResource("json", token, "local_course_add_new_course_module_resource", courseid, section,
                     itemid, time, visible, name, beforemod);
         }
@@ -179,19 +176,6 @@ public class MoodleService {
         moodleClient.removeResource("json", token, "core_course_delete_modules", cmid);
     }
 
-    /**
-     * Create a course-module of the type "folder".
-     *
-     * @param token    The Moodle-token.
-     * @param courseid A Moodle-courses id.
-     * @param section  The moodle-sections number in the moodle-course.
-     * @param itemid   The id of the prior uploaded files, which should be presented by the course-module.
-     * @param name     The displayname of the course-module.
-     */
-    public void setFolder(String token, int courseid, int section, Long itemid, String name) {
-        moodleClient.setFolder("json", token, "local_course_add_new_course_module_directory", courseid, section,
-                itemid, name, null);
-    }
 
     /**
      * Create a course-module of the type "resource" at a specific position inside a course-section.
@@ -204,18 +188,38 @@ public class MoodleService {
      * @param beforemod The course-module id of the course-module at the supposed position. If beforemod ist null,
      *                  the course-module will be moved to the bottom of the course-section.
      */
-    public void setFolder(String token, int courseid, int section, Long itemid, String name, int beforemod) {
-        moodleClient.setFolder("json", token, "local_course_add_new_course_module_directory", courseid, section,
-                itemid, name, beforemod);
+    public void setFolder(String token, int courseid, int section, Long itemid, String name, Long time, boolean visible,
+                          int beforemod) {
+        if (beforemod == -1) {
+            moodleClient.setFolder("json", token, "local_course_add_new_course_module_directory", courseid, section,
+                    itemid, name, time, visible, null);
+        } else {
+            moodleClient.setFolder("json", token, "local_course_add_new_course_module_directory", courseid, section,
+                    itemid, name, time, visible, beforemod);
+        }
+    }
+
+    /**
+     * Add a file or several files to an existing folder. Note: to upload several files, it is necessary that all
+     * files are uploaded one after another with the same itemid.
+     *
+     * @param token     The Moodle-token.
+     * @param courseid  A Moodle-courses id.
+     * @param itemid    The id of the prior uploaded file(s), which should be presented by the course-module.
+     * @param contextid The contextid of the folder the files should be added to.
+     */
+    public void addFilesToFolder(String token, int courseid, Long itemid, int contextid) {
+        moodleClient.addFilesToFolder("json", token, "local_course_add_files_to_directory", courseid, itemid,
+                contextid);
     }
 
     /**
      * Method used to create a new course section.
      *
-     * @param token The Moodle-token.
-     * @param courseid A Moodle-courses id.
+     * @param token       The Moodle-token.
+     * @param courseid    A Moodle-courses id.
      * @param sectionname The name of the new section.
-     * @param sectionnum The moodle-sections number in the moodle-course.
+     * @param sectionnum  The moodle-sections number in the moodle-course.
      */
     public void setSection(String token, int courseid, String sectionname, int sectionnum) {
         moodleClient.setSection("json", token, "local_course_add_new_section", courseid, sectionname, sectionnum);

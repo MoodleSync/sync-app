@@ -77,6 +77,52 @@ public class MoodleUploadTemp {
         }
     }
 
+    public MoodleUpload upload(String name, String pathname, String moodleUrl, String token, Long itemid) {
+        try {
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+            //Usage of https
+            if (moodleUrl.startsWith("https")) {
+                X509TrustManager trustManager;
+                SSLSocketFactory sslSocketFactory;
+                try {
+                    trustManager = createTrustManager();
+                    SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+                    sslContext.init(null, new TrustManager[]{trustManager}, new java.security.SecureRandom());
+                    sslSocketFactory = sslContext.getSocketFactory();
+                } catch (GeneralSecurityException e) {
+                    throw new RuntimeException(e);
+                }
+                builder.sslSocketFactory(sslSocketFactory, trustManager);
+                builder.hostnameVerifier((hostname, sslSession) -> hostname
+                        .equalsIgnoreCase(sslSession.getPeerHost()));
+
+            }
+            //Execution of the http-request
+            OkHttpClient client = builder.build();
+            RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart(name, pathname,
+                            RequestBody.create(MediaType.parse("application/octet-stream"),
+                                    new File(pathname)))
+                    .build();
+            Request request = new Request.Builder()
+                    .url(moodleUrl + "/webservice/upload.php?token=" + token + "&itemid=" + itemid)
+                    .method("POST", body)
+                    .build();
+            ResponseBody response = client.newCall(request).execute().body();
+            String bodystring = response.string();
+            ObjectMapper objectMapper = new ObjectMapper();
+            System.out.println("--------------------------------------" + bodystring);
+            List<MoodleUpload> entity = objectMapper.readValue(bodystring, new TypeReference<List<MoodleUpload>>() {
+            });
+            System.out.println(entity);
+            return entity.get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     /**
      * Method user for generating a needed X509TrustManager for https-communication

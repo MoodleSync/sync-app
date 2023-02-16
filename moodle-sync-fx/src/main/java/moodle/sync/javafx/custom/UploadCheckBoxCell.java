@@ -7,14 +7,14 @@ import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.util.StringConverter;
-import moodle.sync.javafx.model.syncTableElement;
+import moodle.sync.javafx.model.SyncTableElement;
 
 /**
  * Class used to display the selctedProperty-value inside a CheckBoxTreeTableCell.
  *
  * @author Daniel Schröter
  */
-public class UploadCheckBoxCell<U, B> extends CheckBoxTableCell<syncTableElement, Boolean> {
+public class UploadCheckBoxCell<U, B> extends CheckBoxTableCell<SyncTableElement, Boolean> {
 
     private CheckBox checkBox;
 

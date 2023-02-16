@@ -28,7 +28,7 @@ public interface MoodleClient {
      * @param moodlewsrestformat Used dataformat.
      * @param token              The Moodle-token.
      * @param function           The called Web Service API function.
-     * @param userid             The users id.
+     * @param userid             The user´s id.
      * @return a list of moodle-courses.
      */
     @POST
@@ -44,7 +44,7 @@ public interface MoodleClient {
      * @param moodlewsrestformat Used dataformat.
      * @param token              The Moodle-token.
      * @param function           The called Web Service API function.
-     * @return a object containing the userid.
+     * @return an object containing the userid.
      */
     @GET
     @Path("")
@@ -122,8 +122,8 @@ public interface MoodleClient {
      */
     @POST
     @Path("")
-    void setResource(@QueryParam("moodlewsrestformat") String moodlewsrestformat, @QueryParam("wstoken") String token,
-                     @QueryParam("wsfunction") String function, @QueryParam("courseid") int courseid,
+    void setResource(@QueryParam("moodlewsrestformat") String moodlewsrestformat, @QueryParam("wstoken") String token
+            , @QueryParam("wsfunction") String function, @QueryParam("courseid") int courseid,
                      @QueryParam("sectionnum") int sectionnum, @QueryParam("itemid") long itemid, @QueryParam("time") Long time,
                      @QueryParam("visible") boolean visible, @QueryParam("displayname") String displayname,
                      @QueryParam("beforemod") Integer beforemod);
@@ -146,7 +146,25 @@ public interface MoodleClient {
     void setFolder(@QueryParam("moodlewsrestformat") String moodlewsrestformat, @QueryParam("wstoken") String token,
                    @QueryParam("wsfunction") String function, @QueryParam("courseid") int courseid,
                    @QueryParam("sectionnum") int sectionnum, @QueryParam("itemid") long itemid,
-                   @QueryParam("displayname") String displayname, @QueryParam("beforemod") Integer beforemod);
+                   @QueryParam("displayname") String displayname, @QueryParam("time") Long time,
+                   @QueryParam("visible") boolean visible, @QueryParam("beforemod") Integer beforemod);
+
+    /**
+     * Add a file or several files to an existing folder.
+     *
+     * @param moodlewsrestformat Used dataformat.
+     * @param token              The Moodle-token.
+     * @param function           The called Web Service API function.
+     * @param courseid           The Moodle-courses id.
+     * @param itemid             The id of the prior uploaded files, which should be presented by the course-module.
+     * @param contextid          The contextid of the folder the files should be added to.
+     */
+    @POST
+    @Path("")
+    void addFilesToFolder(@QueryParam("moodlewsrestformat") String moodlewsrestformat,
+                          @QueryParam("wstoken") String token, @QueryParam("wsfunction") String function,
+                          @QueryParam("courseid") int courseid, @QueryParam("itemid") long itemid,
+                          @QueryParam("contextid") int contextid);
 
     /**
      * Obtains the course-content of a specific course-section.

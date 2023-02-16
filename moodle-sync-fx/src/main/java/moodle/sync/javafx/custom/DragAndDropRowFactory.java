@@ -9,22 +9,39 @@ import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
 
 import moodle.sync.core.util.MoodleAction;
-import moodle.sync.javafx.model.syncTableElement;
+import moodle.sync.javafx.model.SyncTableElement;
+import org.lecturestudio.core.app.ApplicationContext;
+
+import javax.inject.Inject;
 
 /**
  * Class executing the drag and drop process within the sync-table
  */
-public class DragAndDropRowFactory implements Callback<TableView<syncTableElement>, TableRow<syncTableElement>> {
+public class DragAndDropRowFactory implements Callback<TableView<SyncTableElement>, TableRow<SyncTableElement>> {
 
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
+    private final ApplicationContext context;
+    @Inject
+    public DragAndDropRowFactory(ApplicationContext context) {
+        this.context = context;
+    }
+
     @Override
-    public TableRow<syncTableElement> call(TableView<syncTableElement> tableView) {
+    public TableRow<SyncTableElement> call(TableView<SyncTableElement> tableView) {
 
 
-        final TableRow<syncTableElement> row;
+        final TableRow<SyncTableElement> row;
 
         row = new TableRow<>();
+
+        row.setOnMouseClicked(event -> {
+            SyncTableElement sectionElement = tableView.getItems().get(row.getIndex());
+            context.getEventBus().post(sectionElement);
+
+            event.consume();
+        });
+
 
         row.setOnDragDetected(event -> {
             /* drag was detected, start drag-and-drop gesture*/
@@ -55,10 +72,9 @@ public class DragAndDropRowFactory implements Callback<TableView<syncTableElemen
             Dragboard db = event.getDragboard();
             if (db.hasContent(SERIALIZED_MIME_TYPE)) {
                 int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
-                syncTableElement draggedElement = tableView.getItems().remove(draggedIndex);
+                SyncTableElement draggedElement = tableView.getItems().remove(draggedIndex);
 
                 int dropIndex;
-
 
                 if (row.isEmpty()) {
                     dropIndex = tableView.getItems().size();
@@ -67,31 +83,25 @@ public class DragAndDropRowFactory implements Callback<TableView<syncTableElemen
                 }
 
                 if (draggedElement.getAction() == MoodleAction.UploadSection) {
-                    if (tableView.getItems().get(dropIndex).getAction() == MoodleAction.ExistingSection) {
-                        draggedElement.setSection(tableView.getItems().get(dropIndex).getSection());
-                        draggedElement.setBeforemod(tableView.getItems().get(dropIndex).getCmid());
-                        tableView.getItems().add(dropIndex, draggedElement);
-
-                        event.setDropCompleted(true);
-                        tableView.getSelectionModel().select(dropIndex);
-                        tableView.refresh();
-                    } else {
-                        tableView.getItems().add(draggedIndex, draggedElement);
-
-                        event.setDropCompleted(true);
-                        tableView.getSelectionModel().select(draggedIndex);
-                        tableView.refresh();
-                    }
-                } else if (draggedElement.getAction() == MoodleAction.ExistingSection) {
                     tableView.getItems().add(draggedIndex, draggedElement);
 
                     event.setDropCompleted(true);
                     tableView.getSelectionModel().select(draggedIndex);
                     tableView.refresh();
-                } else {
+                }
+                else if (draggedElement.getAction() == MoodleAction.ExistingSection ||
+                        draggedElement.getAction() == MoodleAction.DatatypeNotKnown) {
+                    tableView.getItems().add(draggedIndex, draggedElement);
+
+                    event.setDropCompleted(true);
+                    tableView.getSelectionModel().select(draggedIndex);
+                    tableView.refresh();
+                }
+                else {
                     if (tableView.getItems().get(dropIndex).getAction() == MoodleAction.ExistingSection) {
                         draggedElement.setBeforemod(-1);
-                    } else {
+                    }
+                    else {
                         if (dropIndex != draggedElement.getOldPos()) {
                             draggedElement.setBeforemod(tableView.getItems().get(dropIndex).getCmid());
                         }
@@ -99,7 +109,8 @@ public class DragAndDropRowFactory implements Callback<TableView<syncTableElemen
                     if (dropIndex != draggedElement.getOldPos() || draggedElement.getAction() == MoodleAction.MoodleUpload || draggedElement.getAction() == MoodleAction.FTPUpload) {
                         draggedElement.setSectionId(tableView.getItems().get(dropIndex - 1).getSectionId());
                         draggedElement.setSelectable(true);
-                    } else {
+                    }
+                    else {
                         draggedElement.setSelectable(false);
                     }
 

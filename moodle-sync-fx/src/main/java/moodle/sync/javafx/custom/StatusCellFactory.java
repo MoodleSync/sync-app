@@ -5,15 +5,15 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
-import moodle.sync.javafx.model.syncTableElement;
+import moodle.sync.javafx.model.SyncTableElement;
 
 /**
  * Class used to change the background color of a TableCell.
  */
-public class StatusCellFactory implements Callback<TableColumn<syncTableElement, String>, TableCell<syncTableElement, String>> {
+public class StatusCellFactory implements Callback<TableColumn<SyncTableElement, String>, TableCell<SyncTableElement, String>> {
     @Override
-    public TableCell<syncTableElement, String> call(TableColumn<syncTableElement, String> p){
-        StatusTableCell<syncTableElement, String> cell = new StatusTableCell<>();
+    public TableCell<SyncTableElement, String> call(TableColumn<SyncTableElement, String> p){
+        StatusTableCell<SyncTableElement, String> cell = new StatusTableCell<>();
         cell.setAlignment(Pos.CENTER);
         return cell;
     }

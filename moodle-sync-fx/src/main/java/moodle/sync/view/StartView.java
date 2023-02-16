@@ -2,7 +2,7 @@ package moodle.sync.view;
 
 import javafx.collections.ObservableList;
 import moodle.sync.core.model.json.Course;
-import moodle.sync.javafx.model.syncTableElement;
+import moodle.sync.javafx.model.SyncTableElement;
 import moodle.sync.core.model.json.Section;
 import org.lecturestudio.core.beans.BooleanProperty;
 import org.lecturestudio.core.beans.ObjectProperty;
@@ -29,6 +29,10 @@ public interface StartView extends View {
 
     void setSelectAll(BooleanProperty selectAll);
 
+    void setCourseId(String string);
+
+    void setSectionId(String string);
+
     void setCourses(List<Course> courses);
 
     void setCourse(ObjectProperty<Course> course);
@@ -39,5 +43,5 @@ public interface StartView extends View {
 
     void setOnCourseChanged(ConsumerAction<Course> action);
 
-    void setData(ObservableList<syncTableElement> data);
+    void setData(ObservableList<SyncTableElement> data);
 }

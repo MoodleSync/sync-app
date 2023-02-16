@@ -5,11 +5,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import javafx.util.converter.DefaultStringConverter;
 import moodle.sync.core.util.MoodleAction;
-import moodle.sync.javafx.model.syncTableElement;
+import moodle.sync.javafx.model.SyncTableElement;
 
 import org.controlsfx.control.PopOver;
 import org.lecturestudio.javafx.control.SvgIcon;
@@ -17,7 +18,7 @@ import org.lecturestudio.javafx.control.SvgIcon;
 /**
  * Class used to display the Name of a Section/ Module including different styles/background colors inside a cell.
  */
-public class UploadHighlightTableCell <U, B> extends TextFieldTableCell<syncTableElement, String> {
+public class UploadHighlightTableCell <U, B> extends TextFieldTableCell<SyncTableElement, String> {
     private Listener listener = new Listener();
     private PopOver popOver;
 
@@ -80,6 +81,8 @@ public class UploadHighlightTableCell <U, B> extends TextFieldTableCell<syncTabl
         else if(getTableRow().getItem().getAction() == MoodleAction.MoodleUpload ||
                 getTableRow().getItem().getAction() == MoodleAction.FTPUpload ||
                 getTableRow().getItem().getAction() == MoodleAction.UploadSection ||
+                getTableRow().getItem().getAction() == MoodleAction.FolderUpload ||
+                getTableRow().getItem().getAction() == MoodleAction.FolderSynchronize ||
                 getTableRow().getItem().getAction() == MoodleAction.DatatypeNotKnown) {
             if((getTableRow().getItem().getAction() == MoodleAction.MoodleUpload && getTableRow().getItem() != null) ||
                     (getTableRow().getItem().getAction() == MoodleAction.FTPUpload && getTableRow().getItem() != null)) {
@@ -87,7 +90,8 @@ public class UploadHighlightTableCell <U, B> extends TextFieldTableCell<syncTabl
                     setText(null);
                 }
                 getTableRow().getItem().selectedProperty().addListener(listener);
-            } else{
+            }
+            else {
                 setText(null);
             }
         }
@@ -109,7 +113,15 @@ public class UploadHighlightTableCell <U, B> extends TextFieldTableCell<syncTabl
                 case "survey" -> icon.getStyleClass().add("survey-icon");
                 default -> icon.getStyleClass().add("other-icon");
             }
-            setGraphic(icon);
+            if(!getTableRow().getItem().getUserVisible()){
+                SvgIcon optIcon = new SvgIcon();
+                optIcon.getStyleClass().add("lock-icon");
+                HBox elem = new HBox(optIcon, icon);
+                setGraphic(elem);
+            }
+            else {
+                setGraphic(icon);
+            }
             setText(this.getText().replaceAll("\\u00a0\\n|&nbsp;\\r\\n", ""));
         }
     }
@@ -121,18 +133,11 @@ public class UploadHighlightTableCell <U, B> extends TextFieldTableCell<syncTabl
             if(getTableRow().getItem().selectedProperty().get()){
                 setStyle("-fx-font-weight: normal");
                 setText(getTableRow().getItem().getExistingFileName());
-            } else{
+            }
+            else{
                 setText(null);
             }
-            //setVisible(getTableRow().getItem().selectedProperty().get());
-            /*if(getTableRow().getItem().selectedProperty().get()) {
-                setText(getTableRow().getItem().getExistingFileName());
-                setEditable(true);
-                setVisible(true);
-            } else{
-                setVisible(false);
-                setEditable(false);
-            }*/
+
         }
     }
 

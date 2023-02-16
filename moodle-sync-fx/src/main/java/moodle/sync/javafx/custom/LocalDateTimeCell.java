@@ -10,12 +10,12 @@ import javafx.scene.layout.HBox;
 import moodle.sync.core.util.MoodleAction;
 
 import moodle.sync.javafx.model.TimeDateElement;
-import moodle.sync.javafx.model.syncTableElement;
+import moodle.sync.javafx.model.SyncTableElement;
 
 /**
  * Class used to display a time/date setter inside a TableCell.
  */
-public class LocalDateTimeCell<S, U> extends TableCell<syncTableElement, TimeDateElement> {
+public class LocalDateTimeCell<S, U> extends TableCell<SyncTableElement, TimeDateElement> {
 
     private DatePicker datePicker;
     private TimePicker timePicker;

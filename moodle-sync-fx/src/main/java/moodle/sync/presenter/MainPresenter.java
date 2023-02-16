@@ -41,10 +41,10 @@ import org.lecturestudio.core.view.ViewContextFactory;
 import org.lecturestudio.core.view.ViewHandler;
 import org.lecturestudio.core.view.ViewLayer;
 import org.lecturestudio.web.api.model.GitHubRelease;
-import org.lecturestudio.web.api.service.VersionChecker;
 
 import moodle.sync.input.Shortcut;
 import moodle.sync.view.MainView;
+import org.lecturestudio.web.api.service.VersionChecker;
 
 /**
  * Class defining the logic of the "main-window".
@@ -124,7 +124,7 @@ public class MainPresenter extends org.lecturestudio.core.presenter.MainPresente
 			// Check for a new version.
 			CompletableFuture.runAsync(() -> {
 				try {
-					VersionChecker versionChecker = new VersionChecker();
+					VersionChecker versionChecker = new VersionChecker("MoodleSync", "sync-app");
 
 					if (versionChecker.newVersionAvailable()) {
 						GitHubRelease release = versionChecker.getLatestRelease();
