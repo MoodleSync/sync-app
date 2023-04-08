@@ -13,8 +13,10 @@
     @author Daniel Schröter
 -->
 
-<fx:root alignment="CENTER" type="VBox" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
-    <BorderPane VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root alignment="CENTER" type="VBox" xmlns="http://javafx.com/javafx/17.0.2-ea"
+         xmlns:fx="http://javafx.com/fxml/1" minWidth="580.0">
+    <BorderPane VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+                minWidth="580.0">
         <top>
             <HBox alignment="BOTTOM_CENTER" spacing="5.0">
                 <VBox alignment="BOTTOM_CENTER">
@@ -48,7 +50,7 @@
                     </ComboBox>
                 </VBox>
                <Pane HBox.hgrow="ALWAYS" />
-                <Button fx:id="updateButton" mnemonicParsing="false" text="%start.update" />
+                <Button fx:id="updateButton" mnemonicParsing="false" text="%start.update"/>
                 <Button fx:id="syncButton" mnemonicParsing="false" text="%start.sync" />
                 <Button fx:id="settingsButton" mnemonicParsing="false" text="%start.settings" />
                 <padding>

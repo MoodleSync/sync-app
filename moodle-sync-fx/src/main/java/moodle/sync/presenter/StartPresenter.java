@@ -326,6 +326,7 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
      * Method to refresh the course-list (in Combo box).
      */
     private void refreshCourseList() {
+        //TODO Listener hinzufügen um nicht immer Aktualisieren zu müssen
         view.setCourses(courses());
     }
 
@@ -360,7 +361,7 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
             //If no section is selected, or "all" are selected, directories are checked and coursecontent is set.
             if (isNull(section) || section.getId() == -2) {
                 //Check if course-folder exists, otherwise create one.
-                Path courseDirectory = Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname());
+                Path courseDirectory = Paths.get(config.getSyncRootPath() + "/" + course.getShortname());
                 FileService.directoryManager(courseDirectory);
                 //Initialize sectionList with folders inside course-directory.
                 sectionList = FileService.getPathsInDirectory(courseDirectory);
@@ -392,7 +393,7 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
 
                     //Create or sort section directory
                     Path execute =
-                            Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() + "_" + sectionName);
+                            Paths.get(config.getSyncRootPath() + "/" + course.getShortname() + "/" + section.getSection() + "_" + sectionName);
                     sectionList = FileService.formatSectionFolder(sectionList, section); //Formats section
                         // folder-list -> if Section 3 in Moodle names "Test", inside the course directory, the
                         // sections-directory should be called 3_Test.
@@ -506,7 +507,7 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
         courseData = data;
 
         //Add FileWatcher in course-directory to detect added sections.
-        watcher = new FileWatcher(new File(config.getSyncRootPath() + "/" + course.getDisplayname()));
+        watcher = new FileWatcher(new File(config.getSyncRootPath() + "/" + course.getShortname()));
         watcher.addListener(this).watch();
 
         return data;
@@ -554,7 +555,7 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
     private void openCourseDirectory() {
         Desktop desktop = Desktop.getDesktop();
         try {
-            File dirToOpen = new File(config.getSyncRootPath() + "/" + course.getDisplayname());
+            File dirToOpen = new File(config.getSyncRootPath() + "/" + course.getShortname());
             desktop.open(dirToOpen);
         } catch (Throwable e) {
             logException(e, "Sync failed");

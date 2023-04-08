@@ -8,7 +8,6 @@ import javafx.util.converter.IntegerStringConverter;
 import moodle.sync.presenter.SettingsPresenter;
 import moodle.sync.util.UserInputValidations;
 import moodle.sync.view.SettingsView;
-import org.controlsfx.control.PopOver;
 import org.lecturestudio.core.beans.BooleanProperty;
 import org.lecturestudio.core.beans.ObjectProperty;
 import org.lecturestudio.core.beans.StringProperty;
@@ -41,6 +40,9 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
 
     @FXML
     private TextField tokenField;
+
+    @FXML
+    private Button checkToken;
 
     @FXML
     private TextField syncRootPath;
@@ -122,6 +124,29 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
                     (tokenField.getText().isEmpty())
             );
         });
+    }
+
+    @Override
+    public void setOnCheckToken(Action action) {
+        FxUtils.bindAction(checkToken, action);
+    }
+
+    @Override
+    public void setTokenValid(boolean valid){
+        tokenField.pseudoClassStateChanged(
+                PseudoClass.getPseudoClass("error"),
+                (!valid)
+        );
+        tokenField.pseudoClassStateChanged(
+                PseudoClass.getPseudoClass("valid"),
+                (valid)
+        );
+        //if(valid) {
+            //tokenField.setStyle("-fx-border-width: 4px; -fx-text-box-border: #3CB222; -fx-focus-color: #3CB222");
+        //} else {
+            //tokenField.getStyleClass().add("error");
+            //tokenField.setStyle("-fx-border-width: 4px; -fx-text-box-border: #B22222; -fx-focus-color: #B22222");
+        //}
     }
 
     /**

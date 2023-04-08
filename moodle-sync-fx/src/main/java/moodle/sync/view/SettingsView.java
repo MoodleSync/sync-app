@@ -38,6 +38,10 @@ public interface SettingsView extends View {
 
     void setMoodleToken(StringProperty moodleToken);
 
+    void setOnCheckToken(Action action);
+
+    void setTokenValid(boolean valid);
+
     void setSyncRootPath(StringProperty path);
 
     void setSelectSyncRootPath(Action action);

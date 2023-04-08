@@ -50,6 +50,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
         view.setFormatsMoodle(config.formatsMoodleProperty());
         view.setFormatsFileserver(config.formatsFileserverProperty());
         view.setMoodleToken(config.moodleTokenProperty());
+        view.setOnCheckToken(this::checkToken);
         view.setSyncRootPath(config.syncRootPathProperty());
         view.setSelectSyncRootPath(this::selectSyncPath);
         view.setFtpField(config.FileserverProperty());
@@ -83,11 +84,31 @@ public class SettingsPresenter extends Presenter<SettingsView> {
         }
         File initDirectory = new File(syncPath);
         DirectoryChooserView dirChooser = viewFactory.createDirectoryChooserView();
-        dirChooser.setInitialDirectory(initDirectory);
-        File selectedFile = dirChooser.show(view);
+        File selectedFile;
+        try {
+            dirChooser.setInitialDirectory(initDirectory);
+            selectedFile = dirChooser.show(view);
+        }
+        catch (IllegalArgumentException e) {
+            //Show working directory if an illegal path is entered.
+            DefaultConfiguration defaultConfiguration = new DefaultConfiguration();
+            dirChooser.setInitialDirectory(new File(defaultConfiguration.getSyncRootPath()));
+            selectedFile = dirChooser.show(view);
+        }
 
         if (nonNull(selectedFile)) {
             config.setSyncRootPath(selectedFile.getAbsolutePath());
+        }
+    }
+
+    private void checkToken() {
+        try{
+            MoodleSyncConfiguration config = (MoodleSyncConfiguration) context.getConfiguration();
+            moodleService.setApiUrl(config.getMoodleUrl());
+            moodleService.getUserId(config.getMoodleToken());
+            view.setTokenValid(true);
+        } catch (Exception e){
+            view.setTokenValid(false);
         }
     }
 }
