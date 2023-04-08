@@ -17,5 +17,6 @@ import lombok.Setter;
  */
 public class Content {
     private String filename;
+    private String fileurl;
     private Long timemodified;
 }
