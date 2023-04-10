@@ -71,6 +71,7 @@
                             <ColumnSizeConstraints prefWidth="90.0" />
                             <ColumnSizeConstraints prefWidth="85.0" />
                             <ColumnSizeConstraints prefWidth="200.0" />
+                            <ColumnSizeConstraints prefWidth="35.0" />
                         </columnConstraints>
                     </DynamicResizePolicy>
                 </columnResizePolicy>
@@ -116,6 +117,14 @@
                         </cellFactory>
                         <cellValueFactory>
                             <PropertyValueFactory property="availabilityDateTime" />
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn fx:id="downloadColumn" styleClass="CENTER">
+                        <cellFactory>
+                            <DownloadableTableCellFactory />
+                        </cellFactory>
+                        <cellValueFactory>
+                            <PropertyValueFactory property="downloadable" />
                         </cellValueFactory>
                     </TableColumn>
                 </columns>

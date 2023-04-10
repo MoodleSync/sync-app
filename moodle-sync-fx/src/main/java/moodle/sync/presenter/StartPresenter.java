@@ -3,6 +3,7 @@ package moodle.sync.presenter;
 import javax.inject.Inject;
 
 import com.google.common.eventbus.Subscribe;
+import moodle.sync.core.util.FileDownloadService;
 import org.apache.commons.io.FilenameUtils;
 
 import javafx.collections.FXCollections;
@@ -169,7 +170,22 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
     //Show selected section if a module is clicked.
     @Subscribe
     public void onSectionClicked(SyncTableElement selectedSection) {
-        view.setSectionId(selectedSection.getSection().toString());
+        if(selectedSection.getDoDownload()){
+            onDownloadFile(selectedSection);
+        } else {
+            view.setSectionId(selectedSection.getSection().toString());
+        }
+    }
+
+    private void onDownloadFile(SyncTableElement file) {
+        try{
+            FileDownloadService.getFile(file.getFileUrl(), token,
+                    config.getSyncRootPath() + "/" + course.getShortname() + "/" + section.getSection() + "_"+ section.getName(),
+                    file.getExistingFileName(), file.getExistingFile());
+
+        } catch (Exception e) {
+            logException(e, "Sync failed");
+        }
     }
 
     //Update view if course was changed.
@@ -388,7 +404,7 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
 
                     //Add section element
                     data.add(new SyncTableElement(sectionName, sectionId, sectionNum, sectionId, data.size(),
-                            section.getSummary(), false, false, MoodleAction.ExistingSection,
+                            section.getSummary(), "",false, false, MoodleAction.ExistingSection,
                             section.getVisible() == 1, true));
 
                     //Create or sort section directory
@@ -434,7 +450,7 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
                                 // TODO: FileServerSupport not functional. -> Check if file in Link is newer than the
                                 // link-module.
                                     data.add(new SyncTableElement(module.getName(), module.getId(), sectionNum,
-                                            sectionId, data.size(), module.getModname(), false, false,
+                                            sectionId, data.size(), module.getModname(), "",false, false,
                                             MoodleAction.NotLocalFile, module.getVisible() == 1, module.getUservisible()));
                             case "folder" -> {
                                 //Check if folder is existent in section-directory.
@@ -446,13 +462,13 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
                                     localContent.get(2).remove(pos);
                                 } else {
                                     data.add(new SyncTableElement(module.getName(), module.getId(), sectionNum,
-                                            sectionId, data.size(), module.getModname(), false, false,
+                                            sectionId, data.size(), module.getModname(), "",false, false,
                                             MoodleAction.NotLocalFile, module.getVisible() == 1, module.getUservisible()));
                                 }
                             }
                             default ->
                                     data.add(new SyncTableElement(module.getName(), module.getId(), sectionNum,
-                                            sectionId, data.size(), module.getModname(), false, false,
+                                            sectionId, data.size(), module.getModname(), "",false, false,
                                             MoodleAction.NotLocalFile, module.getVisible() == 1, module.getUservisible()));
                         }
                     }
@@ -511,7 +527,6 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
         watcher.addListener(this).watch();
 
         return data;
-
     }
 
     /**
@@ -524,13 +539,24 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
         for (Section section : courseContent) {
             if (section.getId() != -2) {
                 data.add(new SyncTableElement(section.getName(), section.getId(), section.getSection(),
-                        section.getId(), data.size(), section.getSummary(), false, false,
+                        section.getId(), data.size(), section.getSummary(), "",false, false,
                         MoodleAction.ExistingSection, section.getVisible() == 1, true));
 
                 for (Module module : section.getModules()) {
-                    data.add(new SyncTableElement(module.getName(), module.getId(), section.getSection(),
-                            section.getId(), data.size(), module.getModname(), false, false,
-                            MoodleAction.NotLocalFile, module.getUservisible(), module.getUservisible()));
+                    if(!isNull(module.getContents())) {
+                        SyncTableElement element =new SyncTableElement(module.getName(), module.getId(), section.getSection(),
+                                section.getId(), data.size(), module.getModname(), module.getContents().get(0).getTimemodified().toString(),module.getContents().get(0).getFilename(),false, false,
+                                MoodleAction.NotLocalFile, module.getUservisible(), module.getUservisible());
+                        if(!isNull(module.getContents().get(0).getFileurl())){
+                            element.setDownloadable(true);
+                            element.setFileUrl(module.getContents().get(0).getFileurl());
+                        }
+                        data.add(element);
+                    } else {
+                        data.add(new SyncTableElement(module.getName(), module.getId(), section.getSection(),
+                                section.getId(), data.size(), module.getModname(),"",false, false,
+                                MoodleAction.NotLocalFile, module.getUservisible(), module.getUservisible()));
+                    }
                 }
             }
         }

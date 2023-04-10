@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 /**
  * Class implementing several methods in terms of file handling and comparison.
  *
@@ -143,7 +145,16 @@ public class FileService {
         }
         if (!found) {
             element = new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
-                    module.getModname(), false, false, MoodleAction.NotLocalFile, module.getVisible() == 1, true);
+                    module.getModname(), module.getContents().get(0).getTimemodified().toString() ,
+                    module.getContents().get(0).getFilename() ,false
+                    , false,
+                    MoodleAction.NotLocalFile,
+                    module.getVisible() == 1,
+                    true);
+            if(!isNull(module.getContents().get(0).getFileurl())){
+                element.setDownloadable(true);
+                element.setFileUrl(module.getContents().get(0).getFileurl());
+            }
         }
 
         return new ReturnValue(fileList, element);
