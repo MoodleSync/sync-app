@@ -52,6 +52,8 @@ public class SyncTableElement {
 
     private BooleanProperty downloadable;
 
+    private StringProperty sectionName;
+
     private StringProperty fileurl;
 
 
@@ -210,6 +212,7 @@ public class SyncTableElement {
         this.availabilityDateTime = new SimpleObjectProperty(new TimeDateElement(null, null));
         this.userVisible = new SimpleBooleanProperty(userVisible);
         this.downloadable = new SimpleBooleanProperty(false);
+        this.sectionName = new SimpleStringProperty("");
         this.fileurl = new SimpleStringProperty("");
     }
 
@@ -722,6 +725,33 @@ public class SyncTableElement {
      * @param value the new message.
      */
     public void setContextId(Integer value) { this.contextId.set(value);
+    }
+
+    /**
+     * Providing the messageProperty.
+     *
+     * @return the messageProprty.
+     */
+    public StringProperty sectionNameProperty() {
+        return sectionName;
+    }
+
+    /**
+     * Providing the files message as a String.
+     *
+     * @return the files message as a String.
+     */
+    public String getSectionName() {
+        return this.sectionName.get();
+    }
+
+    /**
+     * Sets a new message.
+     *
+     * @param value the new message.
+     */
+    public void setSectionName(String value) {
+        this.sectionName.set(value);
     }
 
     /**

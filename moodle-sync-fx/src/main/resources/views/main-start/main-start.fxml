@@ -50,6 +50,12 @@
                     </ComboBox>
                 </VBox>
                <Pane HBox.hgrow="ALWAYS" />
+                <Button fx:id="downloadButton" mnemonicParsing="false" text="%start.download">
+                    <tooltip><Tooltip text="%start.download.course" /></tooltip>
+                    <graphic>
+                        <SvgIcon styleClass="icon, download-icon" />
+                    </graphic>
+                </Button>
                 <Button fx:id="updateButton" mnemonicParsing="false" text="%start.update"/>
                 <Button fx:id="syncButton" mnemonicParsing="false" text="%start.sync" />
                 <Button fx:id="settingsButton" mnemonicParsing="false" text="%start.settings" />

@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 import com.google.common.eventbus.Subscribe;
 import moodle.sync.core.util.FileDownloadService;
+import moodle.sync.event.DownloadItemEvent;
 import org.apache.commons.io.FilenameUtils;
 
 import javafx.collections.FXCollections;
@@ -116,6 +117,7 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
         view.setOnUpdate(this::updateCourses);
         view.setOnSync(this::onSync);
         view.setOnSettings(this::onSettings);
+        view.setOnDownloadCourse(this::onDownloadCourse);
         view.setCourse(config.recentCourseProperty());
         view.setCourses(courses());
         view.setSection(config.recentSectionProperty());
@@ -169,22 +171,39 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
 
     //Show selected section if a module is clicked.
     @Subscribe
-    public void onSectionClicked(SyncTableElement selectedSection) {
-        if(selectedSection.getDoDownload()){
-            onDownloadFile(selectedSection);
-        } else {
-            view.setSectionId(selectedSection.getSection().toString());
-        }
+    public void onElementClicked(SyncTableElement selectedSection) {
+        view.setSectionId(selectedSection.getSection().toString());
     }
+
+    @Subscribe
+    public void onDownloadItem(DownloadItemEvent event) {
+        onDownloadFile(event.getElement());
+    }
+
 
     private void onDownloadFile(SyncTableElement file) {
         try{
             FileDownloadService.getFile(file.getFileUrl(), token,
-                    config.getSyncRootPath() + "/" + course.getShortname() + "/" + section.getSection() + "_"+ section.getName(),
+                    config.getSyncRootPath() + "/" + course.getShortname() + "/" + file.getSection() + "_"+ file.getSectionName(),
                     file.getExistingFileName(), file.getExistingFile());
-
+            Thread.sleep(500);
         } catch (Exception e) {
             logException(e, "Sync failed");
+        }
+    }
+
+    private void onDownloadCourse() {
+        for(SyncTableElement courseData : courseData) {
+            if(courseData.getDownloadable()) {
+                try{
+                    FileDownloadService.getFile(courseData.getFileUrl(), token,
+                            config.getSyncRootPath() + "/" + course.getShortname() + "/" + courseData.getSection() + "_"+ courseData.getSectionName(),
+                            courseData.getExistingFileName(), courseData.getExistingFile());
+                    Thread.sleep(500);
+                } catch (Exception e) {
+                    logException(e, "Sync failed");
+                }
+            }
         }
     }
 
@@ -438,6 +457,9 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
                                 try {
                                     ReturnValue elem = FileService.findResourceInFiles(localContent.get(0), module,
                                             sectionNum, sectionId, data.size());
+                                    if(elem.getElement().getDownloadable()) {
+                                        elem.getElement().setSectionName(sectionName);
+                                    }
                                     localContent.set(0, elem.getFileList());
                                     data.add(elem.getElement());
                                 } catch (Exception e) {
@@ -565,16 +587,19 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
 
     @Override
     public void onCreated(FileEvent event) {
+        System.out.println("Wegen created");
         view.setData(setData());
     }
 
     @Override
     public void onModified(FileEvent event) {
-        view.setData(setData());
+        System.out.println("Wegen geändert");
+        //view.setData(setData());
     }
 
     @Override
     public void onDeleted(FileEvent event) {
+        System.out.println("Wegen gelöscht");
         view.setData(setData());
     }
 

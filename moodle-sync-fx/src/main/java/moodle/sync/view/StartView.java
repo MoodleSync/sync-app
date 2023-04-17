@@ -23,6 +23,8 @@ public interface StartView extends View {
 
     void setOnSync(Action action);
 
+    void setOnDownloadCourse(Action action);
+
     void setOnSettings(Action action);
 
     void setOnFolder(Action action);

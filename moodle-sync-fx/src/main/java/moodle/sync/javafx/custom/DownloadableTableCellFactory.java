@@ -20,20 +20,11 @@ public class DownloadableTableCellFactory implements Callback<TableColumn<SyncTa
 
     @Override
     public TableCell<SyncTableElement, Boolean> call(TableColumn<SyncTableElement, Boolean> p) {
-        DownloadableTableCell <SyncTableElement, Boolean> cell = new DownloadableTableCell<SyncTableElement, Boolean>();
+        DownloadableTableCell <SyncTableElement, Boolean> cell =
+                new DownloadableTableCell<SyncTableElement, Boolean>(context);
+
         cell.setAlignment(Pos.CENTER);
         cell.setStyle("-fx-alignment: CENTER;");
-
-        cell.setOnMouseClicked(event -> {
-            if (! cell.isEmpty()) {
-
-                SyncTableElement sectionElement = cell.getTableRow().getItem();
-                sectionElement.setDoDownload(true);
-                context.getEventBus().post(sectionElement);
-
-                event.consume();
-            }
-        });
 
         return cell;
     }
