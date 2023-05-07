@@ -32,11 +32,13 @@ import moodle.sync.presenter.command.ShowSettingsCommand;
 import org.lecturestudio.core.app.ApplicationContext;
 import org.lecturestudio.core.beans.BooleanProperty;
 import org.lecturestudio.core.presenter.Presenter;
+import org.lecturestudio.core.view.Action;
 import org.lecturestudio.core.view.NotificationType;
 import org.lecturestudio.core.view.ViewContextFactory;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -149,6 +151,7 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
             config.setRecentSection(null);
             course = null;
             section = null;
+            //TODO: hier werden dann 4 mal getcontents ausgelöst
         });
 
         //"Select-All"-Button clicked.
@@ -184,27 +187,25 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
     private void onDownloadFile(SyncTableElement file) {
         try{
             FileDownloadService.getFile(file.getFileUrl(), token,
-                    config.getSyncRootPath() + "/" + course.getShortname() + "/" + file.getSection() + "_"+ file.getSectionName(),
+                    config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + file.getSection() + "_"+ file.getSectionName(),
                     file.getExistingFileName(), file.getExistingFile());
-            Thread.sleep(500);
         } catch (Exception e) {
             logException(e, "Sync failed");
         }
     }
 
     private void onDownloadCourse() {
+        try{
+            watcher.close();
         for(SyncTableElement courseData : courseData) {
-            if(courseData.getDownloadable()) {
-                try{
-                    FileDownloadService.getFile(courseData.getFileUrl(), token,
-                            config.getSyncRootPath() + "/" + course.getShortname() + "/" + courseData.getSection() + "_"+ courseData.getSectionName(),
-                            courseData.getExistingFileName(), courseData.getExistingFile());
-                    Thread.sleep(500);
-                } catch (Exception e) {
-                    logException(e, "Sync failed");
-                }
+            if (courseData.getDownloadable()) {
+                FileDownloadService.getFile(courseData.getFileUrl(), token, config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + courseData.getSection() + "_" + courseData.getSectionName(), courseData.getExistingFileName(), courseData.getExistingFile());
             }
         }
+        } catch (Exception e) {
+            logException(e, "Sync failed");
+        }
+        view.setData(setData());
     }
 
     //Update view if course was changed.
@@ -288,7 +289,12 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
      * Method to "open" the Settings-page.
      */
     private void onSettings() {
-        context.getEventBus().post(new ShowSettingsCommand(this::refreshCourseList));
+        context.getEventBus().post(new ShowSettingsCommand(new Action() {
+            @Override
+            public void execute() {
+
+            }
+        }));
     }
 
 
@@ -396,7 +402,7 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
             //If no section is selected, or "all" are selected, directories are checked and coursecontent is set.
             if (isNull(section) || section.getId() == -2) {
                 //Check if course-folder exists, otherwise create one.
-                Path courseDirectory = Paths.get(config.getSyncRootPath() + "/" + course.getShortname());
+                Path courseDirectory = Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname());
                 FileService.directoryManager(courseDirectory);
                 //Initialize sectionList with folders inside course-directory.
                 sectionList = FileService.getPathsInDirectory(courseDirectory);
@@ -428,7 +434,8 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
 
                     //Create or sort section directory
                     Path execute =
-                            Paths.get(config.getSyncRootPath() + "/" + course.getShortname() + "/" + section.getSection() + "_" + sectionName);
+                            Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() +
+                                    "_" + sectionName);
                     sectionList = FileService.formatSectionFolder(sectionList, section); //Formats section
                         // folder-list -> if Section 3 in Moodle names "Test", inside the course directory, the
                         // sections-directory should be called 3_Test.
@@ -438,10 +445,6 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
                     //Initialize the fileServerRequired variable, used to check if the fileserver is required.
                     fileServerRequired = false;
                     List<FileServerFile> files = List.of();
-
-                    //Watcher is added to chosen section-directory.
-                    watcher = new FileWatcher(new File(execute.toString()));
-                    watcher.addListener(this).watch();
 
                     //Sort files inside section-directory by format types: MoodleFormats, FileserverFormats,
                     // Directories and Other.
@@ -463,7 +466,8 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
                                     localContent.set(0, elem.getFileList());
                                     data.add(elem.getElement());
                                 } catch (Exception e) {
-                                    showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync" +
+                                    showNotification(NotificationType.WARNING, "start.sync.warning.title", "start" +
+                                            ".sync" +
                                             ".error" + ".permissions");
                                     return setGuestData();
                                 }
@@ -545,7 +549,7 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
         courseData = data;
 
         //Add FileWatcher in course-directory to detect added sections.
-        watcher = new FileWatcher(new File(config.getSyncRootPath() + "/" + course.getShortname()));
+        watcher = new FileWatcher(new File(config.getSyncRootPath() + "/" + course.getDisplayname()));
         watcher.addListener(this).watch();
 
         return data;
@@ -556,7 +560,7 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
      *
      * @return Initializes the list with only a reduced view (Hidden Modules are not shown, changes are not allowed).
      */
-    private ObservableList<SyncTableElement> setGuestData() {
+    private ObservableList<SyncTableElement> setGuestData() throws IOException {
         ObservableList<SyncTableElement> data = FXCollections.observableArrayList();
         for (Section section : courseContent) {
             if (section.getId() != -2) {
@@ -569,10 +573,12 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
                         SyncTableElement element =new SyncTableElement(module.getName(), module.getId(), section.getSection(),
                                 section.getId(), data.size(), module.getModname(), module.getContents().get(0).getTimemodified().toString(),module.getContents().get(0).getFilename(),false, false,
                                 MoodleAction.NotLocalFile, module.getUservisible(), module.getUservisible());
-                        if(!isNull(module.getContents().get(0).getFileurl())){
+                        //if(!isNull(module.getContents().get(0).getFileurl()) && FileService.getPathsInDirectory
+                        // (Path.of(config.getSyncRootPath() + course.getDisplayname() + section.getName())).contains()){
+                            element.setSectionName(section.getName());
                             element.setDownloadable(true);
                             element.setFileUrl(module.getContents().get(0).getFileurl());
-                        }
+                        //}
                         data.add(element);
                     } else {
                         data.add(new SyncTableElement(module.getName(), module.getId(), section.getSection(),
@@ -587,26 +593,23 @@ public class StartPresenter extends Presenter<StartView> implements FileListener
 
     @Override
     public void onCreated(FileEvent event) {
-        System.out.println("Wegen created");
         view.setData(setData());
     }
 
     @Override
     public void onModified(FileEvent event) {
-        System.out.println("Wegen geändert");
-        //view.setData(setData());
+        view.setData(setData());
     }
 
     @Override
     public void onDeleted(FileEvent event) {
-        System.out.println("Wegen gelöscht");
         view.setData(setData());
     }
 
     private void openCourseDirectory() {
         Desktop desktop = Desktop.getDesktop();
         try {
-            File dirToOpen = new File(config.getSyncRootPath() + "/" + course.getShortname());
+            File dirToOpen = new File(config.getSyncRootPath() + "/" + course.getDisplayname());
             desktop.open(dirToOpen);
         } catch (Throwable e) {
             logException(e, "Sync failed");
