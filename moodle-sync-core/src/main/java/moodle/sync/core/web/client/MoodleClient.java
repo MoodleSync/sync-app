@@ -3,10 +3,7 @@ package moodle.sync.core.web.client;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
-import moodle.sync.core.model.json.Course;
-import moodle.sync.core.model.json.JsonConfigProvider;
-import moodle.sync.core.model.json.Section;
-import moodle.sync.core.model.json.SiteInfo;
+import moodle.sync.core.model.json.*;
 import moodle.sync.core.web.filter.LoggingFilter;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProviders;
@@ -216,5 +213,9 @@ public interface MoodleClient {
                     @QueryParam("wsfunction") String function, @QueryParam("courseid") int courseid,
                     @QueryParam("sectionname") String sectionname, @QueryParam("sectionnum") int sectionnum);
 
-
+    @GET
+    @Path("")
+    Permissions getPermissions(@QueryParam("moodlewsrestformat") String moodlewsrestformat,
+                               @QueryParam("wstoken") String token, @QueryParam("wsfunction") String function, @QueryParam(
+                                "courseids[0]") int courseid);
 }

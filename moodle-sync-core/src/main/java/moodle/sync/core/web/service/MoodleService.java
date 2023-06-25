@@ -6,6 +6,7 @@ import java.security.cert.X509Certificate;
 import java.util.List;
 
 import moodle.sync.core.model.json.Course;
+import moodle.sync.core.model.json.Permissions;
 import moodle.sync.core.model.json.Section;
 import moodle.sync.core.model.json.SiteInfo;
 import moodle.sync.core.web.client.MoodleClient;
@@ -223,6 +224,10 @@ public class MoodleService {
      */
     public void setSection(String token, int courseid, String sectionname, int sectionnum) {
         moodleClient.setSection("json", token, "local_course_add_new_section", courseid, sectionname, sectionnum);
+    }
+
+    public Boolean getPermissions(String token, int courseid) {
+        return moodleClient.getPermissions("json", token, "core_course_get_user_administration_options", courseid).getCourses().get(0).getOptions().get(0).getAvailable();
     }
 
 

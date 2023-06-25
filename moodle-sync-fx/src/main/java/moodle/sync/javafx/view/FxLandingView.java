@@ -1,25 +1,21 @@
 package moodle.sync.javafx.view;
 
-import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import moodle.sync.core.model.json.Course;
-import moodle.sync.javafx.model.SyncTableElement;
 import moodle.sync.core.model.json.Section;
-import org.lecturestudio.core.beans.BooleanProperty;
+
+import moodle.sync.presenter.LandingPresenter;
+
+import moodle.sync.view.LandingView;
 import org.lecturestudio.core.beans.ObjectProperty;
 import org.lecturestudio.core.view.Action;
 import org.lecturestudio.core.view.ConsumerAction;
-import org.lecturestudio.javafx.beans.LectBooleanProperty;
 import org.lecturestudio.javafx.beans.LectObjectProperty;
 import org.lecturestudio.javafx.util.FxUtils;
 import org.lecturestudio.javafx.view.FxView;
 import org.lecturestudio.javafx.view.FxmlView;
-
-import javafx.fxml.FXML;
-import javafx.scene.layout.VBox;
-
-import moodle.sync.presenter.StartPresenter;
-import moodle.sync.view.StartView;
 
 import java.util.List;
 
@@ -28,14 +24,8 @@ import java.util.List;
  *
  * @author Daniel Schröter
  */
-@FxmlView(name = "main-start", presenter = StartPresenter.class)
-public class FxStartView extends VBox implements StartView, FxView {
-
-    @FXML
-    private Button syncButton;
-
-    @FXML
-    private Button downloadButton;
+@FxmlView(name = "main-landing", presenter = LandingPresenter.class)
+public class FxLandingView extends VBox implements LandingView, FxView {
 
     @FXML
     private Button settingsButton;
@@ -47,36 +37,16 @@ public class FxStartView extends VBox implements StartView, FxView {
     private Button folderButton;
 
     @FXML
-    private Label sectionidlabel;
-
-    @FXML
-    private Label courseidlabel;
-
-    @FXML
-    private CheckBox allSelected;
-
-    @FXML
     private ComboBox<Course> courseCombo;
 
     @FXML
     private ComboBox<Section> sectionCombo;
 
-    @FXML
-    private TableView<SyncTableElement> syncTable;
 
-
-    public FxStartView() {
+    public FxLandingView() {
         super();
     }
 
-
-    @Override
-    public void setData(ObservableList<SyncTableElement> data) {
-        FxUtils.invoke(() -> {
-            syncTable.getItems().clear();
-            syncTable.setItems(data);
-        });
-    }
 
     /**
      * Update the interface
@@ -96,27 +66,6 @@ public class FxStartView extends VBox implements StartView, FxView {
     @Override
     public void setOnSettings(Action action) {
         FxUtils.bindAction(settingsButton, action);
-    }
-
-    @Override
-    public void setOnDownloadCourse(Action action) {
-        FxUtils.bindAction(downloadButton, action);
-    }
-
-
-    @Override
-    public void setOnFolder(Action action) {
-        FxUtils.bindAction(folderButton, action);
-    }
-
-    @Override
-    public void setCourseId(String string){
-        courseidlabel.setText(string);
-    }
-
-    @Override
-    public void setSectionId(String string){
-        sectionidlabel.setText(string);
     }
 
     /**
@@ -140,27 +89,6 @@ public class FxStartView extends VBox implements StartView, FxView {
     }
 
     /**
-     * Method to set the elements of the Section-Combobox.
-     *
-     * @param sections Course-Sections to display.
-     */
-    @Override
-    public void setSections(List<Section> sections) {
-        FxUtils.invoke(() -> sectionCombo.getItems().setAll(sections));
-        sectionCombo.getSelectionModel().selectFirst();
-    }
-
-    /**
-     * Choosen course-section.
-     *
-     * @param section choosen course-section.
-     */
-    @Override
-    public void setSection(ObjectProperty<Section> section) {
-        sectionCombo.valueProperty().bindBidirectional(new LectObjectProperty<>(section));
-    }
-
-    /**
      * Method to initiate the display of the sections of a choosen Course.
      *
      * @param action User chooses Course.
@@ -172,3 +100,4 @@ public class FxStartView extends VBox implements StartView, FxView {
         });
     }
 }
+

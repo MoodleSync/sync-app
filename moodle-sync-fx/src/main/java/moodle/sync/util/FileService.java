@@ -261,6 +261,33 @@ public class FileService {
         return result;
     }
 
+    public static List<List<Path>> sortDirectoryFilesAllFormats(List<Path> directoryFiles, String formatsMoodle,
+                                                      String formatsFileserver) {
+
+        List<Path> moodleElements = new ArrayList<>(List.of());
+        List<Path> fileserverElements = new ArrayList<>(List.of());
+        List<Path> directories = new ArrayList<>(List.of());
+        List<Path> notSupportedElements = new ArrayList<>(List.of());
+
+        for(Path entry : directoryFiles){
+            if(Files.isDirectory(entry)){
+                directories.add(entry);
+            }
+            else {
+                moodleElements.add(entry);
+            }
+
+        }
+
+        List<List<Path>> result = new ArrayList<>();
+        result.add(moodleElements);
+        result.add(fileserverElements);
+        result.add(directories);
+        result.add(notSupportedElements);
+
+        return result;
+    }
+
     public static boolean contains(final String[] arr, final String key) {
         return Arrays.asList(arr).contains(key);
     }

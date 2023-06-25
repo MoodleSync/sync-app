@@ -2,9 +2,8 @@ package moodle.sync.view;
 
 import javafx.collections.ObservableList;
 import moodle.sync.core.model.json.Course;
-import moodle.sync.javafx.model.SyncTableElement;
 import moodle.sync.core.model.json.Section;
-import org.lecturestudio.core.beans.BooleanProperty;
+import moodle.sync.javafx.model.SyncTableElement;
 import org.lecturestudio.core.beans.ObjectProperty;
 import org.lecturestudio.core.view.Action;
 import org.lecturestudio.core.view.ConsumerAction;
@@ -17,8 +16,7 @@ import java.util.List;
  *
  * @author Daniel Schröter
  */
-public interface StartView extends View {
-
+public interface GuestStartView extends View {
 
     void setOnUpdate(Action action);
 
@@ -32,6 +30,8 @@ public interface StartView extends View {
 
     void setSectionId(String string);
 
+    void setProgress(double progress);
+
     void setCourses(List<Course> courses);
 
     void setCourse(ObjectProperty<Course> course);
@@ -42,6 +42,5 @@ public interface StartView extends View {
 
     void setOnCourseChanged(ConsumerAction<Course> action);
 
-    void setData(ObservableList<SyncTableElement> data);
-
+    Void setData(ObservableList<SyncTableElement> data);
 }

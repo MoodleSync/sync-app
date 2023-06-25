@@ -1,25 +1,21 @@
 package moodle.sync.javafx.view;
 
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import moodle.sync.core.model.json.Course;
-import moodle.sync.javafx.model.SyncTableElement;
 import moodle.sync.core.model.json.Section;
-import org.lecturestudio.core.beans.BooleanProperty;
+import moodle.sync.javafx.model.SyncTableElement;
+import moodle.sync.presenter.GuestPresenter;
+import moodle.sync.view.GuestStartView;
 import org.lecturestudio.core.beans.ObjectProperty;
 import org.lecturestudio.core.view.Action;
 import org.lecturestudio.core.view.ConsumerAction;
-import org.lecturestudio.javafx.beans.LectBooleanProperty;
 import org.lecturestudio.javafx.beans.LectObjectProperty;
 import org.lecturestudio.javafx.util.FxUtils;
 import org.lecturestudio.javafx.view.FxView;
 import org.lecturestudio.javafx.view.FxmlView;
-
-import javafx.fxml.FXML;
-import javafx.scene.layout.VBox;
-
-import moodle.sync.presenter.StartPresenter;
-import moodle.sync.view.StartView;
 
 import java.util.List;
 
@@ -28,11 +24,9 @@ import java.util.List;
  *
  * @author Daniel Schröter
  */
-@FxmlView(name = "main-start", presenter = StartPresenter.class)
-public class FxStartView extends VBox implements StartView, FxView {
+@FxmlView(name = "main-gueststart", presenter = GuestPresenter.class)
+public class FxGuestStartView extends VBox implements GuestStartView, FxView {
 
-    @FXML
-    private Button syncButton;
 
     @FXML
     private Button downloadButton;
@@ -53,7 +47,7 @@ public class FxStartView extends VBox implements StartView, FxView {
     private Label courseidlabel;
 
     @FXML
-    private CheckBox allSelected;
+    private ProgressBar progressbar;
 
     @FXML
     private ComboBox<Course> courseCombo;
@@ -65,17 +59,18 @@ public class FxStartView extends VBox implements StartView, FxView {
     private TableView<SyncTableElement> syncTable;
 
 
-    public FxStartView() {
+    public FxGuestStartView() {
         super();
     }
 
 
     @Override
-    public void setData(ObservableList<SyncTableElement> data) {
+    public Void setData(ObservableList<SyncTableElement> data) {
         FxUtils.invoke(() -> {
             syncTable.getItems().clear();
             syncTable.setItems(data);
         });
+        return null;
     }
 
     /**
@@ -86,6 +81,7 @@ public class FxStartView extends VBox implements StartView, FxView {
     @Override
     public void setOnUpdate(Action action) {
         FxUtils.bindAction(updateButton, action);
+        //syncTable.getVisibleLeafColumns().get(1).setVisible(false);
     }
 
     /**
@@ -103,7 +99,6 @@ public class FxStartView extends VBox implements StartView, FxView {
         FxUtils.bindAction(downloadButton, action);
     }
 
-
     @Override
     public void setOnFolder(Action action) {
         FxUtils.bindAction(folderButton, action);
@@ -119,6 +114,10 @@ public class FxStartView extends VBox implements StartView, FxView {
         sectionidlabel.setText(string);
     }
 
+    @Override
+    public void setProgress(double progress) {
+        FxUtils.invoke(() -> progressbar.setProgress(progress));
+    }
     /**
      * Method to set the elements of the Course-Combobox.
      *

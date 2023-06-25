@@ -226,11 +226,20 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
     public void setSyncRootPath(StringProperty path) {
         syncRootPath.textProperty().bindBidirectional(new LectStringProperty(path));
         syncRootPath.textProperty().addListener(event -> {
+            System.out.println(syncRootPath.getText());
+            boolean isDirectory;
+            try{
+                isDirectory = Files.isDirectory(Paths.get(syncRootPath.getText()));
+            } catch (Exception e) {
+                e.printStackTrace();
+                isDirectory = false;
+            }
             syncRootPath.pseudoClassStateChanged(
                     PseudoClass.getPseudoClass("error"),
                     !syncRootPath.getText().isEmpty() &&
-                            !Files.isDirectory(Paths.get(syncRootPath.getText()))
-            );
+                            !isDirectory
+                    );
+
         });
 
     }
