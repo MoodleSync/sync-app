@@ -8,9 +8,8 @@
     In this document, the layout of the "main-window" is defined
 -->
 
-<?import moodle.sync.javafx.view.FxGuestStartView?>
 <?import moodle.sync.javafx.view.FxTrainerStartView?>
-<fx:root type="StackPane" prefWidth="800" prefHeight="600" xmlns="http://javafx.com/javafx/8"
+<fx:root type="StackPane" prefWidth="800" prefHeight="700" xmlns="http://javafx.com/javafx/8"
 		 xmlns:fx="http://javafx.com/fxml/1">
 	<stylesheets>
 		<String fx:value="/resources/css/base.css" />

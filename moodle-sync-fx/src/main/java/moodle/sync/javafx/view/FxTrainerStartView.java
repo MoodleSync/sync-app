@@ -3,7 +3,6 @@ package moodle.sync.javafx.view;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import moodle.sync.core.model.json.Course;
 import moodle.sync.core.model.json.Section;
@@ -17,8 +16,6 @@ import org.lecturestudio.core.view.Action;
 import org.lecturestudio.core.view.ConsumerAction;
 import org.lecturestudio.javafx.beans.LectBooleanProperty;
 import org.lecturestudio.javafx.beans.LectObjectProperty;
-import org.lecturestudio.javafx.layout.ColumnSizeConstraints;
-import org.lecturestudio.javafx.layout.DynamicResizePolicy;
 import org.lecturestudio.javafx.util.FxUtils;
 import org.lecturestudio.javafx.view.FxView;
 import org.lecturestudio.javafx.view.FxmlView;
@@ -188,8 +185,6 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
      */
     @Override
     public void setCourse(ObjectProperty<Course> course) {
-        System.out.println("in fx changed");
-        System.out.println(course.get());
         FxUtils.invoke(() -> courseCombo.valueProperty().bindBidirectional(new LectObjectProperty<>(course)));
     }
 
@@ -202,6 +197,12 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
     public void setSections(List<Section> sections) {
         FxUtils.invoke(() -> {
             sectionCombo.getItems().setAll(sections);
+        });
+    }
+
+    @Override
+    public void selectFirstSection() {
+        FxUtils.invoke(() -> {
             sectionCombo.getSelectionModel().selectFirst();
         });
     }
@@ -223,7 +224,6 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
      */
     @Override
     public void setOnCourseChanged(ConsumerAction<Course> action) {
-        System.out.println("in fx changed");
         courseCombo.valueProperty().addListener((observable, oldCourse, newCourse) -> {
             executeAction(action, newCourse);
         });
@@ -231,7 +231,6 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
 
     @Override
     public void setOnSectionChanged(ConsumerAction<Section> action) {
-        System.out.println("SectionChanged");
         sectionCombo.valueProperty().addListener((observable, oldSection, newSection) -> {
             executeAction(action, newSection);
         });

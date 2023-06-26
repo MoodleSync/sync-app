@@ -48,8 +48,6 @@ public class SettingsPresenter extends Presenter<SettingsView> {
 
     @Override
     public void initialize() throws Exception{
-        System.out.println("SettingsPresenter initialized");
-        //MoodleSyncSettingsConfig settingsConfig = (MoodleSyncSettingsConfig) context.getConfiguration();
         LocaleProvider localeProvider = new LocaleProvider();
         this.settingsConfig = new MoodleSyncConfiguration(config);
 
@@ -75,14 +73,6 @@ public class SettingsPresenter extends Presenter<SettingsView> {
      * Function to close the "settings-page".
      *
      */
-    //@Override
-    //public void close() {
-        //MoodleSyncConfiguration config = (MoodleSyncConfiguration) context.getConfiguration();
-        //Reconstruct the MoodleService with the new settings.
-        //moodleService.setApiUrl(config.getMoodleUrl());
-     //   super.close();
-    //}
-
     @Override
     public void close() {
         if (Objects.nonNull(this.closeAction) && this.isCloseable()) {

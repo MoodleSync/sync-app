@@ -3,9 +3,7 @@ package moodle.sync.presenter;
 import com.google.common.eventbus.Subscribe;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import moodle.sync.core.config.DefaultConfiguration;
 import moodle.sync.core.config.MoodleSyncConfiguration;
 import moodle.sync.core.fileserver.FileServerClientFTP;
@@ -22,24 +20,14 @@ import moodle.sync.core.web.service.MoodleService;
 import moodle.sync.event.DownloadItemEvent;
 import moodle.sync.javafx.model.ReturnValue;
 import moodle.sync.javafx.model.SyncTableElement;
-import moodle.sync.presenter.command.ShowGuestCommand;
 import moodle.sync.presenter.command.ShowSettingsCommand;
-import moodle.sync.presenter.command.ShowTrainerCommand;
-import moodle.sync.util.FileService;
-import moodle.sync.util.SetModuleService;
-import moodle.sync.util.VerifyDataService;
-import moodle.sync.util.ZipUtil;
-import moodle.sync.view.StartView;
+import moodle.sync.util.*;
 import moodle.sync.view.TrainerStartView;
 import org.apache.commons.io.FilenameUtils;
-import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.Notifications;
 import org.lecturestudio.core.app.ApplicationContext;
 import org.lecturestudio.core.beans.BooleanProperty;
-import org.lecturestudio.core.beans.ObjectProperty;
 import org.lecturestudio.core.presenter.Presenter;
-import org.lecturestudio.core.view.Action;
-import org.lecturestudio.core.view.ConsumerAction;
 import org.lecturestudio.core.view.NotificationType;
 import org.lecturestudio.core.view.ViewContextFactory;
 import org.lecturestudio.javafx.util.FxUtils;
@@ -55,9 +43,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import static java.util.Objects.isNull;
 
@@ -106,7 +91,14 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
     //Selected moodle section.
     private Section section;
 
+    //If users view should be guest- or trainer-mode.
     private Boolean guest;
+
+    //To check if the courseCombo needs to be refreshed.
+    private int courseCount = 0;
+
+    //To check if the sectionCombo needs to be refreshed.
+    private int sectionCount = 0;
 
 
     @Inject
@@ -139,7 +131,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         view.setCourses(courses());
         view.setSection(config.recentSectionProperty());
         view.setOnCourseChanged(this::changeCourse);
-        view.setOnSectionChanged(this::sectionChanged);
+        view.setOnSectionChanged(this::changeSection);
         view.setProgress(0.0);
         view.setOnFolder(this::openCourseDirectory);
         view.setSelectAll(selectAll);
@@ -171,64 +163,19 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
 
     }
 
-    private void changeCourse(Course newCourse) {
-        try {
-            if(isNull(newCourse)) return;
-            config.setRecentCourse(newCourse);
-            course = newCourse;
-            section = config.getRecentSection();
-            //Check if Trainer or Student
-            if (moodleService.getPermissions(config.getMoodleToken(), course.getId())) {
-                view.setTrainerMode();
-                guest = false;
-            } else {
-                view.setGuestMode();
-                guest = true;
-            }
-            //get Sections for view.setSections() and get Content
-            courseContent = sections();
-
-            courseContent.add(0, new Section(-2, this.context.getDictionary().get("start.sync.showall"), 1, "all", -1, -1, -1, true, null));
-            //Add to Sectioncombo
-            List<Section> courseSections = courseContent;
-            view.setSections(courseSections);
-            view.setSection(new ObjectProperty<Section>(section));
-            //If only one section should be displayed: Todo: Redundant
-            if (!isNull(section)) {
-                if (section.getId() != -2) {
-                    courseContent = section();
-                    view.setSection(new ObjectProperty<Section>(section));
-                }
-            }
-            //next Step: setData according to Permissions
-            if (guest) {
-                view.setDataGuest(setGuestData());
-            } else {
-                view.setDataTrainer(setTrainerData());
-            }
-            //Update Bottom line
-            view.setProgress(0.0);
-            updateBottomLine();
-            System.out.println("Change course fertig, setze property");
-            System.out.println(config.recentCourseProperty().get());
-            //view.setCourse(config.recentCourseProperty());
-        } catch (Exception e) {
-            logException(e, "Sync failed");
-            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
-        }
-    }
-
     //Show selected section if a module is clicked.
     @Subscribe
     public void onElementClicked(SyncTableElement selectedSection) {
         view.setSectionId(selectedSection.getSection().toString());
     }
 
-    private void popUp() {
-        FxUtils.invoke(() -> {
-            Notifications notifications = Notifications.create().title(this.context.getDictionary().get("start.download.finish.title")).text(this.context.getDictionary().get("start.download.finish.message")).position(Pos.BOTTOM_RIGHT);
-            notifications.showInformation();
-        });
+    @Subscribe
+    public void onDownloadItem(DownloadItemEvent event) {
+        onDownloadFile(event.getElement());
+    }
+
+    private void popUpDownload() {
+        PopupUtil.popUpDownload(context);
     }
 
     private List<Section> sections() {
@@ -288,6 +235,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
             if (config.recentCourseProperty() != null) {
                 course = config.getRecentCourse();
             }
+            courseCount = courses.size();
         }
         catch (Exception e) {
             logException(e, "Sync failed");
@@ -303,6 +251,14 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         }
 
         return courses;
+    }
+
+    private void updateCourses() {
+        changeCourse(course);
+    }
+
+    private void selectFirstSection() {
+        view.selectFirstSection();
     }
 
     /**
@@ -324,9 +280,19 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
             config.setPasswordFileserver(settingsConfig.getPasswordFileserver());
             config.setPortFileserver(settingsConfig.getPortFileserver());
             config.setShowUnknownFormats(settingsConfig.getShowUnknownFormats());
-            config.setLocale(config.getLocale());
+            config.setLocale(settingsConfig.getLocale());
 
-            view.setCourses(courses());
+            int oldCount = courseCount;
+            List<Course> newCourses = courses();
+            if(oldCount != courseCount) {
+                config.setRecentCourse(null);
+                config.setRecentSection(null);
+                view.setCourses(newCourses);
+                clearView();
+            } else {
+                changeCourse(course);
+            }
+
         }
     }
 
@@ -349,22 +315,43 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         }
     }
 
-    private void sectionChanged(Section newSection) {
-        if(!isNull(newSection)) {
-
-            if((!newSection.getId().equals(section.getId())) && (newSection.getId() != -2)) {
-                section = newSection;
-                config.setRecentSection(newSection);
-                courseContent = section();
-            } else if (newSection.getId() == -2) {
-                section = newSection;
-                config.setRecentSection(newSection);
-                //courseContent = sections();
+    private void changeCourse(Course newCourse) {
+        try {
+            if(isNull(newCourse)) return;
+            else if (course != newCourse) {
+                config.setRecentCourse(newCourse);
+                course = newCourse;
+                config.setRecentSection(null);
+            }
+            section = config.getRecentSection();
+            //Check if Trainer or Student
+            if (moodleService.getPermissions(config.getMoodleToken(), course.getId())) {
+                view.setTrainerMode();
+                guest = false;
             } else {
-                return;
+                view.setGuestMode();
+                guest = true;
             }
 
-            if(guest){
+            courseContent = sections();
+
+            courseContent.add(0, new Section(-2, this.context.getDictionary().get("start.sync.showall"), 1, "all", -1, -1, -1, true, null));
+            //Add to Sectioncombo
+            List<Section> courseSections = courseContent;
+            if((courseSections.size() != sectionCount)) {
+                view.setSections(courseSections);
+                sectionCount = courseSections.size();
+            }
+            if (isNull(section)) {
+                section = courseContent.get(0);
+                config.setRecentSection(section);
+                selectFirstSection();
+            }
+            if (section.getId() != -2) {
+                courseContent = section();
+            }
+            //next Step: setData according to Permissions
+            if (guest) {
                 view.setDataGuest(setGuestData());
             } else {
                 view.setDataTrainer(setTrainerData());
@@ -372,6 +359,47 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
             //Update Bottom line
             view.setProgress(0.0);
             updateBottomLine();
+            //view.setCourse(config.recentCourseProperty());
+        } catch (Exception e) {
+            logException(e, "Sync failed");
+            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
+        }
+    }
+
+    private void changeSection(Section newSection) {
+        try {
+            if (isNull(section)) {
+                return;
+            }
+            if (!isNull(newSection)) {
+                if ((!newSection.getId().equals(section.getId())) && (newSection.getId() != -2)) {
+                    section = newSection;
+                    config.setRecentSection(newSection);
+                    courseContent = section();
+                } else if (newSection.getId() == -2) {
+                    if(newSection != section) {
+                        section = newSection;
+                        config.setRecentSection(newSection);
+                        courseContent = sections();
+                    } else {
+                        return;
+                    }
+                } else {
+                    return;
+                }
+
+                if (guest) {
+                    view.setDataGuest(setGuestData());
+                } else {
+                    view.setDataTrainer(setTrainerData());
+                }
+                //Update Bottom line
+                view.setProgress(0.0);
+                updateBottomLine();
+            }
+        } catch (Exception e) {
+            logException(e, "Sync failed");
+            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
         }
     }
 
@@ -390,14 +418,11 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
             showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
         }
 
-        //sectionList: if "all sections" is chosen, all section-directories are stored. -> Needed to detect new
-        // sections.
         List<Path> sectionList = List.of();
 
         ObservableList<SyncTableElement> data = FXCollections.observableArrayList();
 
         try {
-            //If no section is selected, or "all" are selected, directories are checked and coursecontent is set.
             if (isNull(section) || section.getId() == -2) {
                 //Check if course-folder exists, otherwise create one.
                 Path courseDirectory = Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname());
@@ -414,6 +439,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                     Path execute =
                             Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() +
                                     "_" + section.getName());
+                    //Create Section-Folder if not exists
                     FileService.directoryManager(execute);
                     List<List<Path>> localContent =
                             FileService.sortDirectoryFilesAllFormats(FileService.getPathsInDirectory(execute),
@@ -421,7 +447,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                     for (Module module : section.getModules()) {
                         if (!isNull(module.getContents()) && Objects.equals(module.getModname(), "resource")) {
 
-                            ReturnValue elem = FileService.findResourceInFiles(localContent.get(0), module,
+                            ReturnValue elem = FileService.findResourceInFilesGuest(localContent.get(0), module,
                                     section.getSection(), section.getId(), data.size());
                             localContent.set(0, elem.getFileList());
                             data.add(elem.getElement());
@@ -608,11 +634,6 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         return data;
     }
 
-    @Subscribe
-    public void onDownloadItem(DownloadItemEvent event) {
-        onDownloadFile(event.getElement());
-    }
-
     private void onDownloadFile(SyncTableElement file) {
         try {
             FileDownloadService.getFile(file.getFileUrl(), token,
@@ -629,7 +650,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                 .supplyAsync(() -> {downloadCourse();
                     return null;} )
                 .thenRun(() -> {zipDirectory(Path.of(config.getSyncRootPath() + "/" + course.getDisplayname()));})
-                .thenRun(() -> {popUp();})
+                .thenRun(() -> {popUpDownload();})
                 .thenRun(() -> {changeCourse(course);})
                 .exceptionally(e -> {
                     logException(e, "Download course " + "failed");
@@ -664,10 +685,6 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         }
     }
 
-
-    private void updateCourses() {
-        view.setCourses(courses());
-    }
 
     /**
      * Starts the sync-process.
@@ -727,30 +744,8 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         updateCourses();
     }
 
-    //TODO
     private void zipDirectory (Path source) {
         try {
-            /*FileService.directoryManager(source);
-            Path p = Files.createFile(Paths.get("C:\\Users\\danie\\OneDrive\\Desktop\\Uni vergangene Module\\Bachelor" +
-                    " " + "Arbeit\\Root\\Testzip.zip"));
-
-            try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p))) {
-                Files.walk(source).forEach(path -> {
-                    if(Files.isDirectory(source.relativize(path))) {
-                        path = Path.of(source.relativize(path).toString() + "/");
-                    }
-                    ZipEntry zipEntry = new ZipEntry(source.relativize(path).toString());
-                    try {
-                        System.out.println("Zipped " + source.relativize(path));
-                        zs.putNextEntry(zipEntry);
-                        Files.copy(path, zs);
-                        zs.closeEntry();
-                    } catch (Exception e) {
-                        logException(e, "Sync failed");
-                    }
-                });
-            }*/
-            //List<Path> files = Files.walk(source,1).collect(Collectors.toList());
             List<Path> files = new ArrayList<>();
             files.add(source);
             ZipUtil.zip(files, config.getSyncRootPath() + "/" +course.getDisplayname() +".zip");
@@ -762,29 +757,17 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
 
     @Override
     public void onCreated(FileEvent event) {
-        if(section.getId() != -2) {
-            sectionChanged(section);
-        } else {
             changeCourse(course);
-        }
     }
 
     @Override
     public void onModified(FileEvent event) {
-        if(section.getId() != -2) {
-            sectionChanged(section);
-        } else {
-            changeCourse(course);
-        }
+        changeCourse(course);
     }
 
     @Override
     public void onDeleted(FileEvent event) {
-        if(section.getId() != -2) {
-            sectionChanged(section);
-        } else {
-            changeCourse(course);
-        }
+        changeCourse(course);
     }
 
 }

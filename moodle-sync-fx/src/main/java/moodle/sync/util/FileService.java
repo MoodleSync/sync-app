@@ -31,7 +31,7 @@ import static java.util.Objects.isNull;
 public class FileService {
 
     /**
-     * Secures that a directory given in a given path exists. Therefore the directory could be created.
+     * Secures that a directory given in a given path exists. Therefore, the directory could be created.
      */
     public static void directoryManager(Path p) throws Exception {
         Files.createDirectories(p);
@@ -141,6 +141,59 @@ public class FileService {
                                 MoodleAction.ExistingFile, module.getVisible() == 1, true);
                     }
                     fileList.remove(i);
+                    break;
+                }
+            }
+        }
+        if (!found) {
+            element = new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
+                    module.getModname(), module.getContents().get(0).getTimemodified().toString() ,
+                    module.getContents().get(0).getFilename() ,false
+                    , false,
+                    MoodleAction.NotLocalFile,
+                    module.getVisible() == 1,
+                    true);
+            if(!isNull(module.getContents().get(0).getFileurl())){
+                element.setDownloadable(true);
+                element.setFileUrl(module.getContents().get(0).getFileurl());
+            }
+        }
+
+        return new ReturnValue(fileList, element);
+    }
+
+    /**
+     * Method to identify a course-module "resource" and search for the corresponding local file. Then a
+     * SyncTableElement is created it will be returned in combination with an updated fileList.
+     */
+    public static ReturnValue findResourceInFilesGuest(List<Path> fileList, Module module, int sectionNum,
+                                                       int sectionId,
+                                                  int position /* Substitute data.size()*/) throws Exception {
+        SyncTableElement element = null;
+        boolean found = false;
+        for (int i = 0; i < fileList.size(); i++) {
+            if (fileList.get(i).getFileName().toString().equals(module.getContents().get(0).getFilename())) {
+                found = true;
+                long onlinemodified = module.getContents().get(0).getTimemodified() * 1000;
+                long filemodified = Files.getLastModifiedTime(fileList.get(i)).toMillis();
+                //Check if local file is older.
+                if ((filemodified+1) < onlinemodified) {
+                    element = new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
+                            module.getModname(), module.getContents().get(0).getTimemodified().toString() ,
+                            module.getContents().get(0).getFilename() ,false
+                            , false,
+                            MoodleAction.ExistingFile,
+                            module.getVisible() == 1,
+                            true);
+                    if(!isNull(module.getContents().get(0).getFileurl())){
+                        element.setDownloadable(true);
+                        element.setFileUrl(module.getContents().get(0).getFileurl());
+                    }
+                    break;
+                } else {
+                    element = new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId,
+                            position, module.getModname(), fileList.get(i), false, false,
+                            MoodleAction.ExistingFile, module.getVisible() == 1, true);
                     break;
                 }
             }

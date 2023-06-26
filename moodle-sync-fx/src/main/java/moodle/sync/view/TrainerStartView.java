@@ -43,6 +43,8 @@ public interface TrainerStartView extends View {
 
     void setSections(List<Section> sections);
 
+    void selectFirstSection();
+
     void setSection(ObjectProperty<Section> section);
 
     void setOnCourseChanged(ConsumerAction<Course> action);
