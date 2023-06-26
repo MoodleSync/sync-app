@@ -37,20 +37,7 @@ public class ZipUtil {
         zos.flush();
         zos.close();
     }
-    /**
-     * Compresses files represented in an array of paths
-     * @param files a String array containing file paths
-     * @param destZipFile The path of the destination zip file
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    /*public static void zip(String[] files, String destZipFile) throws FileNotFoundException, IOException {
-        List<File> listFiles = new ArrayList<File>();
-        for (int i = 0; i < files.length; i++) {
-            listFiles.add(new File(files[i]));
-        }
-        zip(listFiles, destZipFile);
-    }*/
+
     /**
      * Adds a directory to the current zip output stream
      * @param folder the directory to be  added

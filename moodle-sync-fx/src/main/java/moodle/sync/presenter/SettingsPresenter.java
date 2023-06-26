@@ -34,7 +34,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
 
     private MoodleSyncConfiguration settingsConfig;
 
-    private MoodleSyncConfiguration config;
+    private final MoodleSyncConfiguration config;
 
     @Inject
     SettingsPresenter(ApplicationContext context, SettingsView view,

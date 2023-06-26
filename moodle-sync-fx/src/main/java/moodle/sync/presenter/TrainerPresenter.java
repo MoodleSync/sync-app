@@ -3,7 +3,6 @@ package moodle.sync.presenter;
 import com.google.common.eventbus.Subscribe;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
 import moodle.sync.core.config.DefaultConfiguration;
 import moodle.sync.core.config.MoodleSyncConfiguration;
 import moodle.sync.core.fileserver.FileServerClientFTP;
@@ -24,13 +23,11 @@ import moodle.sync.presenter.command.ShowSettingsCommand;
 import moodle.sync.util.*;
 import moodle.sync.view.TrainerStartView;
 import org.apache.commons.io.FilenameUtils;
-import org.controlsfx.control.Notifications;
 import org.lecturestudio.core.app.ApplicationContext;
 import org.lecturestudio.core.beans.BooleanProperty;
 import org.lecturestudio.core.presenter.Presenter;
 import org.lecturestudio.core.view.NotificationType;
 import org.lecturestudio.core.view.ViewContextFactory;
-import org.lecturestudio.javafx.util.FxUtils;
 
 import javax.inject.Inject;
 import java.awt.*;
@@ -59,7 +56,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
     private final MoodleService moodleService;
 
     //Configuration providing the settings.
-    private MoodleSyncConfiguration config;
+    private final MoodleSyncConfiguration config;
 
     //Providing the content of a course. Used for the section-combobox.
     private List<Section> courseContent;
