@@ -27,7 +27,6 @@ public class SettingsPresenter extends Presenter<SettingsView> {
 
     private final ViewContextFactory viewFactory;
 
-    //Used MoodleService for executing Web Service API-Calls.
     private final MoodleService moodleService;
 
     private ConsumerAction<MoodleSyncConfiguration> closeAction;
@@ -78,7 +77,6 @@ public class SettingsPresenter extends Presenter<SettingsView> {
         if (Objects.nonNull(this.closeAction) && this.isCloseable()) {
             this.closeAction.execute(settingsConfig);
         }
-
         super.close();
     }
 
@@ -112,6 +110,9 @@ public class SettingsPresenter extends Presenter<SettingsView> {
         }
     }
 
+    /**
+     * Used to verify the inserted token.
+     */
     private void checkToken() {
         try{
             //MoodleSyncConfiguration settingsConfig = (MoodleSyncConfiguration) context.getConfiguration();
@@ -123,6 +124,11 @@ public class SettingsPresenter extends Presenter<SettingsView> {
         }
     }
 
+    /**
+     * Closes the presenter and hands over the settingsConfig.
+     *
+     * @param settingsConfig config to hand over.
+     */
     public void setOnClose(ConsumerAction<MoodleSyncConfiguration> settingsConfig) {
         this.closeAction = ConsumerAction.concatenate(this.closeAction, settingsConfig);
     }

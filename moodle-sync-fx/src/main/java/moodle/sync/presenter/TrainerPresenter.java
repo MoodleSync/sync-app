@@ -1,8 +1,10 @@
 package moodle.sync.presenter;
 
+import org.apache.commons.io.FilenameUtils;
 import com.google.common.eventbus.Subscribe;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
 import moodle.sync.core.config.DefaultConfiguration;
 import moodle.sync.core.config.MoodleSyncConfiguration;
 import moodle.sync.core.fileserver.FileServerClientFTP;
@@ -22,7 +24,7 @@ import moodle.sync.javafx.model.SyncTableElement;
 import moodle.sync.presenter.command.ShowSettingsCommand;
 import moodle.sync.util.*;
 import moodle.sync.view.TrainerStartView;
-import org.apache.commons.io.FilenameUtils;
+
 import org.lecturestudio.core.app.ApplicationContext;
 import org.lecturestudio.core.beans.BooleanProperty;
 import org.lecturestudio.core.presenter.Presenter;
@@ -40,7 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-
 import static java.util.Objects.isNull;
 
 /**
@@ -166,15 +167,18 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         view.setSectionId(selectedSection.getSection().toString());
     }
 
+    //A specific file should be downloaded.
     @Subscribe
     public void onDownloadItem(DownloadItemEvent event) {
         onDownloadFile(event.getElement());
     }
 
+    //Show a popup when a course-download is finished.
     private void popUpDownload() {
         PopupUtil.popUpDownload(context);
     }
 
+    //Webservice call to get all sections of a course.
     private List<Section> sections() {
         if (course == null) {
             return new ArrayList<>();
@@ -189,6 +193,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         return new ArrayList<>();
     }
 
+    //Webservice call to get the content of a specific section of a course.
     private List<Section> section() {
         if (course == null) {
             return new ArrayList<>();
@@ -218,6 +223,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         }
     }
 
+    //Webservice call to get all users courses.
     private List<Course> courses() {
         url = config.getMoodleUrl();
         moodleService.setApiUrl(url);
@@ -250,23 +256,25 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         return courses;
     }
 
+    //Update-Button clicked.
     private void updateCourses() {
         changeCourse(course);
     }
 
+    //Used to display "Show-All" section as selected in sectionCombo.
     private void selectFirstSection() {
         view.selectFirstSection();
     }
 
-    /**
-     * Method to "open" the Settings-page.
-     */
+    //Method to "open" the Settings-page.
     private void onSettings() {
         context.getEventBus().post(new ShowSettingsCommand(this::checkSettings));
     }
 
+    //Method after settingsPresenter is closed, processing changes.
     private void checkSettings(MoodleSyncConfiguration settingsConfig) {
         if(!config.equals(settingsConfig)) {
+            //Cant be moved to another class.
             config.setSyncRootPath(settingsConfig.getSyncRootPath());
             config.setMoodleToken(settingsConfig.getMoodleToken());
             config.setMoodleUrl(settingsConfig.getMoodleUrl());
@@ -293,6 +301,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         }
     }
 
+    //Used to remove content in tables
     private void clearView() {
         if (guest) {
             view.setDataGuest(FXCollections.observableArrayList());
@@ -301,6 +310,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         }
     }
 
+    //Method used to open the course-directory.
     private void openCourseDirectory() {
         Desktop desktop = Desktop.getDesktop();
         try {
@@ -312,6 +322,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         }
     }
 
+    //Method used when a course is changed or when it should be refreshed.
     private void changeCourse(Course newCourse) {
         try {
             if(isNull(newCourse)) return;
@@ -323,10 +334,8 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
             section = config.getRecentSection();
             //Check if Trainer or Student
             if (moodleService.getPermissions(config.getMoodleToken(), course.getId())) {
-                view.setTrainerMode();
                 guest = false;
             } else {
-                view.setGuestMode();
                 guest = true;
             }
 
@@ -363,6 +372,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         }
     }
 
+    //Method used when a section is changed or when it should be refreshed.
     private void changeSection(Section newSection) {
         try {
             if (isNull(section)) {
@@ -401,6 +411,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
     }
 
 
+    //Sets table-data corresponding to the users permissions.
     private ObservableList<SyncTableElement> setGuestData() {
         token = config.getMoodleToken();
         if (isNull(course))
@@ -470,6 +481,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         return data;
     }
 
+    //Sets table-data corresponding to the users permissions.
     private ObservableList<SyncTableElement> setTrainerData() {
         token = config.getMoodleToken();
         //section = config.getRecentSection();
@@ -631,6 +643,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         return data;
     }
 
+    //Method used to download a single file. Will be saved in section-folder.
     private void onDownloadFile(SyncTableElement file) {
         try {
             FileDownloadService.getFile(file.getFileUrl(), token,
@@ -642,6 +655,8 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         changeCourse(course);
     }
 
+    //Method used to initiate the download of a complete course. Will create a zip-archive of the courses folder
+    // afterward.
     private void onDownloadCourse() {
         CompletableFuture
                 .supplyAsync(() -> {downloadCourse();
@@ -655,6 +670,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                 });
     }
 
+    //Downloads each file of a course.
     private void downloadCourse() {
         try {
             try {
@@ -683,9 +699,9 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
     }
 
 
-    /**
-     * Starts the sync-process.
-     */
+
+
+    //Starts the sync-process.
     private void onSync() {
         //Several security checks to prevent unwanted behaviour.
         if (config.getRecentCourse() == null) {
@@ -741,6 +757,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         updateCourses();
     }
 
+    //Method used to create a zip-archive.
     private void zipDirectory (Path source) {
         try {
             List<Path> files = new ArrayList<>();

@@ -73,8 +73,6 @@ public class FileService {
         return result;
     }
 
-    //public static List<>
-
     /**
      * Method used to find a course module inside a List of paths. Returns the position of the file inside the List.
      */
@@ -164,7 +162,7 @@ public class FileService {
 
     /**
      * Method to identify a course-module "resource" and search for the corresponding local file. Then a
-     * SyncTableElement is created it will be returned in combination with an updated fileList.
+     * SyncTableElement is created it will be returned in combination with an updated fileList. Only guest-view.
      */
     public static ReturnValue findResourceInFilesGuest(List<Path> fileList, Module module, int sectionNum,
                                                        int sectionId,
@@ -217,7 +215,7 @@ public class FileService {
 
     /**
      * Checks a course module "folder" for updates. Therefore, first of all it is checked if the files inside the
-     * directory are up-to-date. Afterwards, it is checked if there are new files which should be added to the folder.
+     * directory are up-to-date. Afterward, it is checked if there are new files which should be added to the folder.
      */
     public static SyncTableElement checkDirectoryForUpdates(Path path, Module module, int sectionNum, int sectionId,
                                                             int position, String formatsMoodle) throws Exception{

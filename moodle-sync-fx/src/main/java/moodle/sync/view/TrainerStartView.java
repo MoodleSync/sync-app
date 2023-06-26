@@ -55,7 +55,4 @@ public interface TrainerStartView extends View {
 
     void setDataGuest(ObservableList<SyncTableElement> data);
 
-    void setGuestMode();
-
-    void setTrainerMode();
 }

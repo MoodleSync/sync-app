@@ -75,7 +75,11 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
         super();
     }
 
-
+    /**
+     * Configures the table for Moodle-Role "Trainer".
+     *
+     * @param data content of the table.
+     */
     @Override
     public void setDataTrainer(ObservableList<SyncTableElement> data) {
         FxUtils.invoke(() -> {
@@ -90,6 +94,11 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
         });
     }
 
+    /**
+     * Configures the table for Moodle-Role "Student".
+     *
+     * @param data content of the table.
+     */
     @Override
     public void setDataGuest(ObservableList<SyncTableElement> data) {
         FxUtils.invoke(() -> {
@@ -134,35 +143,61 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
         FxUtils.bindAction(settingsButton, action);
     }
 
+    /**
+     * Method to invoke the download of the course.
+     *
+     * @param action Download course.
+     */
     @Override
     public void setOnDownloadCourse(Action action) {
         FxUtils.bindAction(downloadButton, action);
     }
 
+    /**
+     * Method to select all possible "execute"-boxes.
+     *
+     * @param selectAll boolean param.
+     */
     @Override
     public void setSelectAll(BooleanProperty selectAll) {
         FxUtils.invoke(() -> allSelected.selectedProperty().bindBidirectional(new LectBooleanProperty(selectAll)));
     }
 
+    /**
+     * Method to set the progress in the progressbar.
+     *
+     * @param progress Progress from 0-1.
+     */
     @Override
     public void setProgress(double progress) {
         FxUtils.invoke(() -> progressbar.setProgress(progress));
     }
 
+    /**
+     * Method used to open the courses-directory.
+     *
+     * @param action open the folder.
+     */
     @Override
     public void setOnFolder(Action action) {
         FxUtils.bindAction(folderButton, action);
-        NotificationPane notificationPane = new NotificationPane();
-        notificationPane.setContent(new Label("test"));
-        notificationPane.setText("Test mit setText");
-        notificationPane.show();
     }
 
+    /**
+     * Method used to display the courses' id.
+     *
+     * @param string id of the course.
+     */
     @Override
     public void setCourseId(String string){
         FxUtils.invoke(() -> courseidlabel.setText(string));
     }
 
+    /**
+     * Method used to display the sections' id.
+     *
+     * @param string id of the section.
+     */
     @Override
     public void setSectionId(String string){
         FxUtils.invoke(() -> sectionidlabel.setText(string));
@@ -200,6 +235,9 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
         });
     }
 
+    /**
+     * Method used to select the first item of the sectionCombo.
+     */
     @Override
     public void selectFirstSection() {
         FxUtils.invoke(() -> {
@@ -218,9 +256,9 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
     }
 
     /**
-     * Method to initiate the display of the sections of a choosen Course.
+     * Method to initiate the update of the data when a course is changed.
      *
-     * @param action User chooses Course.
+     * @param action update table.
      */
     @Override
     public void setOnCourseChanged(ConsumerAction<Course> action) {
@@ -229,6 +267,11 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
         });
     }
 
+    /**
+     * Method to initiate the update of the data when a section is changed.
+     *
+     * @param action update table.
+     */
     @Override
     public void setOnSectionChanged(ConsumerAction<Section> action) {
         sectionCombo.valueProperty().addListener((observable, oldSection, newSection) -> {
@@ -236,11 +279,4 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
         });
     }
 
-    @Override
-    public void setGuestMode() {
-    }
-
-    @Override
-    public void setTrainerMode() {
-    }
 }
