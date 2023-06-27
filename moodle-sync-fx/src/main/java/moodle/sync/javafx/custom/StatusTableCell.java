@@ -124,6 +124,10 @@ public class StatusTableCell <U, B> extends TableCell<SyncTableElement, String> 
                 setText(item);
                 setStyle("-fx-text-fill: gray");
             }
+            else if(getTableRow().getItem().getAction() == MoodleAction.NotLocalFile) {
+                setText("");
+                setStyle("-fx-background-color: TRANSPARENT");
+            }
             else{
                 setText(item);
                 setStyle("-fx-background-color: TRANSPARENT");

@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 /**
  * Class implementing several methods in terms of file handling and comparison.
  *
@@ -29,7 +31,7 @@ import java.util.List;
 public class FileService {
 
     /**
-     * Secures that a directory given in a given path exists. Therefore the directory could be created.
+     * Secures that a directory given in a given path exists. Therefore, the directory could be created.
      */
     public static void directoryManager(Path p) throws Exception {
         Files.createDirectories(p);
@@ -143,7 +145,69 @@ public class FileService {
         }
         if (!found) {
             element = new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
-                    module.getModname(), false, false, MoodleAction.NotLocalFile, module.getVisible() == 1, true);
+                    module.getModname(), module.getContents().get(0).getTimemodified().toString() ,
+                    module.getContents().get(0).getFilename() ,false
+                    , false,
+                    MoodleAction.NotLocalFile,
+                    module.getVisible() == 1,
+                    true);
+            if(!isNull(module.getContents().get(0).getFileurl())){
+                element.setDownloadable(true);
+                element.setFileUrl(module.getContents().get(0).getFileurl());
+            }
+        }
+
+        return new ReturnValue(fileList, element);
+    }
+
+    /**
+     * Method to identify a course-module "resource" and search for the corresponding local file. Then a
+     * SyncTableElement is created it will be returned in combination with an updated fileList. Only guest-view.
+     */
+    public static ReturnValue findResourceInFilesGuest(List<Path> fileList, Module module, int sectionNum,
+                                                       int sectionId,
+                                                  int position /* Substitute data.size()*/) throws Exception {
+        SyncTableElement element = null;
+        boolean found = false;
+        for (int i = 0; i < fileList.size(); i++) {
+            if (fileList.get(i).getFileName().toString().equals(module.getContents().get(0).getFilename())) {
+                found = true;
+                long onlinemodified = module.getContents().get(0).getTimemodified() * 1000;
+                long filemodified = Files.getLastModifiedTime(fileList.get(i)).toMillis();
+                //Check if local file is older.
+                if ((filemodified+1) < onlinemodified) {
+                    element = new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
+                            module.getModname(), module.getContents().get(0).getTimemodified().toString() ,
+                            module.getContents().get(0).getFilename() ,false
+                            , false,
+                            MoodleAction.ExistingFile,
+                            module.getVisible() == 1,
+                            true);
+                    if(!isNull(module.getContents().get(0).getFileurl())){
+                        element.setDownloadable(true);
+                        element.setFileUrl(module.getContents().get(0).getFileurl());
+                    }
+                    break;
+                } else {
+                    element = new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId,
+                            position, module.getModname(), fileList.get(i), false, false,
+                            MoodleAction.ExistingFile, module.getVisible() == 1, true);
+                    break;
+                }
+            }
+        }
+        if (!found) {
+            element = new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
+                    module.getModname(), module.getContents().get(0).getTimemodified().toString() ,
+                    module.getContents().get(0).getFilename() ,false
+                    , false,
+                    MoodleAction.NotLocalFile,
+                    module.getVisible() == 1,
+                    true);
+            if(!isNull(module.getContents().get(0).getFileurl())){
+                element.setDownloadable(true);
+                element.setFileUrl(module.getContents().get(0).getFileurl());
+            }
         }
 
         return new ReturnValue(fileList, element);
@@ -151,7 +215,7 @@ public class FileService {
 
     /**
      * Checks a course module "folder" for updates. Therefore, first of all it is checked if the files inside the
-     * directory are up-to-date. Afterwards, it is checked if there are new files which should be added to the folder.
+     * directory are up-to-date. Afterward, it is checked if there are new files which should be added to the folder.
      */
     public static SyncTableElement checkDirectoryForUpdates(Path path, Module module, int sectionNum, int sectionId,
                                                             int position, String formatsMoodle) throws Exception{
@@ -237,6 +301,33 @@ public class FileService {
             else {
                 notSupportedElements.add(entry);
             }
+        }
+
+        List<List<Path>> result = new ArrayList<>();
+        result.add(moodleElements);
+        result.add(fileserverElements);
+        result.add(directories);
+        result.add(notSupportedElements);
+
+        return result;
+    }
+
+    public static List<List<Path>> sortDirectoryFilesAllFormats(List<Path> directoryFiles, String formatsMoodle,
+                                                      String formatsFileserver) {
+
+        List<Path> moodleElements = new ArrayList<>(List.of());
+        List<Path> fileserverElements = new ArrayList<>(List.of());
+        List<Path> directories = new ArrayList<>(List.of());
+        List<Path> notSupportedElements = new ArrayList<>(List.of());
+
+        for(Path entry : directoryFiles){
+            if(Files.isDirectory(entry)){
+                directories.add(entry);
+            }
+            else {
+                moodleElements.add(entry);
+            }
+
         }
 
         List<List<Path>> result = new ArrayList<>();

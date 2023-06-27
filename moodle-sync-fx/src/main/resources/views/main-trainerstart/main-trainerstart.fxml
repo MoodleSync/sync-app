@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<?import moodle.sync.javafx.custom.*?>
+<?import org.lecturestudio.javafx.control.*?>
+<?import org.lecturestudio.javafx.layout.*?>
+
+<!--
+    In this document, the layout of the "start-page" is defined
+    @author Daniel Schröter
+-->
+
+<fx:root alignment="CENTER" type="VBox" xmlns="http://javafx.com/javafx/17.0.2-ea"
+         xmlns:fx="http://javafx.com/fxml/1" minWidth="580.0">
+    <BorderPane VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+                minWidth="580.0" fx:id="borderPane">
+        <top>
+            <HBox alignment="BOTTOM_CENTER" spacing="5.0">
+                <VBox alignment="BOTTOM_CENTER">
+                    <Button fx:id="folderButton" mnemonicParsing="false">
+                        <tooltip><Tooltip text="%start.folderButton" /></tooltip>
+                        <graphic>
+                            <SvgIcon styleClass="icon, folderButton" />
+                        </graphic>
+                    </Button>
+                </VBox>
+                <VBox>
+                    <Label text="%start.selectcourse" />
+                    <ComboBox fx:id="courseCombo">
+                        <buttonCell>
+                            <CourseListCell />
+                        </buttonCell>
+                        <cellFactory>
+                            <CourseCellFactory />
+                        </cellFactory>
+                    </ComboBox>
+                </VBox>
+                <VBox>
+                    <Label text="%start.selectsection" />
+                    <ComboBox fx:id="sectionCombo">
+                        <buttonCell>
+                            <SectionListCell />
+                        </buttonCell>
+                        <cellFactory>
+                            <SectionCellFactory />
+                        </cellFactory>
+                    </ComboBox>
+                </VBox>
+               <Pane HBox.hgrow="ALWAYS" />
+                <Button fx:id="downloadButton" mnemonicParsing="false" text="%start.download">
+                    <tooltip><Tooltip text="%start.download.course" /></tooltip>
+                    <graphic>
+                        <SvgIcon styleClass="icon, download-icon" />
+                    </graphic>
+                </Button>
+                <Button fx:id="updateButton" mnemonicParsing="false" text="%start.update"/>
+                <Button fx:id="syncButton" mnemonicParsing="false" text="%start.sync" />
+                <Button fx:id="settingsButton" mnemonicParsing="false" text="%start.settings" />
+                <Button fx:id="helpButton" mnemonicParsing="false" text="%start.help" >
+                    <tooltip><Tooltip text="%start.help.tooltip" /></tooltip>
+                    <graphic>
+                        <SvgIcon styleClass="icon, help-icon" />
+                    </graphic>
+                </Button>
+                <padding>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                </padding>
+            </HBox>
+        </top>
+        <center>
+            <StackPane BorderPane.alignment="CENTER" fx:id="tableContainer">
+                <TableView fx:id="syncTableTrainer" editable="true" >
+                    <rowFactory>
+                        <DragAndDropRowFactory />
+                    </rowFactory>
+                    <columnResizePolicy>
+                        <DynamicResizePolicy tableView="$syncTableTrainer" fx:id="policy">
+                            <columnConstraints>
+                                <ColumnSizeConstraints percentWidth="0.495" />
+                                <ColumnSizeConstraints percentWidth="0.495" />
+                                <ColumnSizeConstraints prefWidth="90.0" />
+                                <ColumnSizeConstraints prefWidth="85.0" />
+                                <ColumnSizeConstraints prefWidth="200.0" />
+                                <ColumnSizeConstraints prefWidth="35.0" />
+                            </columnConstraints>
+                        </DynamicResizePolicy>
+                    </columnResizePolicy>
+                    <columns>
+                        <TableColumn fx:id="courseViewTableColumn" text="Moodle">
+                        <cellFactory>
+                                <HighlightSectionCellFactory />
+                            </cellFactory>
+                            <cellValueFactory>
+                                <PropertyValueFactory property="moduleName" />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="localViewTableColumn" text="%start.local">
+                            <cellFactory>
+                                <StatusCellFactory />
+                            </cellFactory>
+                            <cellValueFactory>
+                                <PropertyValueFactory property="existingFileName" />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="executeTableColumn" styleClass="CENTER" text="%start.execute">
+                            <graphic>
+                                <CheckBox fx:id="allSelected" mnemonicParsing="false" />
+                            </graphic>
+                            <cellFactory>
+                                <CheckBoxTableCellFactory />
+                            </cellFactory>
+                            <cellValueFactory>
+                                <UploadElementCellValueFactory />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="availabilityTableColumn" styleClass="CENTER" text="%start.visible">
+                            <cellFactory>
+                                <AvailabilityCellFactory />
+                            </cellFactory>
+                            <cellValueFactory>
+                                <AvailabilityCellValueFactory />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="availabilityTimeTableColumn" styleClass="CENTER" text="%start.availability">
+                            <cellFactory>
+                                <AvailableDateTimeTableCellFactory />
+                            </cellFactory>
+                            <cellValueFactory>
+                                <PropertyValueFactory property="availabilityDateTime" />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="downloadColumn" styleClass="CENTER">
+                            <cellFactory>
+                                <DownloadableTableCellFactory />
+                            </cellFactory>
+                            <cellValueFactory>
+                                <PropertyValueFactory property="downloadable" />
+                            </cellValueFactory>
+                        </TableColumn>
+                    </columns>
+                </TableView>
+                <TableView fx:id="syncTableGuest" editable="true" BorderPane.alignment="CENTER">
+                    <rowFactory>
+                        <DragAndDropRowFactory />
+                    </rowFactory>
+                    <columnResizePolicy>
+                        <DynamicResizePolicy tableView="$syncTableGuest">
+                            <columnConstraints>
+                                <ColumnSizeConstraints percentWidth="0.495" />
+                                <ColumnSizeConstraints percentWidth="0.495" />
+                                <ColumnSizeConstraints prefWidth="35.0" />
+                            </columnConstraints>
+                        </DynamicResizePolicy>
+                    </columnResizePolicy>
+                    <columns>
+                        <TableColumn fx:id="courseViewTableColumn2" text="Moodle">
+                            <cellFactory>
+                                <HighlightSectionCellFactory />
+                            </cellFactory>
+                            <cellValueFactory>
+                                <PropertyValueFactory property="moduleName" />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="localViewTableColumn2" text="%start.local">
+                            <cellFactory>
+                                <StatusCellFactory />
+                            </cellFactory>
+                            <cellValueFactory>
+                                <PropertyValueFactory property="existingFileName" />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="downloadColumn2" styleClass="CENTER">
+                            <cellFactory>
+                                <DownloadableTableCellFactory />
+                            </cellFactory>
+                            <cellValueFactory>
+                                <PropertyValueFactory property="downloadable" />
+                            </cellValueFactory>
+                        </TableColumn>
+                    </columns>
+                </TableView>
+                <BorderPane.margin>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                </BorderPane.margin>
+            </StackPane>
+        </center>
+      <bottom>
+          <HBox minWidth="580.0" spacing="5.0">
+              <HBox alignment="CENTER_LEFT">
+                  <HBox spacing="5.0">
+                      <Label text="%start.labelcourse" />
+                      <Label fx:id="courseidlabel" />
+                      <Label text="%start.labelsection" />
+                      <Label fx:id="sectionidlabel" />
+                  </HBox>
+              </HBox>
+              <Pane HBox.hgrow="ALWAYS" />
+              <HBox alignment="CENTER_RIGHT">
+                  <HBox>
+                      <ProgressBar fx:id="progressbar"/>
+                  </HBox>
+              </HBox>
+              <BorderPane.margin>
+                  <Insets left="5.0" right="25.0" bottom="5.0"/>
+              </BorderPane.margin>
+          </HBox>
+      </bottom>
+    </BorderPane>
+</fx:root>

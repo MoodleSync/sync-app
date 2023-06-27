@@ -9,6 +9,7 @@ import org.lecturestudio.core.beans.ObjectProperty;
 import org.lecturestudio.core.beans.StringProperty;
 
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * This class represents a configuration containing several settings.
@@ -52,10 +53,27 @@ public class MoodleSyncConfiguration extends Configuration {
     private final BooleanProperty showUnknownFormats = new BooleanProperty();
 
     //Language
-    private final ObjectProperty<Locale> locale = new ObjectProperty();
+    private final ObjectProperty<Locale> locale = new ObjectProperty<>();
 
-    //Delete file property - still in work
-    private final BooleanProperty executeDeletion = new BooleanProperty();
+    public MoodleSyncConfiguration() {
+    }
+
+
+    public MoodleSyncConfiguration (MoodleSyncConfiguration config) {
+        this.syncRootPath.set(config.syncRootPath.get());
+        this.recentCourse.set(config.recentCourse.get());
+        this.moodleToken.set(config.moodleToken.get());
+        this.recentSection.set(config.recentSection.get());
+        this.moodleUrl.set(config.moodleUrl.get());
+        this.formatsMoodle.set(config.formatsMoodle.get());
+        this.formatsFileserver.set(config.formatsFileserver.get());
+        this.ftpserver.set(config.ftpserver.get());
+        this.ftpuser.set(config.ftpuser.get());
+        this.ftppassword.set(config.ftppassword.get());
+        this.ftpport.set(config.ftpport.get());
+        this.showUnknownFormats.set(config.showUnknownFormats.get());
+        this.locale.set(config.locale.get());
+    }
 
     public String getSyncRootPath() {
         return syncRootPath.get();
@@ -213,16 +231,25 @@ public class MoodleSyncConfiguration extends Configuration {
         return this.locale;
     }
 
-    public Boolean getExecuteDeletion() {
-        return executeDeletion.get();
+    public boolean equals(MoodleSyncConfiguration o) {
+        return Objects.equals(this.syncRootPath.get(), o.syncRootPath.get()) && Objects.equals(this.recentCourse.get(),
+                o.recentCourse.get()) && Objects.equals(this.moodleToken.get(), o.moodleToken.get()) &&
+                Objects.equals(this.recentSection.get(), o.recentSection.get()) &&
+                Objects.equals(this.moodleUrl.get(), o.moodleUrl.get()) &&
+                Objects.equals(this.formatsMoodle.get(), o.formatsMoodle.get()) &&
+                Objects.equals(this.formatsFileserver.get(), o.formatsFileserver.get()) &&
+                Objects.equals(this.ftpserver.get(), o.ftpserver.get()) &&
+                Objects.equals(this.ftpuser.get(), o.ftpuser.get()) &&
+                Objects.equals(this.ftppassword.get(), o.ftppassword.get()) &&
+                Objects.equals(this.ftpport.get(), o.ftpport.get()) &&
+                Objects.equals(this.showUnknownFormats.get(), o.showUnknownFormats.get()) &&
+                Objects.equals(this.locale.get(), o.locale.get());
     }
 
-    public void setExecuteDeletion(Boolean executeDeletion) {
-        this.executeDeletion.set(executeDeletion);
-    }
-
-    public BooleanProperty executeDeletionProperty() {
-        return executeDeletion;
+    @Override
+    public int hashCode() {
+        return Objects.hash(syncRootPath, recentCourse, moodleToken, recentSection, moodleUrl, formatsMoodle,
+                formatsFileserver, ftpserver, ftpuser, ftppassword, ftpport, showUnknownFormats, locale);
     }
 
 }

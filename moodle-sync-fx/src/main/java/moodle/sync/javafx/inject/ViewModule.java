@@ -37,8 +37,9 @@ public class ViewModule extends AbstractModule {
 		bind(ProgressDialogView.class).to(FxProgressDialogView.class);
 
 		bind(MainView.class).to(FxMainView.class);
-		bind(StartView.class).to(FxStartView.class);
 		bind(SettingsView.class).to(FxSettingsView.class);
+		bind(TrainerStartView.class).to(FxTrainerStartView.class);
+
 
 		Provider<AggregateBundle> resourceProvider = getProvider(AggregateBundle.class);
 		Provider<BuilderFactory> builderProvider = getProvider(BuilderFactory.class);

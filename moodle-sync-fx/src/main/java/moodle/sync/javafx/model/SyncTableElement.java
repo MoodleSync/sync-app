@@ -44,11 +44,18 @@ public class SyncTableElement {
 
     private ObjectProperty<TimeDateElement> availabilityDateTime;
 
-    private BooleanProperty delete = new SimpleBooleanProperty(false);
+    private BooleanProperty doDownload = new SimpleBooleanProperty(false);
 
     private ObjectProperty<List<Path>> content;
 
     private IntegerProperty contextId;
+
+    private BooleanProperty downloadable;
+
+    private StringProperty sectionName;
+
+    private StringProperty fileurl;
+
 
 
     public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,
@@ -69,6 +76,8 @@ public class SyncTableElement {
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(new TimeDateElement(null, null));
         this.userVisible = new SimpleBooleanProperty(userVisible);
+        this.downloadable = new SimpleBooleanProperty(false);
+        this.fileurl = new SimpleStringProperty("");
     }
 
     public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,
@@ -88,6 +97,8 @@ public class SyncTableElement {
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(new TimeDateElement(null, null));
         this.userVisible = new SimpleBooleanProperty(userVisible);
+        this.downloadable = new SimpleBooleanProperty(false);
+        this.fileurl = new SimpleStringProperty("");
     }
 
     public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,
@@ -113,6 +124,8 @@ public class SyncTableElement {
         this.content = new SimpleObjectProperty<List<Path>>(content);
         this.contextId = new SimpleIntegerProperty(contextId);
         this.userVisible = new SimpleBooleanProperty(userVisible);
+        this.downloadable = new SimpleBooleanProperty(false);
+        this.fileurl = new SimpleStringProperty("");
     }
 
     public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType,
@@ -132,6 +145,8 @@ public class SyncTableElement {
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(availabilityDateTime);
         this.userVisible = new SimpleBooleanProperty(userVisible);
+        this.downloadable = new SimpleBooleanProperty(false);
+        this.fileurl = new SimpleStringProperty("");
     }
 
     public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType,
@@ -152,9 +167,12 @@ public class SyncTableElement {
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(availabilityDateTime);
         this.userVisible = new SimpleBooleanProperty(userVisible);
+        this.downloadable = new SimpleBooleanProperty(false);
+        this.fileurl = new SimpleStringProperty("");
     }
 
-    public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType,
+    public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,
+                            String moduleType ,String existingFileName,
                             Boolean selectable, Boolean selected, MoodleAction action, Boolean visible, Boolean userVisible){
         this.moduleName = new SimpleStringProperty(moduleName);
         this.cmid = new SimpleIntegerProperty(cmid);
@@ -163,7 +181,7 @@ public class SyncTableElement {
         this.oldPos = new SimpleIntegerProperty(oldPos);
         this.moduleType = new SimpleStringProperty(moduleType);
         this.existingFile = null;
-        this.existingFileName = null;
+        this.existingFileName = new SimpleStringProperty(existingFileName);
         this.selectable = new SimpleBooleanProperty(selectable);
         this.selected = new SimpleBooleanProperty(selected);
         this.action = action;
@@ -171,6 +189,31 @@ public class SyncTableElement {
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(new TimeDateElement(null, null));
         this.userVisible = new SimpleBooleanProperty(userVisible);
+        this.downloadable = new SimpleBooleanProperty(false);
+        this.fileurl = new SimpleStringProperty("");
+    }
+
+    public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,
+                            String moduleType, String lastModified, String existingFileName,
+                            Boolean selectable, Boolean selected, MoodleAction action, Boolean visible, Boolean userVisible){
+        this.moduleName = new SimpleStringProperty(moduleName);
+        this.cmid = new SimpleIntegerProperty(cmid);
+        this.section = new SimpleIntegerProperty(section);
+        this.sectionId = new SimpleIntegerProperty(sectionId);
+        this.oldPos = new SimpleIntegerProperty(oldPos);
+        this.moduleType = new SimpleStringProperty(moduleType);
+        this.existingFile = new SimpleStringProperty(lastModified);
+        this.existingFileName = new SimpleStringProperty(existingFileName);
+        this.selectable = new SimpleBooleanProperty(selectable);
+        this.selected = new SimpleBooleanProperty(selected);
+        this.action = action;
+        this.beforemod = new SimpleIntegerProperty(-1);
+        this.visible = new SimpleBooleanProperty(visible);
+        this.availabilityDateTime = new SimpleObjectProperty(new TimeDateElement(null, null));
+        this.userVisible = new SimpleBooleanProperty(userVisible);
+        this.downloadable = new SimpleBooleanProperty(false);
+        this.sectionName = new SimpleStringProperty("");
+        this.fileurl = new SimpleStringProperty("");
     }
 
     public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType,
@@ -191,6 +234,8 @@ public class SyncTableElement {
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(new TimeDateElement(null, null));
         this.userVisible = new SimpleBooleanProperty(userVisible);
+        this.downloadable = new SimpleBooleanProperty(false);
+        this.fileurl = new SimpleStringProperty("");
     }
 
     /**
@@ -558,6 +603,32 @@ public class SyncTableElement {
     }
 
     /**
+     * Providing the userVisibleProperty.
+     *
+     * @return the userVisibleProprty.
+     */
+    public BooleanProperty downloadableProperty() {
+        return downloadable;
+    }
+
+    /**
+     * Providing the userVisible a boolean.
+     *
+     * @return the userVisible as a boolean.
+     */
+    public boolean getDownloadable() {
+        return this.downloadable.get();
+    }
+
+    /**
+     * Sets a new userVisible.
+     *
+     * @param value the new userVisible.
+     */
+    public void setDownloadable(boolean value) { this.downloadable.set(value);
+    }
+
+    /**
      * Providing the messageProperty.
      *
      * @return the messageProprty.
@@ -588,8 +659,8 @@ public class SyncTableElement {
      *
      * @return the messageProprty.
      */
-    public BooleanProperty deleteProperty() {
-        return delete;
+    public BooleanProperty doDownloadProperty() {
+        return doDownload;
     }
 
     /**
@@ -597,8 +668,8 @@ public class SyncTableElement {
      *
      * @return the files message as a String.
      */
-    public boolean getDelete() {
-        return this.delete.get();
+    public boolean getDoDownload() {
+        return this.doDownload.get();
     }
 
     /**
@@ -606,7 +677,7 @@ public class SyncTableElement {
      *
      * @param value the new message.
      */
-    public void setDelete(boolean value) { this.delete.set(value);
+    public void setDoDownload(boolean value) { this.doDownload.set(value);
     }
 
     public ObjectProperty<List<Path>> contentProperty() {
@@ -655,4 +726,59 @@ public class SyncTableElement {
      */
     public void setContextId(Integer value) { this.contextId.set(value);
     }
+
+    /**
+     * Providing the messageProperty.
+     *
+     * @return the messageProprty.
+     */
+    public StringProperty sectionNameProperty() {
+        return sectionName;
+    }
+
+    /**
+     * Providing the files message as a String.
+     *
+     * @return the files message as a String.
+     */
+    public String getSectionName() {
+        return this.sectionName.get();
+    }
+
+    /**
+     * Sets a new message.
+     *
+     * @param value the new message.
+     */
+    public void setSectionName(String value) {
+        this.sectionName.set(value);
+    }
+
+    /**
+     * Providing the messageProperty.
+     *
+     * @return the messageProprty.
+     */
+    public StringProperty fileurlProperty() {
+        return fileurl;
+    }
+
+    /**
+     * Providing the files message as a String.
+     *
+     * @return the files message as a String.
+     */
+    public String getFileUrl() {
+        return this.fileurl.get();
+    }
+
+    /**
+     * Sets a new message.
+     *
+     * @param value the new message.
+     */
+    public void setFileUrl(String value) {
+        this.fileurl.set(value);
+    }
+
 }

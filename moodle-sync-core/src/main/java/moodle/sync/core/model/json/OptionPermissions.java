@@ -9,14 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+public class OptionPermissions {
 
-/**
- * Class representing a course-modules content.
- *
- * @author Daniel Schröter
- */
-public class Content {
-    private String filename;
-    private String fileurl;
-    private Long timemodified;
+    private String name;
+
+    private Boolean available;
 }

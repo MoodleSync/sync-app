@@ -19,6 +19,7 @@ import org.lecturestudio.javafx.control.SvgIcon;
  * Class used to display the Name of a Section/ Module including different styles/background colors inside a cell.
  */
 public class UploadHighlightTableCell <U, B> extends TextFieldTableCell<SyncTableElement, String> {
+
     private Listener listener = new Listener();
     private PopOver popOver;
 

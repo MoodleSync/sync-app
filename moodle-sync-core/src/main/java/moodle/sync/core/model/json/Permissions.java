@@ -5,18 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+public class Permissions {
 
-/**
- * Class representing a course-modules content.
- *
- * @author Daniel Schröter
- */
-public class Content {
-    private String filename;
-    private String fileurl;
-    private Long timemodified;
+    private List<CoursePermissions> courses;
+
 }
+

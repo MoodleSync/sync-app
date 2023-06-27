@@ -8,11 +8,13 @@ import moodle.sync.core.web.service.MoodleService;
 import org.lecturestudio.core.app.ApplicationContext;
 import org.lecturestudio.core.app.LocaleProvider;
 import org.lecturestudio.core.presenter.Presenter;
+import org.lecturestudio.core.view.ConsumerAction;
 import org.lecturestudio.core.view.DirectoryChooserView;
 import org.lecturestudio.core.view.ViewContextFactory;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.util.Objects;
 
 import static java.util.Objects.nonNull;
 
@@ -25,49 +27,56 @@ public class SettingsPresenter extends Presenter<SettingsView> {
 
     private final ViewContextFactory viewFactory;
 
-    //Used MoodleService for executing Web Service API-Calls.
     private final MoodleService moodleService;
+
+    private ConsumerAction<MoodleSyncConfiguration> closeAction;
+
+    private MoodleSyncConfiguration settingsConfig;
+
+    private final MoodleSyncConfiguration config;
 
     @Inject
     SettingsPresenter(ApplicationContext context, SettingsView view,
                       ViewContextFactory viewFactory, MoodleService moodleService) {
         super(context, view);
 
+        this.config = (MoodleSyncConfiguration) context.getConfiguration();
         this.moodleService = moodleService;
         this.viewFactory = viewFactory;
     }
 
     @Override
     public void initialize() throws Exception{
-        MoodleSyncConfiguration config = (MoodleSyncConfiguration) context.getConfiguration();
         LocaleProvider localeProvider = new LocaleProvider();
+        this.settingsConfig = new MoodleSyncConfiguration(config);
 
         //Initialising all functions of the "settings-page" with the help of the configuration.
         view.setOnExit(this::close);
         view.setLocales(localeProvider.getLocales());
-        view.setLocale(config.localeProperty());
-        view.setMoodleField(config.moodleUrlProperty());
-        view.setFormatsMoodle(config.formatsMoodleProperty());
-        view.setFormatsFileserver(config.formatsFileserverProperty());
-        view.setMoodleToken(config.moodleTokenProperty());
+        view.setLocale(settingsConfig.localeProperty());
+        view.setMoodleField(settingsConfig.moodleUrlProperty());
+        view.setFormatsMoodle(settingsConfig.formatsMoodleProperty());
+        view.setFormatsFileserver(settingsConfig.formatsFileserverProperty());
+        view.setMoodleToken(settingsConfig.moodleTokenProperty());
         view.setOnCheckToken(this::checkToken);
-        view.setSyncRootPath(config.syncRootPathProperty());
+        view.setSyncRootPath(settingsConfig.syncRootPathProperty());
         view.setSelectSyncRootPath(this::selectSyncPath);
-        view.setFtpField(config.FileserverProperty());
-        view.setFtpPort(config.portFileserverProperty());
-        view.setFtpUser(config.userFileserverProperty());
-        view.setFtpPassword(config.passwordFileserverProperty());
-        view.setShowUnknownFormats(config.showUnknownFormatsProperty());
+        view.setFtpField(settingsConfig.FileserverProperty());
+        view.setFtpPort(settingsConfig.portFileserverProperty());
+        view.setFtpUser(settingsConfig.userFileserverProperty());
+        view.setFtpPassword(settingsConfig.passwordFileserverProperty());
+        view.setShowUnknownFormats(settingsConfig.showUnknownFormatsProperty());
     }
 
     /**
      * Function to close the "settings-page".
+     *
      */
     @Override
     public void close() {
-        MoodleSyncConfiguration config = (MoodleSyncConfiguration) context.getConfiguration();
-        //Reconstruct the MoodleService with the new settings.
-        moodleService.setApiUrl(config.getMoodleUrl());
+        if (Objects.nonNull(this.closeAction) && this.isCloseable()) {
+            this.closeAction.execute(settingsConfig);
+        }
         super.close();
     }
 
@@ -75,8 +84,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
      * Providing the functionality to choose a Root-Directory.
      */
     private void selectSyncPath() {
-        MoodleSyncConfiguration config = (MoodleSyncConfiguration) context.getConfiguration();
-        String syncPath = config.getSyncRootPath();
+        String syncPath = settingsConfig.getSyncRootPath();
         //Check whether a default path should be used to prevent unwanted behavior.
         if (syncPath == null || syncPath.isEmpty() || syncPath.isBlank()) {
             DefaultConfiguration defaultConfiguration = new DefaultConfiguration();
@@ -95,20 +103,31 @@ public class SettingsPresenter extends Presenter<SettingsView> {
             dirChooser.setInitialDirectory(new File(defaultConfiguration.getSyncRootPath()));
             selectedFile = dirChooser.show(view);
         }
-
         if (nonNull(selectedFile)) {
-            config.setSyncRootPath(selectedFile.getAbsolutePath());
+            settingsConfig.setSyncRootPath(selectedFile.getAbsolutePath());
         }
     }
 
+    /**
+     * Used to verify the inserted token.
+     */
     private void checkToken() {
         try{
-            MoodleSyncConfiguration config = (MoodleSyncConfiguration) context.getConfiguration();
-            moodleService.setApiUrl(config.getMoodleUrl());
-            moodleService.getUserId(config.getMoodleToken());
+            //MoodleSyncConfiguration settingsConfig = (MoodleSyncConfiguration) context.getConfiguration();
+            moodleService.setApiUrl(settingsConfig.getMoodleUrl());
+            moodleService.getUserId(settingsConfig.getMoodleToken());
             view.setTokenValid(true);
         } catch (Exception e){
             view.setTokenValid(false);
         }
+    }
+
+    /**
+     * Closes the presenter and hands over the settingsConfig.
+     *
+     * @param settingsConfig config to hand over.
+     */
+    public void setOnClose(ConsumerAction<MoodleSyncConfiguration> settingsConfig) {
+        this.closeAction = ConsumerAction.concatenate(this.closeAction, settingsConfig);
     }
 }

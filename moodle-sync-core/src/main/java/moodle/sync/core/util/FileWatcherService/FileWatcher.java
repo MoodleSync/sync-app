@@ -53,6 +53,7 @@ public class FileWatcher implements Runnable {
             watchServices.add(watchService);
             boolean poll = true;
             while (poll) {
+                Thread.sleep(500);
                 poll = pollEvents(watchService);
             }
         } catch (IOException | InterruptedException | ClosedWatchServiceException e) {
@@ -80,7 +81,7 @@ public class FileWatcher implements Runnable {
             }
         } else if (kind == ENTRY_MODIFY) {
             for (FileListener listener : listeners) {
-                listener.onModified(event);
+                listener.onCreated(event);
             }
         } else if (kind == ENTRY_DELETE) {
             for (FileListener listener : listeners) {

@@ -88,17 +88,31 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
         FxUtils.bindAction(closesettingsButton, action);
     }
 
-
+    /**
+     * Setting the chosen locale property.
+     *
+     * @param locale chosen language.
+     */
     @Override
     public void setLocale(ObjectProperty<Locale> locale) {
         languageCombo.valueProperty().bindBidirectional(new LectObjectProperty<>(locale));
     }
 
+    /**
+     * Sets the possible values of the languageCombo.
+     *
+     * @param locales possible languages.
+     */
     @Override
     public void setLocales(List<Locale> locales) {
         FxUtils.invoke(() -> languageCombo.getItems().setAll(locales));
     }
 
+    /**
+     * Method used to display the Moodle URL. Includes a verifier.
+     *
+     * @param moodleURL Inserted Moodle URL.
+     */
     @Override
     public void setMoodleField(StringProperty moodleURL) {
         moodleField.textProperty().bindBidirectional(new LectStringProperty(moodleURL));
@@ -126,11 +140,21 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
         });
     }
 
+    /**
+     * Method invokes a checking-operation for the inserted token.
+     *
+     * @param action start checking-operation.
+     */
     @Override
     public void setOnCheckToken(Action action) {
         FxUtils.bindAction(checkToken, action);
     }
 
+    /**
+     * Marks the token-text-field if valid.
+     *
+     * @param valid boolean param.
+     */
     @Override
     public void setTokenValid(boolean valid){
         tokenField.pseudoClassStateChanged(
@@ -141,16 +165,10 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
                 PseudoClass.getPseudoClass("valid"),
                 (valid)
         );
-        //if(valid) {
-            //tokenField.setStyle("-fx-border-width: 4px; -fx-text-box-border: #3CB222; -fx-focus-color: #3CB222");
-        //} else {
-            //tokenField.getStyleClass().add("error");
-            //tokenField.setStyle("-fx-border-width: 4px; -fx-text-box-border: #B22222; -fx-focus-color: #B22222");
-        //}
     }
 
     /**
-     * Input and inputvalidation of the fileserver url.
+     * Input and input-validation of the fileserver url.
      *
      * @param ftpURL User input.
      */
@@ -226,13 +244,20 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
     public void setSyncRootPath(StringProperty path) {
         syncRootPath.textProperty().bindBidirectional(new LectStringProperty(path));
         syncRootPath.textProperty().addListener(event -> {
+            boolean isDirectory;
+            try{
+                isDirectory = Files.isDirectory(Paths.get(syncRootPath.getText()));
+            } catch (Exception e) {
+                e.printStackTrace();
+                isDirectory = false;
+            }
             syncRootPath.pseudoClassStateChanged(
                     PseudoClass.getPseudoClass("error"),
                     !syncRootPath.getText().isEmpty() &&
-                            !Files.isDirectory(Paths.get(syncRootPath.getText()))
-            );
-        });
+                            !isDirectory
+                    );
 
+        });
     }
 
     /**
