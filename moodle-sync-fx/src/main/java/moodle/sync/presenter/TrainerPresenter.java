@@ -347,6 +347,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
             if((courseSections.size() != sectionCount)) {
                 view.setSections(courseSections);
                 sectionCount = courseSections.size();
+                selectFirstSection();
             }
             if (isNull(section)) {
                 section = courseContent.get(0);
@@ -571,6 +572,9 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                                 int pos = FileService.findModuleInList(localContent.get(2), module);
                                 if (pos >= 0) {
                                     //If it exists, check if it should be updated.
+                                    watcher =
+                                            new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() + "_" + section.getName() + "/" + localContent.get(2).get(pos).getFileName()).toFile());
+                                    watcher.addListener(this).watch();
                                     data.add(FileService.checkDirectoryForUpdates(localContent.get(2).get(pos),
                                             module, sectionNum, sectionId, data.size(), config.getFormatsMoodle()));
                                     localContent.get(2).remove(pos);
@@ -608,6 +612,9 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                             data.add(new SyncTableElement(directory.getFileName().toString(), -1, sectionNum,
                                     sectionId, data.size(), "folder", directory, true, false,
                                     MoodleAction.FolderUpload, true, -1, null, content, -1, true));
+                            watcher =
+                                    new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() + "_" + section.getName() + "/" + directory.getFileName()).toFile());
+                            watcher.addListener(this).watch();
                         }
                     }
                     if (!localContent.get(3).isEmpty()) {

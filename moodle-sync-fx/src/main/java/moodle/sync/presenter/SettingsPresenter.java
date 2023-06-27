@@ -84,7 +84,6 @@ public class SettingsPresenter extends Presenter<SettingsView> {
      * Providing the functionality to choose a Root-Directory.
      */
     private void selectSyncPath() {
-        MoodleSyncConfiguration settingsConfig = (MoodleSyncConfiguration) context.getConfiguration();
         String syncPath = settingsConfig.getSyncRootPath();
         //Check whether a default path should be used to prevent unwanted behavior.
         if (syncPath == null || syncPath.isEmpty() || syncPath.isBlank()) {
@@ -104,7 +103,6 @@ public class SettingsPresenter extends Presenter<SettingsView> {
             dirChooser.setInitialDirectory(new File(defaultConfiguration.getSyncRootPath()));
             selectedFile = dirChooser.show(view);
         }
-
         if (nonNull(selectedFile)) {
             settingsConfig.setSyncRootPath(selectedFile.getAbsolutePath());
         }
