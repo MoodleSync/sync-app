@@ -34,6 +34,9 @@ import org.lecturestudio.core.view.ViewContextFactory;
 import javax.inject.Inject;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -125,6 +128,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         view.setOnSync(this::onSync);
         view.setOnSettings(this::onSettings);
         view.setOnDownloadCourse(this::onDownloadCourse);
+        view.setOnOpenWiki(this::onWiki);
         view.setCourse(config.recentCourseProperty());
         view.setCourses(courses());
         view.setSection(config.recentSectionProperty());
@@ -301,7 +305,16 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         }
     }
 
-    //Used to remove content in tables
+    //Used to open wiki.
+    private void onWiki() {
+        try {
+            Desktop.getDesktop().browse(new URI("https://github.com/MoodleSync/sync-app/wiki/Getting-started-with-MoodleSync"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Used to remove content in tables.
     private void clearView() {
         if (guest) {
             view.setDataGuest(FXCollections.observableArrayList());

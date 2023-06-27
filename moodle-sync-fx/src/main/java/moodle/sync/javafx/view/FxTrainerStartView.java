@@ -37,6 +37,9 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
     private Button downloadButton;
 
     @FXML
+    private Button helpButton;
+
+    @FXML
     private Button settingsButton;
 
     @FXML
@@ -151,6 +154,11 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
     @Override
     public void setOnDownloadCourse(Action action) {
         FxUtils.bindAction(downloadButton, action);
+    }
+
+    @Override
+    public void setOnOpenWiki(Action action) {
+        FxUtils.bindAction(helpButton, action);
     }
 
     /**

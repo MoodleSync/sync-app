@@ -25,6 +25,8 @@ public interface TrainerStartView extends View {
 
     void setOnDownloadCourse(Action action);
 
+    void setOnOpenWiki(Action action);
+
     void setOnSettings(Action action);
 
     void setOnFolder(Action action);
