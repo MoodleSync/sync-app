@@ -11,5 +11,9 @@ For further information about installation and usage please visit the wiki of th
 
 Works with following plugin for Moodle: https://github.com/MoodleSync/sync-plugin.
 
-## Screenshot
-![Main view](https://github.com/MoodleSync/sync-app/blob/main/doc/images/mainpage.png)
+## Screenshots
+
+Student mode | Trainer mode
+:-------------------------:|:-------------------------:
+![Main view](https://github.com/MoodleSync/sync-app/blob/main/doc/images/StudentMode.png)  |  ![Main view](https://github.com/MoodleSync/sync-app/blob/main/doc/images/TrainerMode.png)
+
