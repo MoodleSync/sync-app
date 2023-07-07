@@ -42,7 +42,7 @@ public class LocalDateTimeCell<S, U> extends TableCell<SyncTableElement, TimeDat
             timePicker.timeProperty().unbindBidirectional(getTableRow().getItem().availabilityDateTimeProperty().get().LocalTimeProperty());
             if (getTableRow().getItem() != null && (!getTableRow().getItem().isSelectable() ||
                     getTableRow().getItem().getAction() == MoodleAction.UploadSection || getTableRow().getItem().getAction() == MoodleAction.ExistingFile ||
-                    getTableRow().getItem().getAction() == MoodleAction.NotLocalFile)) {
+                    getTableRow().getItem().getAction() == MoodleAction.NotLocalFile || getTableRow().getItem().getAction() == MoodleAction.FolderSynchronize)) {
                 setDisable(false);
                 setGraphic(null);
             }
