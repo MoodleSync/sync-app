@@ -44,7 +44,7 @@ public class AvailabilityCheckBoxCell<U, B> extends CheckBoxTableCell<SyncTableE
         } else if (getTableRow() != null) {
             if (getTableRow().getItem() != null && (!getTableRow().getItem().isSelectable() ||
                     getTableRow().getItem().getAction() == MoodleAction.UploadSection || getTableRow().getItem().getAction() == MoodleAction.ExistingFile
-                    || getTableRow().getItem().getAction() == MoodleAction.NotLocalFile)) {
+                    || getTableRow().getItem().getAction() == MoodleAction.NotLocalFile || getTableRow().getItem().getAction() == MoodleAction.FolderSynchronize)) {
                 checkBox.setAlignment(Pos.CENTER);
                 setDisable(false);
                 setGraphic(null);

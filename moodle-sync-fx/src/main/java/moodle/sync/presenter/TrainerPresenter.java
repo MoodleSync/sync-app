@@ -319,7 +319,9 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
 
     //Used to remove content in tables.
     private void clearView() {
-        if (guest) {
+        if(isNull(guest)) {
+            view.setDataGuest(FXCollections.observableArrayList());
+        } else if (guest) {
             view.setDataGuest(FXCollections.observableArrayList());
         } else {
             view.setDataTrainer(FXCollections.observableArrayList());
