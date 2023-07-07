@@ -64,7 +64,7 @@ public class MoodleService {
      * @param token The Moodle-token.
      * @return the userid as an int.
      */
-    public int getUserId(String token) {
+    public int getUserId(String token) throws Exception {
         SiteInfo info = moodleClient.getSiteInfo("json", token, "core_webservice_get_site_info");
         return info.getUserid();
     }
@@ -226,7 +226,7 @@ public class MoodleService {
         moodleClient.setSection("json", token, "local_course_add_new_section", courseid, sectionname, sectionnum);
     }
 
-    public Boolean getPermissions(String token, int courseid) {
+    public Boolean getPermissions(String token, int courseid) throws Exception {
         return moodleClient.getPermissions("json", token, "core_course_get_user_administration_options", courseid).getCourses().get(0).getOptions().get(0).getAvailable();
     }
 

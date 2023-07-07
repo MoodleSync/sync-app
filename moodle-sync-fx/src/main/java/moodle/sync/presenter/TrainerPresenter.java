@@ -30,6 +30,7 @@ import org.lecturestudio.core.beans.BooleanProperty;
 import org.lecturestudio.core.presenter.Presenter;
 import org.lecturestudio.core.view.NotificationType;
 import org.lecturestudio.core.view.ViewContextFactory;
+import org.lecturestudio.javafx.util.FxUtils;
 
 import javax.inject.Inject;
 import java.awt.*;
@@ -246,9 +247,11 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         }
         catch (Exception e) {
             logException(e, "Sync failed");
-            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.invalidurl.message");
+            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error" +
+                    ".invalidurl.message");
             config.setRecentCourse(null);
             course = null;
+            guest = true;
             clearView();
         }
 

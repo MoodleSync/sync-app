@@ -41,7 +41,8 @@ public class LocalDateTimeCell<S, U> extends TableCell<SyncTableElement, TimeDat
             datePicker.valueProperty().unbindBidirectional(getTableRow().getItem().availabilityDateTimeProperty().get().LocalDateProperty());
             timePicker.timeProperty().unbindBidirectional(getTableRow().getItem().availabilityDateTimeProperty().get().LocalTimeProperty());
             if (getTableRow().getItem() != null && (!getTableRow().getItem().isSelectable() ||
-                    getTableRow().getItem().getAction() == MoodleAction.UploadSection)) {
+                    getTableRow().getItem().getAction() == MoodleAction.UploadSection || getTableRow().getItem().getAction() == MoodleAction.ExistingFile ||
+                    getTableRow().getItem().getAction() == MoodleAction.NotLocalFile)) {
                 setDisable(false);
                 setGraphic(null);
             }
