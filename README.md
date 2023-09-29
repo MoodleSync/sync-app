@@ -1,4 +1,7 @@
 # MoodleSync
+
+! Attention: Until now MooldeSync is not working with Moodle 4.2. !
+
 Due to the digitalization in education and the resulting increasing amount of e-learning resources,
 many universities and other educational institutions use browser based learning platforms for sharing
 and managing those. An often used learning platform is Moodle. It offers lecturers the possibility
