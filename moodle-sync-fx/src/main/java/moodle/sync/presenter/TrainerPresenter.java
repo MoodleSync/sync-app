@@ -193,7 +193,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         }
         catch (Exception e) {
             logException(e, "Sync failed");
-            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.invalidurl.message");
+            context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.invalidurl.message");
         }
         return new ArrayList<>();
     }
@@ -208,7 +208,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         }
         catch (Exception e) {
             logException(e, "Sync failed");
-            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.invalidurl.message");
+            context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.invalidurl.message");
         }
         return new ArrayList<>();
     }
@@ -247,7 +247,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         }
         catch (Exception e) {
             logException(e, "Sync failed");
-            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error" +
+            context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error" +
                     ".invalidurl.message");
             config.setRecentCourse(null);
             course = null;
@@ -336,7 +336,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
             desktop.open(dirToOpen);
         } catch (Throwable e) {
             logException(e, "Sync failed");
-            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.path.unknown.message");
+            context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.path.unknown.message");
         }
     }
 
@@ -387,7 +387,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
             //view.setCourse(config.recentCourseProperty());
         } catch (Exception e) {
             logException(e, "Sync failed");
-            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
+            context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
         }
     }
 
@@ -425,7 +425,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
             }
         } catch (Exception e) {
             logException(e, "Sync failed");
-            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
+            context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
         }
     }
 
@@ -442,7 +442,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         }
         catch (Exception e) {
             logException(e, "Sync failed");
-            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
+            context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
         }
 
         List<Path> sectionList = List.of();
@@ -495,7 +495,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
 
         } catch (Exception e){
             logException(e, "Sync failed");
-            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
+            context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
         }
         return data;
     }
@@ -513,7 +513,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         }
         catch (Exception e) {
             logException(e, "Sync failed");
-            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
+            context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
         }
 
         //sectionList: if "all sections" is chosen, all section-directories are stored. -> Needed to detect new
@@ -656,7 +656,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
             }
         } catch (Exception e) {
             logException(e, "Sync failed");
-            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
+            context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
         }
 
         courseData = data;
@@ -730,12 +730,12 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
     private void onSync() {
         //Several security checks to prevent unwanted behaviour.
         if (config.getRecentCourse() == null) {
-            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.course.message");
+            context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.course.message");
             return;
         }
         //Checks whether Root-Directory is existing.
         if (!Files.isDirectory(Paths.get(config.getSyncRootPath()))) {
-            showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.path.message");
+            context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.path.message");
             return;
         }
         //Calls the API-Call functions depending on the "selected" property and the MoodleAction.
@@ -759,7 +759,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
             catch (Exception e) {
                 logException(e, "Sync failed");
 
-                showNotification(NotificationType.ERROR, "start.sync.error.title",
+                context.showNotification(NotificationType.ERROR, "start.sync.error.title",
                         MessageFormat.format(context.getDictionary().get("start.sync.error.upload.message"),
                                 courseData.getModuleName()));
             }
@@ -774,7 +774,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                 catch (Exception e) {
                     logException(e, "Sync failed");
 
-                    showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.upload" +
+                    context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.upload" +
                             ".message");
                 }
             }
