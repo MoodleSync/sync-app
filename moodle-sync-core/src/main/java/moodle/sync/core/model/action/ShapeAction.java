@@ -1,0 +1,84 @@
+/*
+ * Copyright (C) 2020 TU Darmstadt, Department of Computer Science,
+ * Embedded Systems and Applications Group.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package moodle.sync.core.model.action;
+
+import moodle.sync.core.model.Page;
+import moodle.sync.core.model.shape.Shape;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Abstract class for an action executed on a {@link Page} object. Redo- and
+ * undoable actions should be implemented as subclasses of AbstractAction.
+ *
+ * @author Tobias
+ */
+public abstract class ShapeAction {
+
+	/** The list of shapes. */
+	private final List<Shape> shapes = new ArrayList<>();
+
+	/** The page. */
+	private final Page page;
+
+	/**
+	 * Create a {@link ShapeAction} with the specified page.
+	 *
+	 * @param page The page.
+	 */
+	public ShapeAction(Page page) {
+		this.page = page;
+	}
+
+	/**
+	 * Executes the action.
+	 */
+	public abstract void execute();
+
+	/**
+	 * Undoes the action. Should have exactly the reverse effect as execute/redo.
+	 */
+	public abstract void undo();
+
+	/**
+	 * Redoes the action. Should have exactly the reverse effect as undo.
+	 */
+	public abstract void redo();
+
+	/**
+	 * Get the page.
+	 *
+	 * @return The page.
+	 */
+	public Page getPage() {
+		return page;
+	}
+
+	/**
+	 * Get the shapes.
+	 *
+	 * @return The list of shapes.
+	 */
+	public List<Shape> getShapes() {
+		return shapes;
+	}
+
+}

@@ -63,6 +63,7 @@ public class MoodleUploadTemp {
                     .url(moodleUrl + "/webservice/upload.php?token=" + token)
                     .method("POST", body)
                     .build();
+            System.out.println("--------------------------------------" + request.toString());
             ResponseBody response = client.newCall(request).execute().body();
             String bodystring = response.string();
             ObjectMapper objectMapper = new ObjectMapper();

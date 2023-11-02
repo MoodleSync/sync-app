@@ -2,11 +2,11 @@ package moodle.sync.core.config;
 
 
 import moodle.sync.core.model.json.Course;
-import org.lecturestudio.core.beans.BooleanProperty;
+import moodle.sync.core.beans.BooleanProperty;
 import moodle.sync.core.model.json.Section;
-import org.lecturestudio.core.app.configuration.Configuration;
-import org.lecturestudio.core.beans.ObjectProperty;
-import org.lecturestudio.core.beans.StringProperty;
+import moodle.sync.core.app.configuration.Configuration;
+import moodle.sync.core.beans.ObjectProperty;
+import moodle.sync.core.beans.StringProperty;
 
 import java.util.Locale;
 import java.util.Objects;

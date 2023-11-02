@@ -4,13 +4,13 @@ import java.io.File;
 
 import javax.inject.Inject;
 
-import org.lecturestudio.core.app.AppDataLocator;
-import org.lecturestudio.core.app.ApplicationContext;
-import org.lecturestudio.core.app.configuration.Configuration;
-import org.lecturestudio.core.app.configuration.ConfigurationService;
-import org.lecturestudio.core.app.configuration.JsonConfigurationService;
-import org.lecturestudio.core.app.dictionary.Dictionary;
-import org.lecturestudio.core.bus.EventBus;
+import moodle.sync.core.app.AppDataLocator;
+import moodle.sync.core.app.ApplicationContext;
+import moodle.sync.core.app.configuration.Configuration;
+import moodle.sync.core.app.configuration.ConfigurationService;
+import moodle.sync.core.app.configuration.JsonConfigurationService;
+import moodle.sync.core.app.dictionary.Dictionary;
+import moodle.sync.core.bus.EventBus;
 
 public class MoodleSyncContext extends ApplicationContext {
 
@@ -19,8 +19,8 @@ public class MoodleSyncContext extends ApplicationContext {
 
 	@Inject
 	public MoodleSyncContext(AppDataLocator dataLocator, File configFile,
-			Configuration config, Dictionary dict, EventBus eventBus,
-			EventBus audioBus) {
+							 Configuration config, Dictionary dict, EventBus eventBus,
+							 EventBus audioBus) {
 		super(dataLocator, config, dict, eventBus, audioBus);
 
 		this.configFile = configFile;

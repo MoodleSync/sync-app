@@ -9,7 +9,7 @@ import moodle.sync.core.util.MoodleAction;
 import moodle.sync.javafx.model.SyncTableElement;
 
 import org.controlsfx.control.PopOver;
-import org.lecturestudio.javafx.control.SvgIcon;
+import moodle.sync.core.javafx.control.SvgIcon;
 
 /**
  * Class used to change the background color of a TableCell.
