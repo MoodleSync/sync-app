@@ -461,11 +461,12 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
 
             for (Section section : courseContent) {
                 if (section.getId() != -2) {
-                    data.add(new SyncTableElement(section.getName(), section.getId(), section.getSection(), section.getId(), data.size(), section.getSummary(), "", false, false, MoodleAction.ExistingSection, section.getVisible() == 1, true));
+                    data.add(new SyncTableElement(section.getName().trim(), section.getId(), section.getSection(),
+                            section.getId(), data.size(), section.getSummary(), "", false, false, MoodleAction.ExistingSection, section.getVisible() == 1, true));
 
                     Path execute =
                             Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() +
-                                    "_" + section.getName());
+                                    "_" + section.getName().trim());
                     //Create Section-Folder if not exists
                     FileService.directoryManager(execute);
                     List<List<Path>> localContent =
@@ -479,7 +480,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                             localContent.set(0, elem.getFileList());
                             data.add(elem.getElement());
                             if(elem.getElement().getDownloadable()) {
-                                elem.getElement().setSectionName(section.getName());
+                                elem.getElement().setSectionName(section.getName().trim());
                             }
                         } else {
                             data.add(new SyncTableElement(module.getName(), module.getId(), section.getSection(), section.getId(), data.size(), module.getModname(), "", false, false, MoodleAction.NotLocalFile, module.getUservisible(), module.getUservisible()));
@@ -537,7 +538,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                 //Handle every section on its own
                 //Section "select all" should not be considered
                 if (section.getId() != -2) {
-                    String sectionName = section.getName();
+                    String sectionName = section.getName().trim();
                     int sectionNum = section.getSection();
                     int sectionId = section.getId();
 
@@ -591,7 +592,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                                 if (pos >= 0) {
                                     //If it exists, check if it should be updated.
                                     watcher =
-                                            new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() + "_" + section.getName() + "/" + localContent.get(2).get(pos).getFileName()).toFile());
+                                            new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() + "_" + section.getName().trim() + "/" + localContent.get(2).get(pos).getFileName()).toFile());
                                     watcher.addListener(this).watch();
                                     data.add(FileService.checkDirectoryForUpdates(localContent.get(2).get(pos),
                                             module, sectionNum, sectionId, data.size(), config.getFormatsMoodle()));
@@ -631,7 +632,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                                     sectionId, data.size(), "folder", directory, true, false,
                                     MoodleAction.FolderUpload, true, -1, null, content, -1, true));
                             watcher =
-                                    new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() + "_" + section.getName() + "/" + directory.getFileName()).toFile());
+                                    new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() + "_" + section.getName().trim() + "/" + directory.getFileName()).toFile());
                             watcher.addListener(this).watch();
                         }
                     }

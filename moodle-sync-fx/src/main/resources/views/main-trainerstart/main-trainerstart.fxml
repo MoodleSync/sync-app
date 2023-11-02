@@ -56,9 +56,9 @@
                         <SvgIcon styleClass="icon, download-icon" />
                     </graphic>
                 </Button>
-                <Button fx:id="updateButton" mnemonicParsing="false" text="%start.update"/>
-                <Button fx:id="syncButton" mnemonicParsing="false" text="%start.sync" />
-                <Button fx:id="settingsButton" mnemonicParsing="false" text="%start.settings" />
+                <Button fx:id="updateButton" mnemonicParsing="false" text="%start.update" minWidth="90"/>
+                <Button fx:id="syncButton" mnemonicParsing="false" text="%start.sync" minWidth="110" />
+                <Button fx:id="settingsButton" mnemonicParsing="false" text="%start.settings" minWidth="95" />
                 <Button fx:id="helpButton" mnemonicParsing="false" text="%start.help" >
                     <tooltip><Tooltip text="%start.help.tooltip" /></tooltip>
                     <graphic>

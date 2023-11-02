@@ -1,0 +1,6 @@
+.scroll-pane-focus,
+.scroll-pane-focus:focused{
+    -fx-background-color: -fx-box-border, -fx-control-inner-background;
+    -fx-background-insets: 0, 1;
+    -fx-font-size: 11px;
+}

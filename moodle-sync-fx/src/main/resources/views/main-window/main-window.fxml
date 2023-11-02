@@ -3,21 +3,24 @@
 <?import java.lang.String?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
+<?import moodle.sync.javafx.view.FxTrainerStartView?>
+<?import javafx.scene.control.ScrollPane?>
 
 <!--
     In this document, the layout of the "main-window" is defined
 -->
 
-<?import moodle.sync.javafx.view.FxTrainerStartView?>
 <fx:root type="StackPane" prefWidth="800" prefHeight="700" xmlns="http://javafx.com/javafx/8"
 		 xmlns:fx="http://javafx.com/fxml/1">
 	<stylesheets>
 		<String fx:value="/resources/css/base.css" />
 	</stylesheets>
 
+	<ScrollPane fitToWidth="true" fitToHeight="true" pannable="true" styleClass="scroll-pane-focus">
 	<BorderPane fx:id="contentPane">
 		<center>
-			<FxTrainerStartView />
+				<FxTrainerStartView/>
 		</center>
 	</BorderPane>
+	</ScrollPane>
 </fx:root>

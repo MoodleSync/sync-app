@@ -58,6 +58,8 @@
 		<package.bundle.dir>${package.name}-bundle-${os.name}</package.bundle.dir>
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 		<license.path>${project.basedir}/../</license.path>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 
 	<build>
