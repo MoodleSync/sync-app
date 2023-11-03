@@ -16,23 +16,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package moodle.sync.core.util;
+package moodle.sync.javafx.core.view;
+
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.scene.Scene;
+
+import static java.util.Objects.nonNull;
+
+public interface FxView {
+
+	Scene getScene();
+
+	ReadOnlyObjectProperty<Scene> sceneProperty();
 
 
-/**
- * The listener that is called when changes to the {@link org.lecturestudio.core.util.ObservableSet} occur.
- * 
- * @author Alex Andres
- *
- * @param <T>
- */
-public interface SetChangeListener<T extends ObservableSet<?>> {
+	default void onSceneSet() {
 
-	/**
-	 * Called whenever one or more elements in the Set have changed.
-	 *
-	 * @param set The changed Set.
-	 */
-	void setChanged(T set);
-	
+	}
+
+	default void registerOnSceneSet() {
+		sceneProperty().addListener(new InvalidationListener() {
+
+			@Override
+			public void invalidated(Observable observable) {
+				Scene scene = getScene();
+
+				if (nonNull(scene)) {
+					sceneProperty().removeListener(this);
+
+					onSceneSet();
+				}
+			}
+		});
+	}
+
 }

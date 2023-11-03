@@ -16,23 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package moodle.sync.core.util;
+package moodle.sync.core.presenter.command;
 
+public class CloseApplicationCommand {
 
-/**
- * The listener that is called when changes to the {@link org.lecturestudio.core.util.ObservableSet} occur.
- * 
- * @author Alex Andres
- *
- * @param <T>
- */
-public interface SetChangeListener<T extends ObservableSet<?>> {
-
-	/**
-	 * Called whenever one or more elements in the Set have changed.
-	 *
-	 * @param set The changed Set.
-	 */
-	void setChanged(T set);
-	
 }

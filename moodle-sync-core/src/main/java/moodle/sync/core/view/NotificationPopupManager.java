@@ -16,23 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package moodle.sync.core.util;
+package moodle.sync.core.view;
 
+public interface NotificationPopupManager {
 
-/**
- * The listener that is called when changes to the {@link org.lecturestudio.core.util.ObservableSet} occur.
- * 
- * @author Alex Andres
- *
- * @param <T>
- */
-public interface SetChangeListener<T extends ObservableSet<?>> {
+    void show(View rootView, NotificationPopupView view);
 
-	/**
-	 * Called whenever one or more elements in the Set have changed.
-	 *
-	 * @param set The changed Set.
-	 */
-	void setChanged(T set);
-	
 }

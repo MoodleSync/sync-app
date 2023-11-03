@@ -37,7 +37,6 @@ import moodle.sync.core.view.NotificationPopupManager;
 import moodle.sync.core.view.NotificationPopupView;
 import moodle.sync.core.view.NotificationType;
 import moodle.sync.core.view.View;
-import moodle.sync.core.view.ViewContextFactory;
 import moodle.sync.core.view.ViewHandler;
 import moodle.sync.core.view.ViewLayer;
 import moodle.sync.web.api.model.GitHubRelease;
@@ -49,7 +48,7 @@ import moodle.sync.web.api.service.VersionChecker;
 /**
  * Class defining the logic of the "main-window".
  */
-public class MainPresenter extends org.lecturestudio.core.presenter.MainPresenter<MainView> implements ViewHandler {
+public class MainPresenter extends MainPresenter<MainView> implements ViewHandler {
 
 	private final ObservableMap<Class<? extends View>, BooleanProperty> viewMap;
 
@@ -60,8 +59,6 @@ public class MainPresenter extends org.lecturestudio.core.presenter.MainPresente
 	private final List<Presenter<?>> contexts;
 
 	private final NotificationPopupManager popupManager;
-
-	private final ViewContextFactory contextFactory;
 
 	/** The waiting notification. */
 	private NotificationPresenter notificationPresenter;

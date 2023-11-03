@@ -16,23 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package moodle.sync.core.util;
+package moodle.sync.javafx.core.view;
 
+import moodle.sync.core.presenter.Presenter;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * The listener that is called when changes to the {@link org.lecturestudio.core.util.ObservableSet} occur.
- * 
- * @author Alex Andres
+ * This annotation is used to mark classes as FXML-based views.
  *
- * @param <T>
+ * @author Alex Andres
  */
-public interface SetChangeListener<T extends ObservableSet<?>> {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE })
+public @interface FxmlView {
 
-	/**
-	 * Called whenever one or more elements in the Set have changed.
-	 *
-	 * @param set The changed Set.
-	 */
-	void setChanged(T set);
-	
+	String name() default "";
+
+	Class<? extends Presenter> presenter() default Presenter.class;
+
 }

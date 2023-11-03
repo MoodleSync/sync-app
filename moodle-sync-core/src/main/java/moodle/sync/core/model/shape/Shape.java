@@ -21,7 +21,6 @@ package moodle.sync.core.model.shape;
 import moodle.sync.core.geometry.PenPoint2D;
 import moodle.sync.core.geometry.Point2D;
 import moodle.sync.core.geometry.Rectangle2D;
-import moodle.sync.core.input.KeyEvent;
 import moodle.sync.core.model.listener.ShapeChangeListener;
 
 import java.io.IOException;
@@ -47,8 +46,6 @@ public abstract class Shape implements Cloneable {
 	private int handle = hashCode();
 
 	private boolean selected = false;
-
-	private KeyEvent keyEvent;
 
 	@Override
 	public abstract Shape clone();
@@ -153,24 +150,6 @@ public abstract class Shape implements Cloneable {
 	}
 
 	/**
-	 * Set new key event.
-	 *
-	 * @param event The new key event.
-	 */
-	public void setKeyEvent(KeyEvent event) {
-		this.keyEvent = event;
-	}
-
-	/**
-	 * Get the key event.
-	 *
-	 * @return The key event.
-	 */
-	public KeyEvent getKeyEvent() {
-		return keyEvent;
-	}
-
-	/**
 	 * Translate all points of {@link #points} by the specified delta.
 	 *
 	 * @param delta The delta by which to translate the points.
@@ -258,71 +237,5 @@ public abstract class Shape implements Cloneable {
 		fireShapeChanged(getBounds());
 	}
 
-	/**
-	 * Creates a new {@link ByteBuffer} with the specified length of the payload and inserts default shape fields.
-	 * The buffer will be of the size of the specified length + the length of the inserted default fields.
-	 *
-	 * @param length The length of the payload of the specific shape.
-	 *
-	 * @return A new {@link ByteBuffer} with pre-filled default shape fields.
-	 */
-	protected ByteBuffer createBuffer(int length) {
-		int header = 0;
-
-		KeyEvent keyEvent = getKeyEvent();
-
-		if (keyEvent != null) {
-			length += 9;
-
-			// Set the flag in the header.
-			header |= KEY_EVENT_MASK;
-		}
-
-		ByteBuffer buffer = ByteBuffer.allocate(length + 8);
-
-		// Set header.
-		buffer.putInt(header);
-		// Shape handle.
-		buffer.putInt(getHandle());
-
-		if (keyEvent != null) {
-			// KeyEvent: 9 bytes.
-			buffer.putInt(keyEvent.getKeyCode());
-			buffer.putInt(keyEvent.getModifiers());
-			buffer.put((byte) keyEvent.getEventType().ordinal());
-		}
-
-		return buffer;
-	}
-
-	/**
-	 * Creates a new {@link ByteBuffer} with the specified payload to read from
-	 * and reads default shape fields, if any present.
-	 *
-	 * @param input The shape payload data.
-	 *
-	 * @return A new {@link ByteBuffer} to read specific shape fields.
-	 */
-	protected ByteBuffer createBuffer(byte[] input) {
-		ByteBuffer buffer = ByteBuffer.wrap(input);
-
-		int header = buffer.getInt();
-		int handle = buffer.getInt();
-
-		setHandle(handle);
-
-		if ((header & KEY_EVENT_MASK) == KEY_EVENT_MASK) {
-			// KeyEvent
-			int keyCode = buffer.getInt();
-			int modifiers = buffer.getInt();
-
-			KeyEvent.EventType eventType = KeyEvent.EventType.values()[buffer.get()];
-			KeyEvent keyEvent = new KeyEvent(keyCode, modifiers, eventType);
-
-			setKeyEvent(keyEvent);
-		}
-
-		return buffer;
-	}
 
 }

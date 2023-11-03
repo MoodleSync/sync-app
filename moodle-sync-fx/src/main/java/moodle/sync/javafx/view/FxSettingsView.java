@@ -12,12 +12,12 @@ import moodle.sync.core.beans.BooleanProperty;
 import moodle.sync.core.beans.ObjectProperty;
 import moodle.sync.core.beans.StringProperty;
 import moodle.sync.core.view.Action;
-import moodle.sync.core.javafx.beans.LectBooleanProperty;
-import moodle.sync.core.javafx.beans.LectObjectProperty;
-import moodle.sync.core.javafx.beans.LectStringProperty;
-import moodle.sync.core.javafx.util.FxUtils;
-import moodle.sync.core.javafx.view.FxView;
-import moodle.sync.core.javafx.view.FxmlView;
+import moodle.sync.javafx.core.beans.LectBooleanProperty;
+import moodle.sync.javafx.core.beans.LectObjectProperty;
+import moodle.sync.javafx.core.beans.LectStringProperty;
+import moodle.sync.javafx.core.util.FxUtils;
+import moodle.sync.javafx.core.view.FxView;
+import moodle.sync.javafx.core.view.FxmlView;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;

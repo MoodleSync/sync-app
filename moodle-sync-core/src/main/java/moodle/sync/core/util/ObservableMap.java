@@ -18,21 +18,30 @@
 
 package moodle.sync.core.util;
 
+import java.util.Map;
 
 /**
- * The listener that is called when changes to the {@link org.lecturestudio.core.util.ObservableSet} occur.
- * 
+ * A {@link Map} that notifies when changes occur.
+ *
  * @author Alex Andres
  *
- * @param <T>
+ * @param <K> The key type.
+ * @param <V> The value type.
  */
-public interface SetChangeListener<T extends ObservableSet<?>> {
+public interface ObservableMap<K, V> extends Map<K, V> {
 
-	/**
-	 * Called whenever one or more elements in the Set have changed.
-	 *
-	 * @param set The changed Set.
-	 */
-	void setChanged(T set);
-	
+    /**
+     * Adds a listener to be notified when changes to the map occur.
+     *
+     * @param listener The listener to be notified on map changes.
+     */
+    void addListener(MapChangeListener<K, V> listener);
+
+    /**
+     * Removes a previously added listener.
+     *
+     * @param listener The listener to remove.
+     */
+    void removeListener(MapChangeListener<K, V> listener);
+
 }

@@ -25,14 +25,11 @@ import moodle.sync.core.beans.BooleanProperty;
 import moodle.sync.core.bus.EventBus;
 
 import moodle.sync.core.geometry.Position;
-import moodle.sync.core.model.DocumentList;
 import moodle.sync.core.presenter.command.ConfirmationNotificationCommand;
 import moodle.sync.core.presenter.command.NotificationCommand;
 import moodle.sync.core.presenter.command.NotificationPopupCommand;
-import moodle.sync.core.service.DocumentService;
 import moodle.sync.core.view.Action;
 import moodle.sync.core.view.NotificationType;
-import moodle.sync.core.view.PresentationParameterProvider;
 import moodle.sync.core.view.ViewType;
 
 import java.text.MessageFormat;
@@ -44,7 +41,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base application context implementation that holds data object required by
  * the application. Such objects are, for instance, the {@link Configuration},
- * the {@link Dictionary} or the {@link DocumentService}.
+ * the {@link Dictionary}
  *
  * @author Alex Andres
  */
@@ -61,9 +58,6 @@ public abstract class ApplicationContext {
 
 	/** The application dictionary. */
 	private final Dictionary dictionary;
-
-	/** The document service to manage all slide documents. */
-	private final DocumentService documentService;
 
 	/** The presentation provider to manage the presentation of each page. */
 	private final Map<ViewType, PresentationParameterProvider> ppProvider;
@@ -102,7 +96,6 @@ public abstract class ApplicationContext {
 		this.eventBus = eventBus;
 		this.audioBus = audioBus;
 		this.ppProvider = new EnumMap<>(ViewType.class);
-		this.documentService = new DocumentService(this);
 
 		ppProvider.put(ViewType.User, new PresentationParameterProvider(config));
 		ppProvider.put(ViewType.Preview, new PresentationParameterProvider(config));
@@ -128,15 +121,6 @@ public abstract class ApplicationContext {
 	}
 
 	/**
-	 * Obtain the document service.
-	 *
-	 * @return the document service.
-	 */
-	public DocumentService getDocumentService() {
-		return documentService;
-	}
-
-	/**
 	 * Obtain the application event data bus.
 	 *
 	 * @return the application event data bus.
@@ -152,15 +136,6 @@ public abstract class ApplicationContext {
 	 */
 	public EventBus getAudioBus() {
 		return audioBus;
-	}
-
-	/**
-	 * Obtain the list of all opened documents.
-	 *
-	 * @return the list of all opened documents.
-	 */
-	public DocumentList getDocuments() {
-		return documentService.getDocuments();
 	}
 
 	/**

@@ -17,8 +17,8 @@ import moodle.sync.core.view.Action;
 import moodle.sync.core.view.View;
 import moodle.sync.core.view.ViewLayer;
 import moodle.sync.core.javafx.beans.converter.KeyEventConverter;
-import moodle.sync.core.javafx.util.FxUtils;
-import moodle.sync.core.javafx.view.FxmlView;
+import moodle.sync.javafx.core.util.FxUtils;
+import moodle.sync.javafx.core.view.FxmlView;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

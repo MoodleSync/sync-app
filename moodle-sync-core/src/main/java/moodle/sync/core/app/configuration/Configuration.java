@@ -24,7 +24,6 @@ import moodle.sync.core.beans.DoubleProperty;
 import moodle.sync.core.beans.ObjectProperty;
 import moodle.sync.core.beans.StringProperty;
 import moodle.sync.core.geometry.Dimension2D;
-import moodle.sync.core.model.RecentDocument;
 import moodle.sync.core.util.ObservableArrayList;
 import moodle.sync.core.util.ObservableHashMap;
 import moodle.sync.core.util.ObservableList;
@@ -89,9 +88,6 @@ public class Configuration {
 
 	/** The tool configuration containing all tool related properties. */
 	private final ToolConfiguration toolConfig = new ToolConfiguration();
-
-	/** The audio configuration containing all audio related properties. */
-	private final AudioConfiguration audioConfig = new AudioConfiguration();
 
 
 	/**
@@ -492,13 +488,5 @@ public class Configuration {
 		return toolConfig;
 	}
 
-	/**
-	 * Obtain the audio configuration containing all audio related properties.
-	 *
-	 * @return the audio configuration.
-	 */
-	public AudioConfiguration getAudioConfig() {
-		return audioConfig;
-	}
 
 }

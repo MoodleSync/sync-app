@@ -31,13 +31,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 
-import moodle.sync.core.app.configuration.bind.AudioFormatDeserializer;
-import moodle.sync.core.app.configuration.bind.AudioFormatSerializer;
 import moodle.sync.core.app.configuration.bind.CalendarDeserializer;
 import moodle.sync.core.app.configuration.bind.ColorDeserializer;
 import moodle.sync.core.app.configuration.bind.ColorSerializer;
 import moodle.sync.core.app.configuration.bind.Rectangle2DMixin;
-import moodle.sync.core.audio.AudioFormat;
 import moodle.sync.core.geometry.Rectangle2D;
 import moodle.sync.core.graphics.Color;
 import moodle.sync.core.util.ObservableArrayList;
@@ -72,9 +69,7 @@ public class JsonConfigurationService<T> implements ConfigurationService<T> {
 		module.addAbstractTypeMapping(ObservableList.class, ObservableArrayList.class);
 		module.addAbstractTypeMapping(ObservableSet.class, ObservableHashSet.class);
 		module.addSerializer(Color.class, new ColorSerializer());
-		module.addSerializer(AudioFormat.class, new AudioFormatSerializer());
 		module.addDeserializer(Color.class, new ColorDeserializer());
-		module.addDeserializer(AudioFormat.class, new AudioFormatDeserializer());
 		module.addDeserializer(Calendar.class, new CalendarDeserializer());
 		module.setMixInAnnotation(Rectangle2D.class, Rectangle2DMixin.class);
 

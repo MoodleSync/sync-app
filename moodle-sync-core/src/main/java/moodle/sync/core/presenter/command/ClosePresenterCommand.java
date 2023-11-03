@@ -16,23 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package moodle.sync.core.util;
+package moodle.sync.core.presenter.command;
+
+import moodle.sync.core.presenter.Presenter;
+
+public class ClosePresenterCommand {
+
+    /** The presenter class. */
+    private final Class<? extends Presenter<?>> cls;
 
 
-/**
- * The listener that is called when changes to the {@link org.lecturestudio.core.util.ObservableSet} occur.
- * 
- * @author Alex Andres
- *
- * @param <T>
- */
-public interface SetChangeListener<T extends ObservableSet<?>> {
+    /**
+     * Create a new {@link ClosePresenterCommand} with the specified presenter class.
+     *
+     * @param cls The presenter class.
+     */
+    public ClosePresenterCommand(Class<? extends Presenter<?>> cls) {
+        this.cls = cls;
+    }
 
-	/**
-	 * Called whenever one or more elements in the Set have changed.
-	 *
-	 * @param set The changed Set.
-	 */
-	void setChanged(T set);
-	
+    /**
+     * Get the presenter class.
+     *
+     * @return The presenter class.
+     */
+    public Class<? extends Presenter<?>> getPresenterClass() {
+        return cls;
+    }
 }
