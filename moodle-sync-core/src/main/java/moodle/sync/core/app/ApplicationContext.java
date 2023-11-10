@@ -30,11 +30,9 @@ import moodle.sync.core.presenter.command.NotificationCommand;
 import moodle.sync.core.presenter.command.NotificationPopupCommand;
 import moodle.sync.core.view.Action;
 import moodle.sync.core.view.NotificationType;
-import moodle.sync.core.view.ViewType;
 
 import java.text.MessageFormat;
-import java.util.EnumMap;
-import java.util.Map;
+
 
 import static java.util.Objects.requireNonNull;
 
@@ -59,8 +57,6 @@ public abstract class ApplicationContext {
 	/** The application dictionary. */
 	private final Dictionary dictionary;
 
-	/** The presentation provider to manage the presentation of each page. */
-	private final Map<ViewType, PresentationParameterProvider> ppProvider;
 
 	/** The application event data bus. */
 	private final EventBus eventBus;
@@ -95,11 +91,6 @@ public abstract class ApplicationContext {
 		this.dictionary = dict;
 		this.eventBus = eventBus;
 		this.audioBus = audioBus;
-		this.ppProvider = new EnumMap<>(ViewType.class);
-
-		ppProvider.put(ViewType.User, new PresentationParameterProvider(config));
-		ppProvider.put(ViewType.Preview, new PresentationParameterProvider(config));
-		ppProvider.put(ViewType.Presentation, new PresentationParameterProvider(config));
 	}
 
 	/**
@@ -139,24 +130,14 @@ public abstract class ApplicationContext {
 	}
 
 	/**
-	 * Obtain the {@link org.lecturestudio.core.app.AppDataLocator} to access application specific data.
+	 * Obtain the AppDataLocator to access application specific data.
 	 *
-	 * @return the {@link org.lecturestudio.core.app.AppDataLocator}.
+	 * @return the AppDataLocator.
 	 */
 	public AppDataLocator getDataLocator() {
 		return dataLocator;
 	}
 
-	/**
-	 * Obtain the {@link PresentationParameterProvider} for the given {@link ViewType}.
-	 *
-	 * @param type The {@link ViewType} of the presentation provider.
-	 *
-	 * @return the {@link PresentationParameterProvider} bound to the {@link ViewType}.
-	 */
-	public PresentationParameterProvider getPagePropertyProvider(ViewType type) {
-		return ppProvider.get(type);
-	}
 
 	/**
 	 * Puts the application in full screen mode.

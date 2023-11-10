@@ -24,9 +24,7 @@ import moodle.sync.core.beans.DoubleProperty;
 import moodle.sync.core.beans.ObjectProperty;
 import moodle.sync.core.beans.StringProperty;
 import moodle.sync.core.geometry.Dimension2D;
-import moodle.sync.core.util.ObservableArrayList;
 import moodle.sync.core.util.ObservableHashMap;
-import moodle.sync.core.util.ObservableList;
 
 import java.util.Locale;
 
@@ -74,20 +72,9 @@ public class Configuration {
 	/** Defines the extended drawing area of a page. */
 	private final ObjectProperty<Dimension2D> extendPageDimension = new ObjectProperty<>();
 
-	/** The list of recently opened slide documents. */
-	private final ObservableList<RecentDocument> recentDocuments = new ObservableArrayList<>();
-
 	/** The mapping of a filesystem path to a related context. */
 	private final ObservableHashMap<String, String> contextPaths = new ObservableHashMap<>();
 
-	/** The whiteboard configuration containing all whiteboard related properties. */
-	private final WhiteboardConfiguration whiteboardConfig = new WhiteboardConfiguration();
-
-	/** The grid display containing all display related properties. */
-	private final DisplayConfiguration displayConfig = new DisplayConfiguration();
-
-	/** The tool configuration containing all tool related properties. */
-	private final ToolConfiguration toolConfig = new ToolConfiguration();
 
 
 	/**
@@ -441,17 +428,6 @@ public class Configuration {
 	}
 
 	/**
-	 * Obtain the list of recently opened slide documents.
-	 *
-	 * @return the list of recently opened slide documents.
-	 *
-	 * @see RecentDocument
-	 */
-	public ObservableList<RecentDocument> getRecentDocuments() {
-		return recentDocuments;
-	}
-
-	/**
 	 * Returns the mapping of a filesystem path to a related context.
 	 *
 	 * @return The context to path mapping.
@@ -460,33 +436,6 @@ public class Configuration {
 		return contextPaths;
 	}
 
-	/**
-	 * Obtain the whiteboard configuration containing all whiteboard related
-	 * properties.
-	 *
-	 * @return the whiteboard configuration.
-	 */
-	public WhiteboardConfiguration getWhiteboardConfig() {
-		return whiteboardConfig;
-	}
-
-	/**
-	 * Obtain the grid display containing all display related properties.
-	 *
-	 * @return the display configuration.
-	 */
-	public DisplayConfiguration getDisplayConfig() {
-		return displayConfig;
-	}
-
-	/**
-	 * Obtain the tool configuration containing all tool related properties.
-	 *
-	 * @return the tool configuration.
-	 */
-	public ToolConfiguration getToolConfig() {
-		return toolConfig;
-	}
 
 
 }

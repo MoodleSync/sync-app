@@ -13,19 +13,20 @@ import java.util.ResourceBundle;
 
 import javax.inject.Singleton;
 
+import moodle.sync.core.app.AppDataLocator;
+import moodle.sync.core.app.ApplicationContext;
+import moodle.sync.core.app.LocaleProvider;
+import moodle.sync.core.app.configuration.Configuration;
+import moodle.sync.core.app.configuration.ConfigurationService;
+import moodle.sync.core.app.configuration.JsonConfigurationService;
+import moodle.sync.core.app.dictionary.Dictionary;
+import moodle.sync.core.bus.ApplicationBus;
+import moodle.sync.core.bus.AudioBus;
+import moodle.sync.core.bus.EventBus;
+import moodle.sync.core.util.DirUtils;
 import moodle.sync.core.web.service.MoodleService;
-import org.lecturestudio.core.app.AppDataLocator;
-import org.lecturestudio.core.app.ApplicationContext;
-import org.lecturestudio.core.app.LocaleProvider;
-import org.lecturestudio.core.app.configuration.Configuration;
-import org.lecturestudio.core.app.configuration.ConfigurationService;
-import org.lecturestudio.core.app.configuration.JsonConfigurationService;
-import org.lecturestudio.core.app.dictionary.Dictionary;
-import org.lecturestudio.core.audio.bus.AudioBus;
-import org.lecturestudio.core.bus.ApplicationBus;
-import org.lecturestudio.core.bus.EventBus;
-import org.lecturestudio.core.util.AggregateBundle;
-import org.lecturestudio.core.util.DirUtils;
+import moodle.sync.core.util.AggregateBundle;
+
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

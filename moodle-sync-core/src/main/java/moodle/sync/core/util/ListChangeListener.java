@@ -19,7 +19,7 @@
 package moodle.sync.core.util;
 
 /**
- * The listener that is called when changes to the {@link org.lecturestudio.core.util.ObservableList} occur.
+ * The listener that is called when changes to the {@link moodle.sync.core.util.ObservableList} occur.
  * 
  * @author Alex Andres
  *

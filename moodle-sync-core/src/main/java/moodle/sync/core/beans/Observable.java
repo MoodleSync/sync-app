@@ -29,7 +29,7 @@ package moodle.sync.core.beans;
 public interface Observable<T> {
 
 	/**
-	 * Adds the given {@link org.lecturestudio.core.beans.ChangeListener} to be notified whenever the value of this
+	 * Adds the given {@link moodle.sync.core.beans.ChangeListener} to be notified whenever the value of this
 	 * {@link Observable} has changed.
 	 *
 	 * @param listener The listener to register.
@@ -39,7 +39,7 @@ public interface Observable<T> {
 	void addListener(ChangeListener<? super T> listener);
 
 	/**
-	 * Removes the given {@link org.lecturestudio.core.beans.ChangeListener} from the listener list.
+	 * Removes the given {@link moodle.sync.core.beans.ChangeListener} from the listener list.
 	 *
 	 * @param listener The listener to remove.
 	 */

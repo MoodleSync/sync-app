@@ -1,0 +1,19 @@
+.page-slider {
+    -fx-text-fill: -fx-text-inner-color;
+    -fx-background-color: rgba(210, 210, 210, 0.7);
+    -fx-border-radius: 5 5 5 5;
+    -fx-background-radius: 5 5 5 5;
+    -fx-background-position: center;
+    -fx-cursor: hand;
+}
+
+.page-event-marker {
+    -fx-fill: #63B3ED;
+}
+.page-event-delete-marker {
+    -fx-fill: #FC8181;
+}
+
+.event-timeline-pane {
+    -fx-background-color: derive(-fx-background, -4%);
+}

@@ -10,7 +10,7 @@ import moodle.sync.core.view.View;
  */
 public interface ConfirmationNotificationView extends View {
 
-	void setOnConfirm(org.lecturestudio.core.view.Action action);
+	void setOnConfirm(Action action);
 
 	void setType(NotificationType type);
 

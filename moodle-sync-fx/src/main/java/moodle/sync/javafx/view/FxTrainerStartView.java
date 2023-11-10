@@ -4,21 +4,21 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import moodle.sync.core.beans.BooleanProperty;
+import moodle.sync.core.beans.ObjectProperty;
 import moodle.sync.core.model.json.Course;
 import moodle.sync.core.model.json.Section;
+import moodle.sync.core.view.Action;
+import moodle.sync.core.view.ConsumerAction;
+import moodle.sync.javafx.core.beans.LectBooleanProperty;
+import moodle.sync.javafx.core.beans.LectObjectProperty;
+import moodle.sync.javafx.core.util.FxUtils;
+import moodle.sync.javafx.core.view.FxmlView;
+import moodle.sync.javafx.core.view.FxView;
 import moodle.sync.javafx.model.SyncTableElement;
 import moodle.sync.presenter.TrainerPresenter;
 import moodle.sync.view.TrainerStartView;
-import org.controlsfx.control.NotificationPane;
-import org.lecturestudio.core.beans.BooleanProperty;
-import org.lecturestudio.core.beans.ObjectProperty;
-import org.lecturestudio.core.view.Action;
-import org.lecturestudio.core.view.ConsumerAction;
-import org.lecturestudio.javafx.beans.LectBooleanProperty;
-import org.lecturestudio.javafx.beans.LectObjectProperty;
-import org.lecturestudio.javafx.util.FxUtils;
-import org.lecturestudio.javafx.view.FxView;
-import org.lecturestudio.javafx.view.FxmlView;
+
 
 import java.util.List;
 

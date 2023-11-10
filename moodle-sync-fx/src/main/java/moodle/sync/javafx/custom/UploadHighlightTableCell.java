@@ -10,10 +10,10 @@ import javafx.scene.layout.VBox;
 
 import javafx.util.converter.DefaultStringConverter;
 import moodle.sync.core.util.MoodleAction;
+import moodle.sync.javafx.core.control.SvgIcon;
 import moodle.sync.javafx.model.SyncTableElement;
 
 import org.controlsfx.control.PopOver;
-import org.lecturestudio.javafx.control.SvgIcon;
 
 /**
  * Class used to display the Name of a Section/ Module including different styles/background colors inside a cell.

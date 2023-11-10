@@ -18,21 +18,28 @@
 
 package moodle.sync.javafx.core.util;
 
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.*;
-import moodle.sync.core.view.Action;
-import moodle.sync.core.view.ConsumerAction;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import static java.util.Objects.*;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.ButtonBase;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import moodle.sync.core.view.Action;
+import moodle.sync.core.view.ConsumerAction;
 
 public final class FxUtils {
 
@@ -70,7 +77,7 @@ public final class FxUtils {
 	 * Run this Runnable in the JavaFX Application Thread. This method can be
 	 * called whether or not the current thread is the JavaFX Application
 	 * Thread.
-	 * 
+	 *
 	 * @param runnable The code to be executed in the JavaFX Application Thread.
 	 */
 	public static void invoke(Runnable runnable) {
@@ -98,10 +105,10 @@ public final class FxUtils {
 			results.addAll(result);
 		}
 
-		for (Node child : parent.getChildrenUnmodifiable()) {
-			if (child instanceof Parent parentChild) {
-				getAllNodesInParent(parentChild, selector, results);
-			}
+		for (Node child : parent.getChildrenUnmodifiable()) { //TODO Alex besprechen
+			//if (child instanceof Parent parentChild) {
+			//	getAllNodesInParent(parentChild, selector, results);
+			//}
 		}
 	}
 

@@ -1,7 +1,8 @@
 package moodle.sync.presenter;
 
-import org.lecturestudio.core.app.ApplicationContext;
-import org.lecturestudio.core.util.ShutdownHandler;
+
+import moodle.sync.core.app.ApplicationContext;
+import moodle.sync.core.util.ShutdownHandler;
 
 public class SaveConfigurationHandler extends ShutdownHandler {
 

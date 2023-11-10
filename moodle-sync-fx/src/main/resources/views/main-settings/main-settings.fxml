@@ -4,7 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import org.lecturestudio.javafx.factory.*?>
+<?import moodle.sync.javafx.factory.LocaleListCell?>
+<?import moodle.sync.javafx.factory.LocaleCellFactory?>
 
 <!--
     In this document, the layout of the "settings-page" is defined

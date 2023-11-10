@@ -1,14 +1,15 @@
 package moodle.sync.view;
 
 import javafx.collections.ObservableList;
+import moodle.sync.core.beans.BooleanProperty;
+import moodle.sync.core.beans.ObjectProperty;
 import moodle.sync.core.model.json.Course;
 import moodle.sync.core.model.json.Section;
+import moodle.sync.core.view.Action;
+import moodle.sync.core.view.ConsumerAction;
+import moodle.sync.core.view.View;
 import moodle.sync.javafx.model.SyncTableElement;
-import org.lecturestudio.core.beans.BooleanProperty;
-import org.lecturestudio.core.beans.ObjectProperty;
-import org.lecturestudio.core.view.Action;
-import org.lecturestudio.core.view.ConsumerAction;
-import org.lecturestudio.core.view.View;
+
 
 import java.util.List;
 

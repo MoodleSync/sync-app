@@ -1,16 +1,15 @@
 package moodle.sync.presenter;
 
+import moodle.sync.core.app.ApplicationContext;
+import moodle.sync.core.app.LocaleProvider;
 import moodle.sync.core.config.DefaultConfiguration;
 import moodle.sync.core.config.MoodleSyncConfiguration;
+import moodle.sync.core.presenter.Presenter;
+import moodle.sync.core.view.ConsumerAction;
+import moodle.sync.core.view.DirectoryChooserView;
+import moodle.sync.core.view.ViewContextFactory;
 import moodle.sync.view.SettingsView;
 import moodle.sync.core.web.service.MoodleService;
-
-import org.lecturestudio.core.app.ApplicationContext;
-import org.lecturestudio.core.app.LocaleProvider;
-import org.lecturestudio.core.presenter.Presenter;
-import org.lecturestudio.core.view.ConsumerAction;
-import org.lecturestudio.core.view.DirectoryChooserView;
-import org.lecturestudio.core.view.ViewContextFactory;
 
 import javax.inject.Inject;
 import java.io.File;

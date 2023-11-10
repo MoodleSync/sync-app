@@ -3,12 +3,12 @@ package moodle.sync.cli.inject;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
+import moodle.sync.core.app.LocaleProvider;
+import moodle.sync.core.app.dictionary.Dictionary;
+import moodle.sync.core.beans.StringProperty;
+import moodle.sync.core.util.AggregateBundle;
 import moodle.sync.core.web.service.MoodleService;
 
-import org.lecturestudio.core.app.LocaleProvider;
-import org.lecturestudio.core.app.dictionary.Dictionary;
-import org.lecturestudio.core.beans.StringProperty;
-import org.lecturestudio.core.util.AggregateBundle;
 
 import javax.inject.Singleton;
 import java.util.Locale;

@@ -1,8 +1,8 @@
 package moodle.sync.javafx.log;
 
-import org.lecturestudio.core.app.AppDataLocator;
-import org.lecturestudio.core.log.Log4jXMLConfigurationFactory;
-import org.lecturestudio.core.model.VersionInfo;
+import moodle.sync.core.app.AppDataLocator;
+import moodle.sync.core.log.Log4jXMLConfigurationFactory;
+import moodle.sync.core.model.VersionInfo;
 
 import org.apache.logging.log4j.core.config.Order;
 import org.apache.logging.log4j.core.config.plugins.Plugin;

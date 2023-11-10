@@ -9,16 +9,14 @@ import javax.inject.Provider;
 
 import javafx.util.BuilderFactory;
 
+import moodle.sync.core.inject.DIViewContextFactory;
+import moodle.sync.core.util.AggregateBundle;
+import moodle.sync.core.view.*;
+import moodle.sync.javafx.guice.FxmlViewLoader;
+import moodle.sync.javafx.guice.FxmlViewMatcher;
 import moodle.sync.javafx.view.*;
 import moodle.sync.view.*;
-
-import org.lecturestudio.core.inject.DIViewContextFactory;
-import org.lecturestudio.core.util.AggregateBundle;
-import org.lecturestudio.core.view.*;
-import org.lecturestudio.javafx.guice.FxmlViewLoader;
-import org.lecturestudio.javafx.guice.FxmlViewMatcher;
-import org.lecturestudio.javafx.view.*;
-import org.lecturestudio.javafx.view.builder.DIBuilderFactory;
+import moodle.sync.view.builder.DIBuilderFactory;
 
 public class ViewModule extends AbstractModule {
 

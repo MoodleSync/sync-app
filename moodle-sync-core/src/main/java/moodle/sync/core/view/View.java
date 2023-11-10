@@ -18,8 +18,6 @@
 
 package moodle.sync.core.view;
 
-import moodle.sync.core.view.Action;
-import moodle.sync.core.view.ConsumerAction;
 
 import static java.util.Objects.nonNull;
 

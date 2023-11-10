@@ -10,12 +10,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.converter.DefaultStringConverter;
+import moodle.sync.core.app.ApplicationContext;
 import moodle.sync.core.util.MoodleAction;
 import moodle.sync.event.DownloadItemEvent;
+import moodle.sync.javafx.core.control.SvgIcon;
 import moodle.sync.javafx.model.SyncTableElement;
 import org.controlsfx.control.PopOver;
-import org.lecturestudio.core.app.ApplicationContext;
-import org.lecturestudio.javafx.control.SvgIcon;
 
 import javax.inject.Inject;
 

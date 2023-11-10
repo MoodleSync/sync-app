@@ -18,8 +18,6 @@
 
 package moodle.sync.core.util;
 
-import org.lecturestudio.core.util.MapChangeListener;
-import org.lecturestudio.core.util.ObservableMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -17,6 +17,7 @@ import java.util.function.Predicate;
 
 import javax.inject.Inject;
 
+import moodle.sync.core.ExecutableBase;
 import moodle.sync.core.app.ApplicationContext;
 import moodle.sync.core.app.configuration.Configuration;
 import moodle.sync.core.beans.BooleanProperty;
@@ -33,22 +34,17 @@ import moodle.sync.core.presenter.command.ShowPresenterCommand;
 import moodle.sync.core.util.ObservableHashMap;
 import moodle.sync.core.util.ObservableMap;
 import moodle.sync.core.util.ShutdownHandler;
-import moodle.sync.core.view.NotificationPopupManager;
-import moodle.sync.core.view.NotificationPopupView;
-import moodle.sync.core.view.NotificationType;
-import moodle.sync.core.view.View;
-import moodle.sync.core.view.ViewHandler;
-import moodle.sync.core.view.ViewLayer;
-import moodle.sync.web.api.model.GitHubRelease;
+import moodle.sync.core.view.*;
 
+import moodle.sync.core.web.model.GitHubRelease;
 import moodle.sync.input.Shortcut;
 import moodle.sync.view.MainView;
-import moodle.sync.web.api.service.VersionChecker;
+import moodle.sync.core.web.model.VersionChecker;
 
 /**
  * Class defining the logic of the "main-window".
  */
-public class MainPresenter extends MainPresenter<MainView> implements ViewHandler {
+public class MainPresenter extends moodle.sync.core.presenter.MainPresenter<MainView> implements ViewHandler {
 
 	private final ObservableMap<Class<? extends View>, BooleanProperty> viewMap;
 
@@ -59,6 +55,8 @@ public class MainPresenter extends MainPresenter<MainView> implements ViewHandle
 	private final List<Presenter<?>> contexts;
 
 	private final NotificationPopupManager popupManager;
+
+	private final ViewContextFactory contextFactory;
 
 	/** The waiting notification. */
 	private NotificationPresenter notificationPresenter;

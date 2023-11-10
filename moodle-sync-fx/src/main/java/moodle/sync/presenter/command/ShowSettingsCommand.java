@@ -1,9 +1,9 @@
 package moodle.sync.presenter.command;
 
 import moodle.sync.core.config.MoodleSyncConfiguration;
+import moodle.sync.core.presenter.command.ShowPresenterCommand;
+import moodle.sync.core.view.ConsumerAction;
 import moodle.sync.presenter.SettingsPresenter;
-import org.lecturestudio.core.presenter.command.ShowPresenterCommand;
-import org.lecturestudio.core.view.ConsumerAction;
 
 /**
  * Class used to display and close the settings Page.

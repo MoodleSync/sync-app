@@ -19,8 +19,8 @@
 package moodle.sync.core.app.configuration.bind;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.lecturestudio.core.geometry.Point2D;
-import org.lecturestudio.core.geometry.Rectangle2D;
+import moodle.sync.core.geometry.Point2D;
+import moodle.sync.core.geometry.Rectangle2D;
 
 /**
  * A {@link Rectangle2D} mixin-class to be registered with the FasterXML/jackson

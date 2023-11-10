@@ -3,6 +3,9 @@ package moodle.sync.cli;
 import static java.util.Objects.nonNull;
 
 import moodle.sync.cli.inject.ApplicationModule;
+import moodle.sync.core.app.dictionary.Dictionary;
+import moodle.sync.core.inject.GuiceInjector;
+import moodle.sync.core.inject.Injector;
 import moodle.sync.core.model.json.Course;
 import moodle.sync.core.model.json.MoodleUpload;
 import moodle.sync.core.model.json.Section;
@@ -10,10 +13,6 @@ import moodle.sync.core.web.service.MoodleService;
 import moodle.sync.core.web.service.MoodleUploadTemp;
 
 import org.apache.commons.cli.*;
-
-import org.lecturestudio.core.app.dictionary.Dictionary;
-import org.lecturestudio.core.inject.GuiceInjector;
-import org.lecturestudio.core.inject.Injector;
 
 import java.io.FileInputStream;
 import java.io.IOException;
