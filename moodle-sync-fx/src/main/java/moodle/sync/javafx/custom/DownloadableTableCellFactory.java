@@ -4,8 +4,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
+import moodle.sync.core.app.ApplicationContext;
 import moodle.sync.javafx.model.SyncTableElement;
-import org.lecturestudio.core.app.ApplicationContext;
 
 import javax.inject.Inject;
 

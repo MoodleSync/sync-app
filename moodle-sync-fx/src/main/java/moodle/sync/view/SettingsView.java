@@ -1,13 +1,13 @@
 package moodle.sync.view;
 
-import org.lecturestudio.core.beans.BooleanProperty;
-import org.lecturestudio.core.beans.ObjectProperty;
-import org.lecturestudio.core.beans.StringProperty;
-import org.lecturestudio.core.view.Action;
-import org.lecturestudio.core.view.View;
-
 import java.util.List;
 import java.util.Locale;
+
+import moodle.sync.core.beans.BooleanProperty;
+import moodle.sync.core.beans.ObjectProperty;
+import moodle.sync.core.beans.StringProperty;
+import moodle.sync.core.view.Action;
+import moodle.sync.core.view.View;
 
 /**
  * Interface defining the functions of the "settings-page".

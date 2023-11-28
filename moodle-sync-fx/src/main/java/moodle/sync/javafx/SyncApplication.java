@@ -1,7 +1,7 @@
 package moodle.sync.javafx;
 
-import org.lecturestudio.core.app.ApplicationFactory;
-import org.lecturestudio.javafx.app.JavaFxApplication;
+import moodle.sync.core.app.ApplicationFactory;
+import moodle.sync.javafx.app.JavaFxApplication;
 
 public class SyncApplication extends JavaFxApplication {
 

@@ -17,39 +17,34 @@ import java.util.function.Predicate;
 
 import javax.inject.Inject;
 
-import org.lecturestudio.core.app.ApplicationContext;
-import org.lecturestudio.core.app.configuration.Configuration;
-import org.lecturestudio.core.beans.BooleanProperty;
-import org.lecturestudio.core.bus.event.ViewVisibleEvent;
-import org.lecturestudio.core.input.KeyEvent;
-import org.lecturestudio.core.model.VersionInfo;
-import org.lecturestudio.core.presenter.NewVersionPresenter;
-import org.lecturestudio.core.presenter.NotificationPresenter;
-import org.lecturestudio.core.presenter.Presenter;
-import org.lecturestudio.core.presenter.command.CloseApplicationCommand;
-import org.lecturestudio.core.presenter.command.ClosePresenterCommand;
-import org.lecturestudio.core.presenter.command.NewVersionCommand;
-import org.lecturestudio.core.presenter.command.ShowPresenterCommand;
-import org.lecturestudio.core.util.ObservableHashMap;
-import org.lecturestudio.core.util.ObservableMap;
-import org.lecturestudio.core.util.ShutdownHandler;
-import org.lecturestudio.core.view.NotificationPopupManager;
-import org.lecturestudio.core.view.NotificationPopupView;
-import org.lecturestudio.core.view.NotificationType;
-import org.lecturestudio.core.view.View;
-import org.lecturestudio.core.view.ViewContextFactory;
-import org.lecturestudio.core.view.ViewHandler;
-import org.lecturestudio.core.view.ViewLayer;
-import org.lecturestudio.web.api.model.GitHubRelease;
+import moodle.sync.core.ExecutableBase;
+import moodle.sync.core.app.ApplicationContext;
+import moodle.sync.core.app.configuration.Configuration;
+import moodle.sync.core.beans.BooleanProperty;
+import moodle.sync.core.bus.event.ViewVisibleEvent;
+import moodle.sync.core.input.KeyEvent;
+import moodle.sync.core.model.VersionInfo;
+import moodle.sync.core.presenter.NewVersionPresenter;
+import moodle.sync.core.presenter.NotificationPresenter;
+import moodle.sync.core.presenter.Presenter;
+import moodle.sync.core.presenter.command.CloseApplicationCommand;
+import moodle.sync.core.presenter.command.ClosePresenterCommand;
+import moodle.sync.core.presenter.command.NewVersionCommand;
+import moodle.sync.core.presenter.command.ShowPresenterCommand;
+import moodle.sync.core.util.ObservableHashMap;
+import moodle.sync.core.util.ObservableMap;
+import moodle.sync.core.util.ShutdownHandler;
+import moodle.sync.core.view.*;
 
+import moodle.sync.core.web.model.GitHubRelease;
 import moodle.sync.input.Shortcut;
 import moodle.sync.view.MainView;
-import org.lecturestudio.web.api.service.VersionChecker;
+import moodle.sync.core.web.model.VersionChecker;
 
 /**
  * Class defining the logic of the "main-window".
  */
-public class MainPresenter extends org.lecturestudio.core.presenter.MainPresenter<MainView> implements ViewHandler {
+public class MainPresenter extends moodle.sync.core.presenter.MainPresenter<MainView> implements ViewHandler {
 
 	private final ObservableMap<Class<? extends View>, BooleanProperty> viewMap;
 

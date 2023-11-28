@@ -9,23 +9,24 @@ import java.util.function.Predicate;
 
 import javax.inject.Inject;
 
-import org.lecturestudio.core.app.ApplicationContext;
-import org.lecturestudio.core.app.Theme;
-import org.lecturestudio.core.app.configuration.Configuration;
-import org.lecturestudio.core.geometry.Rectangle2D;
-import org.lecturestudio.core.view.Action;
-import org.lecturestudio.core.view.View;
-import org.lecturestudio.core.view.ViewLayer;
-import org.lecturestudio.javafx.beans.converter.KeyEventConverter;
-import org.lecturestudio.javafx.util.FxUtils;
-import org.lecturestudio.javafx.view.FxmlView;
+import moodle.sync.core.app.ApplicationContext;
+import moodle.sync.core.app.Theme;
+import moodle.sync.core.app.configuration.Configuration;
+import moodle.sync.core.geometry.Rectangle2D;
+import javafx.scene.input.KeyEvent;
+import moodle.sync.core.view.Action;
+import moodle.sync.core.view.View;
+import moodle.sync.core.view.ViewLayer;
+
+import moodle.sync.javafx.core.beans.converter.KeyEventConverter;
+import moodle.sync.javafx.core.util.FxUtils;
+import moodle.sync.javafx.core.view.FxmlView;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -44,7 +45,7 @@ public class FxMainView extends StackPane implements MainView {
 
 	private final Deque<Node> viewStack;
 
-	private Predicate<org.lecturestudio.core.input.KeyEvent> keyAction;
+	private Predicate<moodle.sync.core.input.KeyEvent> keyAction;
 
 	private Action shownAction;
 
@@ -129,7 +130,7 @@ public class FxMainView extends StackPane implements MainView {
 	}
 
 	@Override
-	public void setOnKeyEvent(Predicate<org.lecturestudio.core.input.KeyEvent> action) {
+	public void setOnKeyEvent(Predicate<moodle.sync.core.input.KeyEvent> action) {
 		this.keyAction = action;
 	}
 
@@ -145,7 +146,7 @@ public class FxMainView extends StackPane implements MainView {
 
 	private void onKeyEvent(KeyEvent event) {
 		if (event.getEventType() == KeyEvent.KEY_PRESSED) {
-			org.lecturestudio.core.input.KeyEvent keyEvent = KeyEventConverter.INSTANCE.from(event);
+			moodle.sync.core.input.KeyEvent keyEvent = KeyEventConverter.INSTANCE.from(event);
 
 			if (nonNull(keyAction) && keyAction.test(keyEvent)) {
 				event.consume();

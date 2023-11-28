@@ -1,7 +1,7 @@
 package moodle.sync.input;
 
-import org.lecturestudio.core.input.KeyCode;
-import org.lecturestudio.core.input.KeyEvent;
+import moodle.sync.core.input.KeyCode;
+import moodle.sync.core.input.KeyEvent;
 
 public enum Shortcut {
 
