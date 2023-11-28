@@ -18,7 +18,6 @@
 
 package moodle.sync.core.app;
 
-import moodle.sync.core.app.ApplicationContext;
 import moodle.sync.core.presenter.MainPresenter;
 
 /**

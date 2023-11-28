@@ -18,9 +18,6 @@
 
 package moodle.sync.core.util;
 
-import moodle.sync.core.util.ObservableSet;
-import moodle.sync.core.util.SetChangeListener;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;

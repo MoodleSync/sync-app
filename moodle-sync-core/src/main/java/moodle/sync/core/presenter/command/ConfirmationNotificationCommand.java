@@ -1,7 +1,6 @@
 package moodle.sync.core.presenter.command;
 
 import moodle.sync.core.presenter.ConfirmationNotificationPresenter;
-import moodle.sync.core.presenter.command.ShowPresenterCommand;
 import moodle.sync.core.view.Action;
 import moodle.sync.core.view.NotificationType;
 

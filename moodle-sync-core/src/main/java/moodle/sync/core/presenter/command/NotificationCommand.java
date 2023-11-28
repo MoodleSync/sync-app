@@ -19,7 +19,6 @@
 package moodle.sync.core.presenter.command;
 
 import moodle.sync.core.presenter.NotificationPresenter;
-import moodle.sync.core.presenter.command.ShowPresenterCommand;
 import moodle.sync.core.view.NotificationType;
 
 /**

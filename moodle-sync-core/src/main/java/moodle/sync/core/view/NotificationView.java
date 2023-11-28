@@ -18,10 +18,6 @@
 
 package moodle.sync.core.view;
 
-import moodle.sync.core.view.Action;
-import moodle.sync.core.view.NotificationType;
-import moodle.sync.core.view.View;
-
 public interface NotificationView extends View {
 
 	void setType(NotificationType type);

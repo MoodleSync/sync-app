@@ -1,10 +1,5 @@
 package moodle.sync.core.view;
 
-
-import moodle.sync.core.view.Action;
-import moodle.sync.core.view.NotificationType;
-import moodle.sync.core.view.View;
-
 /**
  * Generic notification class used for notification windows with both an accept and decline option.
  */

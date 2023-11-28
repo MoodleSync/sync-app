@@ -29,7 +29,6 @@ import javax.inject.Inject;
 import moodle.sync.core.app.ApplicationContext;
 import moodle.sync.core.app.dictionary.Dictionary;
 import moodle.sync.core.model.VersionInfo;
-import moodle.sync.core.presenter.Presenter;
 import moodle.sync.core.view.NewVersionView;
 import moodle.sync.core.view.NotificationType;
 import moodle.sync.core.view.ViewLayer;

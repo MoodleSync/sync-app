@@ -7,7 +7,6 @@ import java.util.List;
 
 import moodle.sync.core.beans.StringProperty;
 import moodle.sync.core.model.json.Course;
-import moodle.sync.core.model.json.Permissions;
 import moodle.sync.core.model.json.Section;
 import moodle.sync.core.model.json.SiteInfo;
 import moodle.sync.core.web.client.MoodleClient;

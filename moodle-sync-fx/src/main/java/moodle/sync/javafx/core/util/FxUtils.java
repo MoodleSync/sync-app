@@ -25,27 +25,15 @@ import static java.util.Objects.requireNonNull;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ButtonBase;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
 import moodle.sync.core.view.Action;
-import moodle.sync.core.view.ConsumerAction;
 
 public final class FxUtils {
-
-	public static Parent load(String fxmlPath, ResourceBundle resources, Object controller) {
-		return load(fxmlPath, resources, controller, null);
-	}
 
 	public static Parent load(String fxmlPath, ResourceBundle resources, Object controller, Object root) {
 		URL fxmlURL = FxUtils.class.getResource(fxmlPath);
@@ -98,61 +86,10 @@ public final class FxUtils {
 		}
 	}
 
-	public static void getAllNodesInParent(Parent parent, String selector, Set<Node> results) {
-		Set<Node> result = parent.lookupAll(selector);
-
-		if (!result.isEmpty()) {
-			results.addAll(result);
-		}
-
-		for (Node child : parent.getChildrenUnmodifiable()) { //TODO Alex besprechen
-			//if (child instanceof Parent parentChild) {
-			//	getAllNodesInParent(parentChild, selector, results);
-			//}
-		}
-	}
-
 	public static void bindAction(ButtonBase button, Action action) {
 		requireNonNull(button);
 		requireNonNull(action);
 
 		button.addEventHandler(ActionEvent.ACTION, event -> action.execute());
-	}
-
-	public static void bindAction(ToggleButton toggle, ConsumerAction<Boolean> action) {
-		requireNonNull(toggle);
-		requireNonNull(action);
-
-		toggle.addEventHandler(ActionEvent.ACTION, event -> action.execute(toggle.isSelected()));
-	}
-
-	public static void bindAction(ToggleGroup toggle, ConsumerAction<String> action) {
-		requireNonNull(toggle);
-		requireNonNull(action);
-
-		toggle.selectedToggleProperty().addListener((observableValue, previousToggle, newToggle) -> {
-			action.execute((((Node) observableValue.getValue()).getId()));
-		});
-	}
-
-	public static void bindAction(CheckBox checkBox, ConsumerAction<Boolean> action) {
-		requireNonNull(checkBox);
-		requireNonNull(action);
-
-		checkBox.addEventHandler(ActionEvent.ACTION, event -> action.execute(checkBox.isSelected()));
-	}
-
-	public static void bindAction(MenuItem menuItem, Action action) {
-		requireNonNull(menuItem);
-		requireNonNull(action);
-
-		menuItem.addEventHandler(ActionEvent.ACTION, event -> action.execute());
-	}
-
-	public static void bindAction(CheckMenuItem menuItem, ConsumerAction<Boolean> action) {
-		requireNonNull(menuItem);
-		requireNonNull(action);
-
-		menuItem.addEventHandler(ActionEvent.ACTION, event -> action.execute(menuItem.isSelected()));
 	}
 }

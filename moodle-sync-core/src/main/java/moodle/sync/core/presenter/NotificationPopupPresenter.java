@@ -20,7 +20,6 @@ package moodle.sync.core.presenter;
 
 import moodle.sync.core.app.ApplicationContext;
 import moodle.sync.core.geometry.Position;
-import moodle.sync.core.presenter.Presenter;
 import moodle.sync.core.view.NotificationPopupView;
 import moodle.sync.core.view.NotificationType;
 import moodle.sync.core.view.ViewLayer;

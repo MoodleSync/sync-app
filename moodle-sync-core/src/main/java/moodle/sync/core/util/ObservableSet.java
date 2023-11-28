@@ -18,8 +18,6 @@
 
 package moodle.sync.core.util;
 
-import moodle.sync.core.util.SetChangeListener;
-
 import java.util.Set;
 
 /**

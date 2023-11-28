@@ -1,8 +1,10 @@
 package moodle.sync.util;
 
 import javafx.geometry.Pos;
+
 import moodle.sync.core.app.ApplicationContext;
 import moodle.sync.javafx.core.util.FxUtils;
+
 import org.controlsfx.control.Notifications;
 
 

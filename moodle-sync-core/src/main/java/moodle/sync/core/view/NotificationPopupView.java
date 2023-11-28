@@ -19,7 +19,6 @@
 package moodle.sync.core.view;
 
 import moodle.sync.core.geometry.Position;
-import moodle.sync.core.view.NotificationView;
 
 public interface NotificationPopupView extends NotificationView {
 

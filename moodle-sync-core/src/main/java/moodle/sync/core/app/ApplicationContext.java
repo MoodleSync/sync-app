@@ -57,7 +57,6 @@ public abstract class ApplicationContext {
 	/** The application dictionary. */
 	private final Dictionary dictionary;
 
-
 	/** The application event data bus. */
 	private final EventBus eventBus;
 
