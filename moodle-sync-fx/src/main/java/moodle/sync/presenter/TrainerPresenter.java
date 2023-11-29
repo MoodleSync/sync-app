@@ -2,6 +2,7 @@ package moodle.sync.presenter;
 
 import moodle.sync.core.app.ApplicationContext;
 import moodle.sync.core.beans.BooleanProperty;
+import moodle.sync.core.model.json.Content;
 import moodle.sync.core.presenter.Presenter;
 import moodle.sync.core.view.NotificationType;
 import moodle.sync.core.view.ViewContextFactory;
@@ -29,6 +30,8 @@ import moodle.sync.javafx.model.SyncTableElement;
 import moodle.sync.presenter.command.ShowSettingsCommand;
 import moodle.sync.util.*;
 import moodle.sync.view.TrainerStartView;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 
 import javax.inject.Inject;
@@ -169,10 +172,15 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         view.setSectionId(selectedSection.getSection().toString());
     }
 
-    //A specific file should be downloaded.
+    //A specific file or folder should be downloaded.
     @Subscribe
     public void onDownloadItem(DownloadItemEvent event) {
-        onDownloadFile(event.getElement());
+        if(event.getElement().getModuleType().equals("resource")) {
+            onDownloadFile(event.getElement());
+        }
+        else {
+            onDownloadFolder(event.getElement());
+        }
     }
 
     //Show a popup when a course-download is finished.
@@ -481,7 +489,27 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                             if(elem.getElement().getDownloadable()) {
                                 elem.getElement().setSectionName(section.getName().trim());
                             }
-                        } else {
+                        }
+                        else if (!isNull(module.getContents()) && Objects.equals(module.getModname(), "folder")) {
+                            int pos = FileService.findModuleInList(localContent.get(2), module);
+                            if (pos == -1) {
+                                SyncTableElement folder = new SyncTableElement(module.getName(), module.getId(),
+                                        section.getSection(), section.getId(), data.size(), module.getModname(), "", false, false, MoodleAction.NotLocalFile, module.getUservisible(), module.getUservisible());
+                                if(module.getContents().size() != 0) {
+                                    folder.setDownloadable(true);
+                                    folder.setSectionName(section.getName().trim());
+                                    for(Content content : module.getContents()) {
+                                        folder.addContentOnline(content);
+                                    }
+                                }
+                                data.add(folder);
+                            }
+                        }
+                        else if (Objects.equals(module.getModname(), "label")) {
+                            data.add(new SyncTableElement(module.getName(), module.getId(), section.getSection(), section.getId(), data.size(), module.getModname(), Jsoup.parse(module.getDescription()).text(), false, false, MoodleAction.NotLocalFile, module.getUservisible(), module.getUservisible()));
+
+                        }
+                        else {
                             data.add(new SyncTableElement(module.getName(), module.getId(), section.getSection(), section.getId(), data.size(), module.getModname(), "", false, false, MoodleAction.NotLocalFile, module.getUservisible(), module.getUservisible()));
                         }
                     }
@@ -571,9 +599,8 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                             case "resource" -> {
                                 //If file is local, it must be in localContent[0]
                                 //check if user has permission to see full course-content incl. not available files.
-                                ReturnValue elem = FileService.findResourceInFiles(localContent.get(0), module,
-                                        sectionNum, sectionId, data.size());
-                                if(elem.getElement().getDownloadable()) {
+                                ReturnValue elem = FileService.findResourceInFiles(localContent.get(0), module, sectionNum, sectionId, data.size());
+                                if (elem.getElement().getDownloadable()) {
                                     elem.getElement().setSectionName(sectionName);
                                 }
                                 localContent.set(0, elem.getFileList());
@@ -582,25 +609,30 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                             case "url" ->
                                 // TODO: FileServerSupport not functional. -> Check if file in Link is newer than the
                                 // link-module.
-                                    data.add(new SyncTableElement(module.getName(), module.getId(), sectionNum,
-                                            sectionId, data.size(), module.getModname(), "",false, false,
-                                            MoodleAction.NotLocalFile, module.getVisible() == 1, module.getUservisible()));
+                                    data.add(new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId, data.size(), module.getModname(), "", false, false, MoodleAction.NotLocalFile, module.getVisible() == 1, module.getUservisible()));
                             case "folder" -> {
                                 //Check if folder is existent in section-directory.
                                 int pos = FileService.findModuleInList(localContent.get(2), module);
                                 if (pos >= 0) {
                                     //If it exists, check if it should be updated.
-                                    watcher =
-                                            new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() + "_" + section.getName().trim() + "/" + localContent.get(2).get(pos).getFileName()).toFile());
+                                    watcher = new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() + "_" + section.getName().trim() + "/" + localContent.get(2).get(pos).getFileName()).toFile());
                                     watcher.addListener(this).watch();
-                                    data.add(FileService.checkDirectoryForUpdates(localContent.get(2).get(pos),
-                                            module, sectionNum, sectionId, data.size(), config.getFormatsMoodle()));
+                                    data.add(FileService.checkDirectoryForUpdates(localContent.get(2).get(pos), module, sectionNum, sectionId, data.size(), config.getFormatsMoodle()));
                                     localContent.get(2).remove(pos);
                                 } else {
-                                    data.add(new SyncTableElement(module.getName(), module.getId(), sectionNum,
-                                            sectionId, data.size(), module.getModname(), "",false, false,
-                                            MoodleAction.NotLocalFile, module.getVisible() == 1, module.getUservisible()));
+                                    SyncTableElement folder = new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId, data.size(), module.getModname(), "", false, false, MoodleAction.NotLocalFile, module.getVisible() == 1, module.getUservisible());
+                                    if(module.getContents().size() != 0) {
+                                        folder.setDownloadable(true);
+                                        folder.setSectionName(sectionName);
+                                        for(Content content : module.getContents()) {
+                                            folder.addContentOnline(content);
+                                        }
+                                    }
+                                    data.add(folder);
                                 }
+                            }
+                            case "label" -> {
+                                    data.add(new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId, data.size(), module.getModname(), Jsoup.parse(module.getDescription()).text(), false, false, MoodleAction.NotLocalFile, module.getVisible() == 1, module.getUservisible()));
                             }
                             default ->
                                     data.add(new SyncTableElement(module.getName(), module.getId(), sectionNum,
@@ -671,9 +703,26 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
     //Method used to download a single file. Will be saved in section-folder.
     private void onDownloadFile(SyncTableElement file) {
         try {
-            FileDownloadService.getFile(file.getFileUrl(), token,
+            FileDownloadService.getFile(file.getContentsOnline().get(0).getFileurl(), token,
                     config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + file.getSection() + "_"+ file.getSectionName(),
                     file.getExistingFileName(), file.getExistingFile());
+        } catch (Exception e) {
+            logException(e, "Sync failed");
+        }
+        changeCourse(course);
+    }
+
+    //Method used to download a single folder. Will be saved in section-folder.
+    private void onDownloadFolder(SyncTableElement folder) {
+        try {
+            //First create folder
+            String path =
+                    config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + folder.getSection() + "_"+ folder.getSectionName() + "/" + folder.getModuleName();
+            FileService.directoryManager(Path.of(path));
+            for(Content content : folder.getContentsOnline()) {
+                FileDownloadService.getFile(content.getFileurl(), token,
+                        path , content.getFilename(), String.valueOf(content.getTimemodified()));
+            }
         } catch (Exception e) {
             logException(e, "Sync failed");
         }
@@ -713,7 +762,19 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
             view.setProgress(0.0);
             for (SyncTableElement courseData : courseData) {
                 if (courseData.getDownloadable()) {
-                    FileDownloadService.getFile(courseData.getFileUrl(), token, config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + courseData.getSection() + "_" + courseData.getSectionName(), courseData.getExistingFileName(), courseData.getExistingFile());
+                    if(courseData.getModuleType().equals("resource")) {
+                        FileDownloadService.getFile(courseData.getContentsOnline().get(0).getFileurl(), token,
+                                config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + courseData.getSection() + "_" + courseData.getSectionName(), courseData.getExistingFileName(), courseData.getExistingFile());
+                    } else if (courseData.getModuleType().equals("folder")) {
+                        //First create folder
+                        String path =
+                                config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + courseData.getSection() + "_"+ courseData.getSectionName() + "/" + courseData.getModuleName();
+                        FileService.directoryManager(Path.of(path));
+                        for(Content content : courseData.getContentsOnline()) {
+                            FileDownloadService.getFile(content.getFileurl(), token,
+                                    path , content.getFilename(), String.valueOf(content.getTimemodified()));
+                        }
+                    }
                     counter++;
                     view.setProgress(counter / count);
                 }

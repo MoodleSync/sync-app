@@ -1,11 +1,13 @@
 package moodle.sync.javafx.model;
 
 import javafx.beans.property.*;
+import moodle.sync.core.model.json.Content;
 import moodle.sync.core.util.MoodleAction;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,7 +56,7 @@ public class SyncTableElement {
 
     private StringProperty sectionName;
 
-    private StringProperty fileurl;
+    private ObjectProperty<List<Content>> contentOnline;
 
 
 
@@ -76,8 +78,9 @@ public class SyncTableElement {
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(new TimeDateElement(null, null));
         this.userVisible = new SimpleBooleanProperty(userVisible);
+        this.sectionName = new SimpleStringProperty("");
         this.downloadable = new SimpleBooleanProperty(false);
-        this.fileurl = new SimpleStringProperty("");
+        this.contentOnline = new SimpleObjectProperty<List<Content>>(new ArrayList<>());
     }
 
     public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,
@@ -97,8 +100,9 @@ public class SyncTableElement {
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(new TimeDateElement(null, null));
         this.userVisible = new SimpleBooleanProperty(userVisible);
+        this.sectionName = new SimpleStringProperty("");
         this.downloadable = new SimpleBooleanProperty(false);
-        this.fileurl = new SimpleStringProperty("");
+        this.contentOnline = new SimpleObjectProperty<List<Content>>(new ArrayList<>());
     }
 
     public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,
@@ -124,8 +128,9 @@ public class SyncTableElement {
         this.content = new SimpleObjectProperty<List<Path>>(content);
         this.contextId = new SimpleIntegerProperty(contextId);
         this.userVisible = new SimpleBooleanProperty(userVisible);
+        this.sectionName = new SimpleStringProperty("");
         this.downloadable = new SimpleBooleanProperty(false);
-        this.fileurl = new SimpleStringProperty("");
+        this.contentOnline = new SimpleObjectProperty<List<Content>>(new ArrayList<>());
     }
 
     public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType,
@@ -145,8 +150,9 @@ public class SyncTableElement {
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(availabilityDateTime);
         this.userVisible = new SimpleBooleanProperty(userVisible);
+        this.sectionName = new SimpleStringProperty("");
         this.downloadable = new SimpleBooleanProperty(false);
-        this.fileurl = new SimpleStringProperty("");
+        this.contentOnline = new SimpleObjectProperty<List<Content>>(new ArrayList<>());
     }
 
     public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType,
@@ -167,8 +173,9 @@ public class SyncTableElement {
         this.visible = new SimpleBooleanProperty(visible);
         this.availabilityDateTime = new SimpleObjectProperty(availabilityDateTime);
         this.userVisible = new SimpleBooleanProperty(userVisible);
+        this.sectionName = new SimpleStringProperty("");
         this.downloadable = new SimpleBooleanProperty(false);
-        this.fileurl = new SimpleStringProperty("");
+        this.contentOnline = new SimpleObjectProperty<List<Content>>(new ArrayList<>());
     }
 
     public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,
@@ -190,7 +197,8 @@ public class SyncTableElement {
         this.availabilityDateTime = new SimpleObjectProperty(new TimeDateElement(null, null));
         this.userVisible = new SimpleBooleanProperty(userVisible);
         this.downloadable = new SimpleBooleanProperty(false);
-        this.fileurl = new SimpleStringProperty("");
+        this.sectionName = new SimpleStringProperty("");
+        this.contentOnline = new SimpleObjectProperty<List<Content>>(new ArrayList<>());
     }
 
     public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos,
@@ -213,7 +221,7 @@ public class SyncTableElement {
         this.userVisible = new SimpleBooleanProperty(userVisible);
         this.downloadable = new SimpleBooleanProperty(false);
         this.sectionName = new SimpleStringProperty("");
-        this.fileurl = new SimpleStringProperty("");
+        this.contentOnline = new SimpleObjectProperty<List<Content>>(new ArrayList<>());
     }
 
     public SyncTableElement(String moduleName, Integer cmid, Integer section, Integer sectionId, Integer oldPos, String moduleType,
@@ -235,7 +243,6 @@ public class SyncTableElement {
         this.availabilityDateTime = new SimpleObjectProperty(new TimeDateElement(null, null));
         this.userVisible = new SimpleBooleanProperty(userVisible);
         this.downloadable = new SimpleBooleanProperty(false);
-        this.fileurl = new SimpleStringProperty("");
     }
 
     /**
@@ -759,8 +766,8 @@ public class SyncTableElement {
      *
      * @return the messageProprty.
      */
-    public StringProperty fileurlProperty() {
-        return fileurl;
+    public ObjectProperty<List<Content>> contentsOnlineProperty() {
+        return contentOnline;
     }
 
     /**
@@ -768,8 +775,8 @@ public class SyncTableElement {
      *
      * @return the files message as a String.
      */
-    public String getFileUrl() {
-        return this.fileurl.get();
+    public List<Content> getContentsOnline() {
+        return this.contentOnline.get();
     }
 
     /**
@@ -777,8 +784,8 @@ public class SyncTableElement {
      *
      * @param value the new message.
      */
-    public void setFileUrl(String value) {
-        this.fileurl.set(value);
+    public void addContentOnline(Content value) {
+        this.contentOnline.get().add(value);
     }
 
 }

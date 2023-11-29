@@ -153,7 +153,7 @@ public class FileService {
                     true);
             if(!isNull(module.getContents().get(0).getFileurl())){
                 element.setDownloadable(true);
-                element.setFileUrl(module.getContents().get(0).getFileurl());
+                element.addContentOnline(module.getContents().get(0));
             }
         }
 
@@ -185,7 +185,7 @@ public class FileService {
                             true);
                     if(!isNull(module.getContents().get(0).getFileurl())){
                         element.setDownloadable(true);
-                        element.setFileUrl(module.getContents().get(0).getFileurl());
+                        element.addContentOnline(module.getContents().get(0));
                     }
                     break;
                 } else {
@@ -206,7 +206,7 @@ public class FileService {
                     true);
             if(!isNull(module.getContents().get(0).getFileurl())){
                 element.setDownloadable(true);
-                element.setFileUrl(module.getContents().get(0).getFileurl());
+                element.addContentOnline(module.getContents().get(0));
             }
         }
 
@@ -260,9 +260,13 @@ public class FileService {
             }
         }
         else {
-            return new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
+            SyncTableElement existingFolder =  new SyncTableElement(module.getName(), module.getId(), sectionNum, sectionId, position,
                     module.getModname(), path, false, false, MoodleAction.ExistingFile,
                     module.getVisible() == 1, true);
+            for(Content content : module.getContents()) {
+                existingFolder.addContentOnline(content);
+            }
+            return existingFolder;
         }
     }
 

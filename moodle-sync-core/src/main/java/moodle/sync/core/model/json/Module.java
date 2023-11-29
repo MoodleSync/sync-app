@@ -21,6 +21,7 @@ public class Module {
     private String name;
     private Integer instance;
     private Integer contextid;
+    private String description;
     private Integer visible;
     private Boolean uservisible;
     private String modname;
