@@ -20,12 +20,6 @@ import static moodle.sync.core.fileserver.panopto.util.PanoptoAuthorizer.authori
 @RegisterProviders({@RegisterProvider(LoggingFilter.class), @RegisterProvider(JsonConfigProvider.class),})
 public interface PanoptoClient {
 
-    //default String getAuthorizationHeader() throws Exception {
-    //    final Credential credential = authorize("5ba41c3b-c0f5-4fec-91f0-b09e00aa8acf",
-    //        "xj5zi5MTqL5nwwezud8eyN5AWkx2WpU/N21Vwuzf8T4=");
-    //    return "Bearer " + credential.getAccessToken();
-    //}
-
     @POST
     @Consumes("application/json")
     @Path("PublicAPI/REST/sessionUpload")
