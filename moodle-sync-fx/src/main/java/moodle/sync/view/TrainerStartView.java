@@ -4,10 +4,12 @@ import javafx.collections.ObservableList;
 import moodle.sync.core.beans.BooleanProperty;
 import moodle.sync.core.beans.ObjectProperty;
 import moodle.sync.core.model.json.Course;
+import moodle.sync.core.model.json.PanoptoCourse;
 import moodle.sync.core.model.json.Section;
 import moodle.sync.core.view.Action;
 import moodle.sync.core.view.ConsumerAction;
 import moodle.sync.core.view.View;
+import moodle.sync.javafx.core.util.FxUtils;
 import moodle.sync.javafx.model.SyncTableElement;
 
 
@@ -54,8 +56,20 @@ public interface TrainerStartView extends View {
 
     void setOnSectionChanged(ConsumerAction<Section> action);
 
+    void setOnPanoptoChanged(ConsumerAction<PanoptoCourse> action);
+
     void setDataTrainer(ObservableList<SyncTableElement> data);
 
     void setDataGuest(ObservableList<SyncTableElement> data);
+
+    void setPanoptoCourse(ObjectProperty<PanoptoCourse> panoptoCourse);
+
+    void setPanoptoCourses(List<PanoptoCourse> panoptoCourses);
+
+    void setPanoptoFileserver();
+
+    void removePanoptoFileserver();
+
+
 
 }

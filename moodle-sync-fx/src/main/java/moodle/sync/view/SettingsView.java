@@ -6,6 +6,8 @@ import java.util.Locale;
 import moodle.sync.core.beans.BooleanProperty;
 import moodle.sync.core.beans.ObjectProperty;
 import moodle.sync.core.beans.StringProperty;
+import moodle.sync.core.fileserver.FileServerClient;
+import moodle.sync.core.fileserver.FileServerType;
 import moodle.sync.core.view.Action;
 import moodle.sync.core.view.View;
 
@@ -26,15 +28,29 @@ public interface SettingsView extends View {
 
     void setFormatsMoodle(StringProperty moodleformats);
 
-    void setFormatsFileserver(StringProperty fileserverformats);
+    void setFormatsFTP(StringProperty ftpformats);
+
+    void setFormatsPanopto(StringProperty panoptoformats);
+
+    void setFileserver(StringProperty client);
+
+    void setFileservers(List<String> clients);
 
     void setFtpField(StringProperty ftpURL);
+
+    void setPanoptoField(StringProperty panoptoURL);
 
     void setFtpPort(StringProperty ftpPort);
 
     void setFtpUser(StringProperty ftpUser);
 
+    void setPanoptoClient(StringProperty panoptoclient);
+
     void setFtpPassword(StringProperty ftpPassword);
+
+    void setPanoptoSecret(StringProperty panoptosecret);
+
+    void setFileserverDefaultFolder(StringProperty defaultFolder);
 
     void setMoodleToken(StringProperty moodleToken);
 
@@ -42,9 +58,19 @@ public interface SettingsView extends View {
 
     void setTokenValid(boolean valid);
 
+    void setOnCheckPanopto(Action action);
+
+    void setPanoptoValid(boolean valid);
+
     void setSyncRootPath(StringProperty path);
 
     void setSelectSyncRootPath(Action action);
 
     void setShowUnknownFormats(BooleanProperty unknownFormats);
+
+    void setPanopto();
+
+    void setFtp();
+
+    void setNoFileserver();
 }

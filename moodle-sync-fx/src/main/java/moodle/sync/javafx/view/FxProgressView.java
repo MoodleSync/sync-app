@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
+import moodle.sync.core.beans.BooleanProperty;
 import moodle.sync.core.view.Action;
 import moodle.sync.core.view.NotificationType;
 import moodle.sync.core.view.ProgressView;
@@ -66,6 +67,11 @@ public class FxProgressView extends NotificationPane implements ProgressView, Fx
         closeAction = Action.concatenate(closeAction, action);
 
         FxUtils.bindAction(closeButton, action);
+    }
+
+    @Override
+    public void setOnHideClose(BooleanProperty hide) {
+        closeButton.setVisible(hide.get());
     }
 
     @Override

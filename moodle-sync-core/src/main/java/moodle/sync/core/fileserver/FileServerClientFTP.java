@@ -8,6 +8,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
+import javax.ws.rs.Path;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -41,13 +42,14 @@ public class FileServerClientFTP implements FileServerClient {
     @Override
     public void connect() {
         try {
-            ftpClient.connect(config.getFileserver(), Integer.parseInt(config.getPortFileserver()));
+            ftpClient.connect(config.getFtpConfiguration().getFtpServer(),
+                    Integer.parseInt(config.getFtpConfiguration().getFtpPort()));
             int reply = ftpClient.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftpClient.disconnect();
                 throw new IOException("Exception in connecting to FTP Server");
             }
-            ftpClient.login(config.getUserFileserver(), config.getPasswordFileserver());
+            ftpClient.login(config.getFtpConfiguration().getFtpUser(), config.getFtpConfiguration().getFtpPassword());
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
         }
         catch (IOException e) {
@@ -87,6 +89,12 @@ public class FileServerClientFTP implements FileServerClient {
             throw new Exception();
         }
         return files;
+    }
+
+    @Override
+    public String getName() {
+        //Todo With Language-Support
+        return "FTP-Server";
     }
 
     /**

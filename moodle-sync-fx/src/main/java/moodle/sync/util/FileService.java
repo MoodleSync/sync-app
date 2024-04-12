@@ -316,6 +316,17 @@ public class FileService {
         return result;
     }
 
+    public static int findFileInFiles(List<Path> fileList, String filename) throws Exception {
+        boolean found = false;
+        for (int i = 0; i < fileList.size(); i++) {
+            if (fileList.get(i).getFileName().toString().equals(filename)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
     public static List<List<Path>> sortDirectoryFilesAllFormats(List<Path> directoryFiles, String formatsMoodle,
                                                       String formatsFileserver) {
 

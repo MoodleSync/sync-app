@@ -12,6 +12,7 @@ import javafx.util.BuilderFactory;
 import moodle.sync.core.inject.DIViewContextFactory;
 import moodle.sync.core.util.AggregateBundle;
 import moodle.sync.core.view.*;
+import moodle.sync.core.view.ProgressView;
 import moodle.sync.javafx.guice.FxmlViewLoader;
 import moodle.sync.javafx.guice.FxmlViewMatcher;
 import moodle.sync.javafx.view.*;

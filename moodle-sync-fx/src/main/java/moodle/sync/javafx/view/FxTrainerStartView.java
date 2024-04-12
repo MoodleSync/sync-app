@@ -7,6 +7,7 @@ import javafx.scene.layout.VBox;
 import moodle.sync.core.beans.BooleanProperty;
 import moodle.sync.core.beans.ObjectProperty;
 import moodle.sync.core.model.json.Course;
+import moodle.sync.core.model.json.PanoptoCourse;
 import moodle.sync.core.model.json.Section;
 import moodle.sync.core.view.Action;
 import moodle.sync.core.view.ConsumerAction;
@@ -21,6 +22,8 @@ import moodle.sync.view.TrainerStartView;
 
 
 import java.util.List;
+
+import static java.util.Objects.isNull;
 
 /**
  * Class implementing the functions of the "start-page".
@@ -67,6 +70,12 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
     private ComboBox<Section> sectionCombo;
 
     @FXML
+    private ComboBox<PanoptoCourse> fileserverCombo;
+
+    @FXML
+    private Label fileserverCourseLabel;
+
+    @FXML
     private TableView<SyncTableElement> syncTableTrainer;
 
     @FXML
@@ -92,7 +101,9 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
             syncTableTrainer.setManaged(true);
             syncButton.setManaged(true);
             syncButton.setVisible(true);
-            syncTableTrainer.getItems().clear();
+            if(!isNull(syncTableTrainer.getItems())) {
+                syncTableTrainer.getItems().clear();
+            }
             syncTableTrainer.setItems(data);
         });
     }
@@ -111,7 +122,9 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
             syncTableGuest.setManaged(true);
             syncButton.setManaged(false);
             syncButton.setVisible(false);
-            syncTableGuest.getItems().clear();
+            if(!isNull(syncTableGuest.getItems())) {
+                syncTableGuest.getItems().clear();
+            }
             syncTableGuest.setItems(data);
         });
     }
@@ -232,6 +245,46 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
     }
 
     /**
+     * Method to set the elements of the Panoptocourse-Combobox.
+     *
+     * @param panoptoCourses Moodle-Courses to display.
+     */
+    @Override
+    public void setPanoptoCourses(List<PanoptoCourse> panoptoCourses) {
+        FxUtils.invoke(() -> fileserverCombo.getItems().setAll(panoptoCourses));
+    }
+
+    /**
+     * Choosen Moodle-course.
+     *
+     * @param panoptoCourse choosen Panopto-course.
+     */
+    @Override
+    public void setPanoptoCourse(ObjectProperty<PanoptoCourse> panoptoCourse) {
+        FxUtils.invoke(() -> fileserverCombo.valueProperty().bindBidirectional(new LectObjectProperty<>(panoptoCourse)));
+    }
+
+    @Override
+    public void setPanoptoFileserver() {
+        FxUtils.invoke(() -> {
+            fileserverCombo.setVisible(true);
+            fileserverCombo.setManaged(true);
+            fileserverCourseLabel.setVisible(true);
+            fileserverCourseLabel.setManaged(true);
+        });
+    }
+
+    @Override
+    public void removePanoptoFileserver() {
+        FxUtils.invoke(() -> {
+            fileserverCombo.setVisible(false);
+            fileserverCombo.setManaged(false);
+            fileserverCourseLabel.setVisible(false);
+            fileserverCourseLabel.setManaged(false);
+        });
+    }
+
+    /**
      * Method to set the elements of the Section-Combobox.
      *
      * @param sections Course-Sections to display.
@@ -284,6 +337,18 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
     public void setOnSectionChanged(ConsumerAction<Section> action) {
         sectionCombo.valueProperty().addListener((observable, oldSection, newSection) -> {
             executeAction(action, newSection);
+        });
+    }
+
+    /**
+     * Method to initiate the update of the data when a section is changed.
+     *
+     * @param action update table.
+     */
+    @Override
+    public void setOnPanoptoChanged(ConsumerAction<PanoptoCourse> action) {
+        fileserverCombo.valueProperty().addListener((observable, oldPanoptoCourse, newPanoptoCourse) -> {
+            executeAction(action, newPanoptoCourse);
         });
     }
 

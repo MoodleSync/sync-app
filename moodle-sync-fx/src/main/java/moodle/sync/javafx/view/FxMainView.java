@@ -260,12 +260,19 @@ public class FxMainView extends StackPane implements MainView {
 		// It's imperative to load fxml-defined stylesheets prior to the user-defined theme
 		// stylesheet, so the theme can override initial styles.
 		getStylesheets().forEach(file -> {
-			loadTheme(new Theme("defined", file));
+			try {
+				loadTheme(new Theme("defined", file));
+			} catch (Exception e) {
+				e.printStackTrace();
+				//ignore
+			}
 		});
+
 		// Remove loaded stylesheets to avoid additional loading by the scene itself.
 		getStylesheets().clear();
 
 		loadTheme(context.getConfiguration().getTheme());
+
 
 		stage.setOnShown(event -> {
 			executeAction(shownAction);

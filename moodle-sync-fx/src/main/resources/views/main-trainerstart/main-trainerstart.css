@@ -114,3 +114,9 @@
 .table-row-cell .time-picker > .box > .fields-box > .separator {
     -fx-text-fill: black;
 }
+
+.tool-bar-overflow-button {
+    -fx-padding: 25.0,0.0,0.0,0;
+    -fx-alignment: bottom-center;
+}
+

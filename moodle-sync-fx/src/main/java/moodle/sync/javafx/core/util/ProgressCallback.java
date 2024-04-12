@@ -16,24 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package moodle.sync.core.view;
+package moodle.sync.javafx.core.util;
 
-import moodle.sync.core.beans.BooleanProperty;
+/**
+ * A callback interface for monitoring progress events.
+ *
+ * @author Alex Andres
+ */
+@FunctionalInterface
+public interface ProgressCallback {
 
-public interface ProgressView extends View {
-
-    void setTitle(String title);
-
-    void setMessage(String message);
-
-    void setError(String message);
-
-    void setProgress(double progress);
-
-    void setOnClose(Action action);
-
-    void setOnHideClose(BooleanProperty hide);
-
-    void setOnViewShown(Action action);
+    /**
+     * Notify of progress for content transfer.
+     *
+     * @param progress The progress value in the range [0, 1].
+     */
+    void onProgress(float progress);
 
 }

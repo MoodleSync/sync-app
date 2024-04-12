@@ -187,17 +187,16 @@ public class UploadHighlightTableCell <U, B> extends TextFieldTableCell<SyncTabl
     public class Listener implements ChangeListener {
         @Override
         public void changed(ObservableValue observableValue, Object o, Object t1) {
-            setEditable(getTableRow().getItem().selectedProperty().get());
-            if(getTableRow().getItem().selectedProperty().get()){
-                setStyle("-fx-font-weight: normal");
-                setText(getTableRow().getItem().getExistingFileName());
+            if (getTableRow() != null && getTableRow().getItem() != null) {
+                setEditable(getTableRow().getItem().selectedProperty().get());
+                if (getTableRow().getItem().selectedProperty().get()) {
+                    setStyle("-fx-font-weight: normal");
+                    setText(getTableRow().getItem().getExistingFileName());
+                } else {
+                    setText(null);
+                }
             }
-            else{
-                setText(null);
-            }
-
         }
     }
-
 }
 

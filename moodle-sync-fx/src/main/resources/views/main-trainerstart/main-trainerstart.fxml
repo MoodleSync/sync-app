@@ -13,14 +13,13 @@
     @author Daniel Schröter
 -->
 
-<?import moodle.sync.javafx.layout.ColumnSizeConstraints?>
-<?import moodle.sync.javafx.layout.DynamicResizePolicy?>
 <fx:root alignment="CENTER" type="VBox" xmlns="http://javafx.com/javafx/17.0.2-ea"
          xmlns:fx="http://javafx.com/fxml/1" minWidth="580.0">
     <BorderPane VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
                 minWidth="580.0" fx:id="borderPane">
         <top>
-            <HBox alignment="BOTTOM_CENTER" spacing="5.0">
+
+            <ToolBar>
                 <VBox alignment="BOTTOM_CENTER">
                     <Button fx:id="folderButton" mnemonicParsing="false">
                         <tooltip><Tooltip text="%start.folderButton" /></tooltip>
@@ -31,7 +30,7 @@
                 </VBox>
                 <VBox>
                     <Label text="%start.selectcourse" />
-                    <ComboBox fx:id="courseCombo">
+                    <ComboBox fx:id="courseCombo" minWidth="100">
                         <buttonCell>
                             <CourseListCell />
                         </buttonCell>
@@ -42,7 +41,7 @@
                 </VBox>
                 <VBox>
                     <Label text="%start.selectsection" />
-                    <ComboBox fx:id="sectionCombo">
+                    <ComboBox fx:id="sectionCombo" minWidth="100">
                         <buttonCell>
                             <SectionListCell />
                         </buttonCell>
@@ -51,26 +50,47 @@
                         </cellFactory>
                     </ComboBox>
                 </VBox>
+                <VBox>
+                    <Label fx:id="fileserverCourseLabel" text="%start.selectFileServerCourse" />
+                    <ComboBox fx:id="fileserverCombo" minWidth="100">
+                        <buttonCell>
+                            <FileserverCourseListCell />
+                        </buttonCell>
+                        <cellFactory>
+                            <FileserverCourseCellFactory />
+                        </cellFactory>
+                    </ComboBox>
+                </VBox>
                <Pane HBox.hgrow="ALWAYS" />
-                <Button fx:id="downloadButton" mnemonicParsing="false" text="%start.download">
-                    <tooltip><Tooltip text="%start.download.course" /></tooltip>
-                    <graphic>
-                        <SvgIcon styleClass="icon, download-icon" />
-                    </graphic>
-                </Button>
-                <Button fx:id="updateButton" mnemonicParsing="false" text="%start.update" minWidth="90"/>
-                <Button fx:id="syncButton" mnemonicParsing="false" text="%start.sync" minWidth="110" />
-                <Button fx:id="settingsButton" mnemonicParsing="false" text="%start.settings" minWidth="95" />
-                <Button fx:id="helpButton" mnemonicParsing="false" text="%start.help" >
-                    <tooltip><Tooltip text="%start.help.tooltip" /></tooltip>
-                    <graphic>
-                        <SvgIcon styleClass="icon, help-icon" />
-                    </graphic>
-                </Button>
+                <HBox alignment="BOTTOM_CENTER">
+                    <Button fx:id="downloadButton" mnemonicParsing="false" text="%start.download" alignment="BOTTOM_CENTER">
+                        <tooltip><Tooltip text="%start.download.course" /></tooltip>
+                        <graphic>
+                            <SvgIcon styleClass="icon, download-icon" />
+                        </graphic>
+                    </Button>
+                </HBox>
+                <HBox alignment="BOTTOM_CENTER">
+                    <Button fx:id="updateButton" mnemonicParsing="false" text="%start.update" minWidth="90" alignment="BOTTOM_CENTER"/>
+                </HBox>
+                <HBox alignment="BOTTOM_CENTER">
+                    <Button fx:id="syncButton" mnemonicParsing="false" text="%start.sync" minWidth="110" />
+                </HBox>
+                <HBox alignment="BOTTOM_CENTER">
+                    <Button fx:id="settingsButton" mnemonicParsing="false" text="%start.settings" minWidth="95"/>
+                </HBox>
+                <HBox alignment="BOTTOM_CENTER">
+                    <Button fx:id="helpButton" mnemonicParsing="false" text="%start.help" >
+                        <tooltip><Tooltip text="%start.help.tooltip" /></tooltip>
+                        <graphic>
+                            <SvgIcon styleClass="icon, help-icon" />
+                        </graphic>
+                    </Button>
+                </HBox>
                 <padding>
                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                 </padding>
-            </HBox>
+            </ToolBar>
         </top>
         <center>
             <StackPane BorderPane.alignment="CENTER" fx:id="tableContainer">
