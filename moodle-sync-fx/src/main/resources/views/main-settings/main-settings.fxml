@@ -11,8 +11,6 @@
     @author Daniel Schröter
 -->
 
-<?import moodle.sync.javafx.view.FxPanoptoSettingsView?>
-<?import moodle.sync.javafx.view.FxFtpSettingsView?>
 <fx:root alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" type="VBox" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Label alignment="TOP_CENTER" text="%settings.settings">
@@ -122,7 +120,7 @@
                 <Label text="%settings.dataformatsmoodle.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
             </children>
         </GridPane>
-        <Label prefWidth="612.0" styleClass="text-head" text="%settings.ftplabel">
+        <Label prefWidth="612.0" styleClass="text-head" text="%settings.fileserverlabel">
             <VBox.margin>
                 <Insets top="10.0" />
             </VBox.margin>

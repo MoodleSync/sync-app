@@ -25,9 +25,9 @@
             <RowConstraints vgrow="SOMETIMES" />
         </rowConstraints>
         <children>
-            <Label text="%settings.ftp" />
-            <Label text="%settings.ftpusername" GridPane.rowIndex="2" />
-            <Label text="%settings.ftppassword" GridPane.rowIndex="4" />
+            <Label text="%settings.panopto.url" />
+            <Label text="%settings.panopto.clientid" GridPane.rowIndex="2" />
+            <Label text="%settings.panopto.secret" GridPane.rowIndex="4" />
             <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="2">
                 <children>
                     <TextField fx:id="panoptoClient" layoutX="10.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
@@ -38,7 +38,10 @@
                     <TextField fx:id="panoptoSecret" layoutX="10.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
                 </children>
             </HBox>
-            <Button fx:id="checkPanopto" alignment="CENTER" contentDisplay="CENTER" maxWidth="-Infinity" mnemonicParsing="false" prefWidth="120.0" text="%settings.token.check" GridPane.columnIndex="2" GridPane.rowIndex="4">
+            <Button fx:id="checkPanopto" alignment="CENTER" contentDisplay="CENTER" maxWidth="-Infinity"
+                    mnemonicParsing="false" prefWidth="120.0" text="%settings.panopto.token.check"
+                    GridPane.columnIndex="2"
+                    GridPane.rowIndex="4">
                 <GridPane.margin>
                     <Insets left="5.0" />
                 </GridPane.margin>
@@ -61,15 +64,18 @@
                     <TextField fx:id="panoptoField" HBox.hgrow="ALWAYS" />
                 </children>
             </HBox>
-            <Label text="%settings.ftp.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+            <Label text="%settings.panopto.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1"
+                   GridPane.columnSpan="2" GridPane.rowIndex="1">
                 <padding>
                     <Insets bottom="5.0" />
                 </padding></Label>
-            <Label text="%settings.ftpusername.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+            <Label text="%settings.panopto.clientid.explain" textFill="#00000080" wrapText="true"
+                   GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
                 <padding>
                     <Insets bottom="5.0" />
                 </padding></Label>
-            <Label text="%settings.ftppassword.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
+            <Label text="%settings.panopto.secret.explain" textFill="#00000080" wrapText="true"
+                   GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
                 <padding>
                     <Insets bottom="5.0" />
                 </padding>
@@ -78,8 +84,10 @@
                 <GridPane.margin>
                     <Insets bottom="5.0" />
                 </GridPane.margin></Label>
-            <Label fx:id="fileserverDefaultFolderLabel" text="%settings.fileserverDefaultFolder" GridPane.rowIndex="6" />
-            <Label fx:id="fileserverDefaultFolderExplain" text="%settings.fileserverDefaultFolder.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="7">
+            <Label fx:id="fileserverDefaultFolderLabel" text="%settings.panopto.fileserverDefaultFolder"
+                   GridPane.rowIndex="6" />
+            <Label fx:id="fileserverDefaultFolderExplain" text="%settings.panopto.fileserverDefaultFolder.explain"
+                   textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="7">
                 <padding>
                     <Insets bottom="3.0" />
                 </padding>

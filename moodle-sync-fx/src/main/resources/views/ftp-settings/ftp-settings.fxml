@@ -23,9 +23,9 @@
             <RowConstraints vgrow="SOMETIMES" />
         </rowConstraints>
         <children>
-            <Label text="%settings.ftp" />
-            <Label text="%settings.ftpusername" GridPane.rowIndex="2" />
-            <Label text="%settings.ftppassword" GridPane.rowIndex="4" />
+            <Label text="%settings.ftp.url" />
+            <Label text="%settings.ftp.username" GridPane.rowIndex="2" />
+            <Label text="%settings.ftp.password" GridPane.rowIndex="4" />
             <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="2">
                 <children>
                     <TextField fx:id="ftpUser" HBox.hgrow="ALWAYS" />
@@ -54,7 +54,8 @@
                     <Insets left="5.0" />
                 </GridPane.margin>
                 <children>
-                    <Label fx:id="ftpPortLabel" alignment="CENTER" contentDisplay="CENTER" minWidth="40.0" prefHeight="25.0" prefWidth="30.0" text="%settings.port">
+                    <Label fx:id="ftpPortLabel" alignment="CENTER" contentDisplay="CENTER" minWidth="40.0"
+                           prefHeight="25.0" prefWidth="30.0" text="%settings.ftp.port">
                         <HBox.margin>
                             <Insets left="5.0" right="5.0" />
                         </HBox.margin></Label>
@@ -69,15 +70,18 @@
                     <TextField fx:id="ftpField" HBox.hgrow="ALWAYS" />
                 </children>
             </HBox>
-            <Label text="%settings.ftp.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+            <Label text="%settings.ftp.url.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1"
+                   GridPane.columnSpan="2" GridPane.rowIndex="1">
                 <padding>
                     <Insets bottom="5.0" />
                 </padding></Label>
-            <Label text="%settings.ftpusername.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+            <Label text="%settings.ftp.username.explain" textFill="#00000080" wrapText="true"
+                   GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
                 <padding>
                     <Insets bottom="5.0" />
                 </padding></Label>
-            <Label text="%settings.ftppassword.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
+            <Label text="%settings.ftp.password.explain" textFill="#00000080" wrapText="true"
+                   GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
                 <padding>
                     <Insets bottom="5.0" />
                 </padding>
