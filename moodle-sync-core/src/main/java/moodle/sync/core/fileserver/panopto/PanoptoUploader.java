@@ -30,12 +30,9 @@ public class PanoptoUploader {
             String[] uploadTarget = session.getUploadTarget().split("/");
 
             String bucketName = uploadTarget[4];
-            System.out.println("Bucketname: " + bucketName);
             String filename = String.valueOf(path.getFileName());
             String key1 = uploadTarget[5] + "/" + filename;
-            System.out.println("Key: " + key1);
             String key2 = uploadTarget[5] + "/upload_manifest_generated.xml";
-            System.out.println("Key: " + key2);
 
             URI myURI = new URI(uri + "/Panopto");
             System.setProperty("aws.accessKeyId", "dummy");
@@ -43,11 +40,7 @@ public class PanoptoUploader {
 
             uploadSingleFile(bucketName, key1, myURI, path);
 
-            System.out.println("Upload mp4 successful");
-
             uploadSingleFile(bucketName, key2, myURI, XMLWriter.CreateUpload_manifest(title, description, getZoneDateTime(), filename));
-
-            System.out.println("Upload manifest successful");
 
             PanoptoSessionComplete sessionComplete = new PanoptoSessionComplete(session.getID(), session.getUploadTarget(), session.getFolderId(), "1", session.getSessionId());
             panoptoService.setFinishSession(sessionComplete);
@@ -66,7 +59,6 @@ public class PanoptoUploader {
 
         CreateMultipartUploadResponse createResponse = s3.createMultipartUpload(createRequest);
         String uploadId = createResponse.uploadId();
-        System.out.println(uploadId);
 
         UploadPartRequest uploadPartRequest1 = UploadPartRequest.builder()
                 .bucket(bucketName)
@@ -102,7 +94,6 @@ public class PanoptoUploader {
 
         CreateMultipartUploadResponse createResponse = s3.createMultipartUpload(createRequest);
         String uploadId = createResponse.uploadId();
-        System.out.println(uploadId);
 
         UploadPartRequest uploadPartRequest1 = UploadPartRequest.builder()
                 .bucket(bucketName)

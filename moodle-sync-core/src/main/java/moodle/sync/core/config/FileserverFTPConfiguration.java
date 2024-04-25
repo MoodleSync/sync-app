@@ -22,6 +22,11 @@ public class FileserverFTPConfiguration {
     private final StringProperty ftpFormats = new StringProperty();
 
     public FileserverFTPConfiguration() {
+        this.ftpServer.set("");
+        this.ftpUser.set("");
+        this.ftpPassword.set("");
+        this.ftpPort.set("");
+        this.ftpFormats.set("");
     }
 
     public FileserverFTPConfiguration (FileserverFTPConfiguration config) {
@@ -95,5 +100,13 @@ public class FileserverFTPConfiguration {
     @Override
     public int hashCode() {
         return Objects.hash(ftpServer, ftpUser, ftpPassword, ftpPort, ftpFormats);
+    }
+
+    public boolean equals(FileserverFTPConfiguration o) {
+        return Objects.equals(this.ftpServer.get(), o.ftpServer.get()) &&
+                Objects.equals(this.ftpUser.get(), o.ftpUser.get()) &&
+                Objects.equals(this.ftpPassword.get(), o.ftpPassword.get()) &&
+                Objects.equals(this.ftpPort.get(), o.ftpPort.get()) &&
+                Objects.equals(this.ftpFormats.get(), o.ftpFormats.get());
     }
 }

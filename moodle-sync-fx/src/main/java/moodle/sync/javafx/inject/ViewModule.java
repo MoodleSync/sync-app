@@ -38,7 +38,8 @@ public class ViewModule extends AbstractModule {
 		bind(MainView.class).to(FxMainView.class);
 		bind(SettingsView.class).to(FxSettingsView.class);
 		bind(TrainerStartView.class).to(FxTrainerStartView.class);
-
+		bind(PanoptoSettingsView.class).to(FxPanoptoSettingsView.class);
+		bind(FtpSettingsView.class).to(FxFtpSettingsView.class);
 
 		Provider<AggregateBundle> resourceProvider = getProvider(AggregateBundle.class);
 		Provider<BuilderFactory> builderProvider = getProvider(BuilderFactory.class);

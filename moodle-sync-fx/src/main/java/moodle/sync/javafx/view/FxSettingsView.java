@@ -2,15 +2,16 @@ package moodle.sync.javafx.view;
 
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.util.converter.IntegerStringConverter;
 import moodle.sync.core.fileserver.FileServerClient;
 import moodle.sync.core.fileserver.FileServerType;
 import moodle.sync.presenter.SettingsPresenter;
 import moodle.sync.util.UserInputValidations;
+import moodle.sync.view.FtpSettingsView;
+import moodle.sync.view.PanoptoSettingsView;
 import moodle.sync.view.SettingsView;
 import moodle.sync.core.beans.BooleanProperty;
 import moodle.sync.core.beans.ObjectProperty;
@@ -42,13 +43,6 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
 
     @FXML
     private Button closesettingsButton;
-
-    @FXML
-    private GridPane fileserverSettings;
-
-    @FXML
-    private RowConstraints fileserverDefaultFolderColumn;
-
     @FXML
     private ComboBox<Locale> languageCombo;
 
@@ -62,27 +56,6 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
     private TextField syncRootPath;
 
     @FXML
-    private TextField ftpField;
-
-    @FXML
-    private TextField panoptoField;
-
-    @FXML
-    private TextField ftpUser;
-
-    @FXML
-    private TextField panoptoClient;
-
-    @FXML
-    private TextField ftpPassword;
-
-    @FXML
-    private TextField panoptoSecret;
-
-    @FXML
-    private Button checkPanopto;
-
-    @FXML
     private TextField moodleField;
 
     @FXML
@@ -92,34 +65,19 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
     private TextArea formatsMoodle;
 
     @FXML
-    private TextField ftpPort;
-
-    @FXML
-    private TextField fileserverDefaultFolder;
-
-    @FXML
-    private TextArea formatsFTP;
-
-    @FXML
-    private TextArea formatsPanopto;
-
-    @FXML
     private Button syncRootPathButton;
 
     @FXML
     private CheckBox showUnknownFormats;
 
     @FXML
-    private Label ftpPortLabel;
+    private StackPane ftpSettingsPane;
 
     @FXML
-    private Label fileserverDefaultFolderLabel;
+    private StackPane panoptoSettingsPane;
 
     @FXML
-    private Label fileserverDefaultFolderExplain;
-
-    @FXML
-    RowConstraints fileserverDefaultFolderColumnExplain;
+    private Pane fileserverContainer;
 
     public FxSettingsView() {
         super();
@@ -214,32 +172,6 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
         );
     }
 
-    /**
-     * Method invokes a checking-operation for the inserted token.
-     *
-     * @param action start checking-operation.
-     */
-    @Override
-    public void setOnCheckPanopto(Action action) {
-        FxUtils.bindAction(checkPanopto, action);
-    }
-
-    /**
-     * Marks the token-text-field if valid.
-     *
-     * @param valid boolean param.
-     */
-    @Override
-    public void setPanoptoValid(boolean valid){
-        panoptoSecret.pseudoClassStateChanged(
-                PseudoClass.getPseudoClass("error"),
-                (!valid)
-        );
-        panoptoSecret.pseudoClassStateChanged(
-                PseudoClass.getPseudoClass("valid"),
-                (valid)
-        );
-    }
 
     /**
      * Setting the chosen fileserver type property.
@@ -259,170 +191,25 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
     @Override
     public void setFileservers(List<String> types) {
         FxUtils.invoke(() -> fileserverCombo.getItems().setAll(types));
-        System.out.println();
     }
 
     @Override
-    public void setPanopto() {
-        FxUtils.invoke(() -> {
-            fileserverSettings.setVisible(true);
-            fileserverSettings.setManaged(true);
-            ftpPortLabel.setManaged(false);
-            ftpPortLabel.setVisible(false);
-            ftpPort.setManaged(false);
-            ftpPort.setVisible(false);
-            fileserverDefaultFolder.setManaged(true);
-            fileserverDefaultFolder.setVisible(true);
-            fileserverDefaultFolderLabel.setVisible(true);
-            fileserverDefaultFolderExplain.setVisible(true);
-            fileserverDefaultFolderLabel.setManaged(true);
-            fileserverDefaultFolderExplain.setManaged(true);
-            fileserverDefaultFolderColumn.setMaxHeight(30.0);
-            fileserverDefaultFolderColumnExplain.setMaxHeight(30.0);
-
-            ftpField.setVisible(false);
-            ftpField.setManaged(false);
-            panoptoField.setVisible(true);
-            panoptoField.setManaged(true);
-
-            ftpUser.setVisible(false);
-            ftpUser.setManaged(false);
-            panoptoClient.setVisible(true);
-            panoptoClient.setManaged(true);
-
-            ftpPassword.setVisible(false);
-            ftpPassword.setManaged(false);
-            panoptoSecret.setVisible(true);
-            panoptoSecret.setManaged(true);
-
-            formatsFTP.setVisible(false);
-            formatsFTP.setManaged(false);
-            formatsPanopto.setVisible(true);
-            formatsPanopto.setManaged(true);
-        });
+    public void setPanopto(PanoptoSettingsView panoptoSettingsView) {
+        if (Node.class.isAssignableFrom(panoptoSettingsView.getClass())) {
+            FxUtils.invoke(() -> fileserverContainer.getChildren().add((Node) panoptoSettingsView));
+        }
     }
 
     @Override
-    public void setFtp() {
-        FxUtils.invoke(() -> {
-            fileserverSettings.setVisible(true);
-            fileserverSettings.setManaged(true);
-            ftpPortLabel.setManaged(true);
-            ftpPortLabel.setVisible(true);
-            ftpPortLabel.setPrefWidth(60.0);
-            ftpPort.setManaged(true);
-            ftpPort.setVisible(true);
-            fileserverDefaultFolder.setManaged(false);
-            fileserverDefaultFolder.setVisible(false);
-            fileserverDefaultFolderLabel.setVisible(false);
-            fileserverDefaultFolderExplain.setVisible(false);
-            fileserverDefaultFolderLabel.setManaged(false);
-            fileserverDefaultFolderExplain.setManaged(false);
-            fileserverDefaultFolderColumn.setMaxHeight(0.0);
-            fileserverDefaultFolderColumnExplain.setMaxHeight(0.0);
-
-            ftpField.setVisible(true);
-            ftpField.setManaged(true);
-            panoptoField.setVisible(false);
-            panoptoField.setManaged(false);
-
-            ftpUser.setVisible(true);
-            ftpUser.setManaged(true);
-            panoptoClient.setVisible(false);
-            panoptoClient.setManaged(false);
-
-            ftpPassword.setVisible(true);
-            ftpPassword.setManaged(true);
-            panoptoSecret.setVisible(false);
-            panoptoSecret.setManaged(false);
-
-            formatsFTP.setVisible(true);
-            formatsFTP.setManaged(true);
-            formatsPanopto.setVisible(false);
-            formatsPanopto.setManaged(false);
-        });
+    public void setFtp(FtpSettingsView ftpSettingsView) {
+        if (Node.class.isAssignableFrom(ftpSettingsView.getClass())) {
+            FxUtils.invoke(() -> fileserverContainer.getChildren().add((Node) ftpSettingsView));
+        }
     }
 
     @Override
-    public void setNoFileserver() {
-        FxUtils.invoke(() -> {
-            fileserverSettings.setVisible(false);
-            fileserverSettings.setManaged(false);
-        });
-    }
-    /**
-     * Input and input-validation of the fileserver url.
-     *
-     * @param ftpURL User input.
-     */
-    @Override
-    public void setFtpField(StringProperty ftpURL) {
-        ftpField.textProperty().bindBidirectional(new LectStringProperty(ftpURL));
-        ftpField.textProperty().addListener(event -> {
-            ftpField.pseudoClassStateChanged(
-                    PseudoClass.getPseudoClass("error"),
-                    (!ftpField.getText().isEmpty() &&
-                            !ftpField.getText().matches("^(((https?|ftp)://)|(ftp\\.))[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"))
-            );
-        });
-    }
-
-    @Override
-    public void setPanoptoField(StringProperty panoptoURL) {
-        panoptoField.textProperty().bindBidirectional(new LectStringProperty(panoptoURL));
-        panoptoField.textProperty().addListener(event -> {
-            panoptoField.pseudoClassStateChanged(
-                    PseudoClass.getPseudoClass("error"),
-                    (!panoptoField.getText().isEmpty() &&
-                            !panoptoField.getText().matches("^((https?)://)[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"))
-            );
-        });
-    }
-
-    /**
-     * Input and inputvalidation of the used port.
-     *
-     * @param ftpport User input.
-     */
-    @Override
-    public void setFtpPort(StringProperty ftpport) {
-        ftpPort.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, UserInputValidations.numberValidationFormatter));
-        ftpPort.textProperty().bindBidirectional(new LectStringProperty(ftpport));
-    }
-
-    /**
-     * Input of the fileserver username.
-     *
-     * @param ftpuser User input.
-     */
-    @Override
-    public void setFtpUser(StringProperty ftpuser) {
-        ftpUser.textProperty().bindBidirectional(new LectStringProperty(ftpuser));
-    }
-
-    @Override
-    public void setPanoptoClient(StringProperty panoptoclient) {
-        panoptoClient.textProperty().bindBidirectional(new LectStringProperty(panoptoclient));
-    }
-
-    /**
-     * Input of the fileserver password.
-     *
-     * @param ftppassword User input.
-     */
-    @Override
-    public void setFtpPassword(StringProperty ftppassword) {
-        ftpPassword.textProperty().bindBidirectional(new LectStringProperty(ftppassword));
-    }
-
-    @Override
-    public void setPanoptoSecret(StringProperty panoptosecret) {
-        panoptoSecret.textProperty().bindBidirectional(new LectStringProperty(panoptosecret));
-    }
-
-    @Override
-    public void setFileserverDefaultFolder(StringProperty defaultFolder) {
-        fileserverDefaultFolder.textProperty().bindBidirectional(new LectStringProperty(defaultFolder));
+    public void clearFileservers() {
+        FxUtils.invoke(() -> fileserverContainer.getChildren().clear());
     }
 
     /**
@@ -434,17 +221,6 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
     public void setFormatsMoodle(StringProperty moodleformats) {
         formatsMoodle.textProperty().bindBidirectional(new LectStringProperty(moodleformats));
     }
-
-    @Override
-    public void setFormatsFTP(StringProperty ftpformats) {
-        formatsFTP.textProperty().bindBidirectional(new LectStringProperty(ftpformats));
-    }
-
-    @Override
-    public void setFormatsPanopto(StringProperty panoptoformats) {
-        formatsPanopto.textProperty().bindBidirectional(new LectStringProperty(panoptoformats));
-    }
-
 
     /**
      * Input of the Root-Directory.

@@ -338,6 +338,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
             config.setMoodleUrl(settingsConfig.getMoodleUrl());
             config.setFormatsMoodle(settingsConfig.getFormatsMoodle());
             //TODO fehlerquelle?
+
             config.setFtpConfiguration(settingsConfig.getFtpConfiguration());
             config.setPanoptoConfiguration(settingsConfig.getPanoptoConfiguration());
 
@@ -965,7 +966,6 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                                             Path.of(courseData.getExistingFile()),
                                                     courseData.getExistingFileName(), "Description");
                                             int state = Integer.parseInt(panoptoService.getStatusSession(sessionId).getState());
-                                            System.out.println("Init state: " + state);
                                             int count = 0;
                                             while (count < 3) {
                                                 sleep(1000);
@@ -976,7 +976,6 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                                                 if (state == 2 || state > 4) {
                                                     throw new Exception();
                                                 }
-                                                System.out.println("State: " + state);
                                             }
                                             PanoptoFolderContent content =
                                                     panoptoService.getFolderContents(new PanoptoFolder(config.getPanoptoConfiguration().panoptoCourseProperty().get().getId()));
@@ -1043,6 +1042,11 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
     }
 
     private void panoptoCourseChanged(PanoptoCourse course) {
+        if(isNull(panoptoCourse.get())) {
+            panoptoCourse.set(course);
+            updateCourses();
+            return;
+        }
         if(!Objects.equals(course.getId(), panoptoCourse.get().getId()) && !courseChanged) {
             panoptoCourse.set(course);
             updateCourses();

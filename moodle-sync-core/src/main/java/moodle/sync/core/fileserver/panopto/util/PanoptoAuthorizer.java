@@ -130,7 +130,7 @@ public class PanoptoAuthorizer {
                 return credential;
             }
             catch (Exception e) {
-                System.out.println("exception catched.....");
+                e.printStackTrace();
                 throw  new Exception();
             }
         } catch (Exception e) {
@@ -151,7 +151,7 @@ public class PanoptoAuthorizer {
             Credential reCred = new Credential.Builder(BearerToken.authorizationHeaderAccessMethod()).setTransport(HTTP_TRANSPORT).setJsonFactory(JSON_FACTORY).setTokenServerUrl(new GenericUrl(TOKEN_SERVER_URL)).setClientAuthentication(new ClientParametersAuthentication(apiKey, apiSecret)).build();
             return reCred;
         } catch (Exception e) {
-            System.out.println("Exception cached");
+            e.printStackTrace();
             return null;
         }
     }

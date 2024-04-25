@@ -30,6 +30,5 @@ public class MoodleSyncContext extends ApplicationContext {
 	public void saveConfiguration() throws Exception {
 		ConfigurationService<Configuration> configService = new JsonConfigurationService<>();
 		configService.save(configFile, getConfiguration());
-		System.out.println("Config saved");
 	}
 }

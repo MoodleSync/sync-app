@@ -60,8 +60,8 @@ public class MoodleSyncConfiguration extends Configuration {
         this.moodleUrl.set(config.moodleUrl.get());
         this.formatsMoodle.set(config.formatsMoodle.get());
         this.fileServerType.set(config.fileServerType.get());
-        this.ftpConfiguration.set(config.ftpConfiguration.get());
-        this.panoptoConfiguration.set(config.panoptoConfiguration.get());
+        this.ftpConfiguration.set(new FileserverFTPConfiguration(config.ftpConfiguration.get()));
+        this.panoptoConfiguration.set(new FileserverPanoptoConfiguration(config.panoptoConfiguration.get()));
         this.showUnknownFormats.set(config.showUnknownFormats.get());
 
     }
@@ -206,8 +206,8 @@ public class MoodleSyncConfiguration extends Configuration {
                 Objects.equals(this.moodleUrl.get(), o.moodleUrl.get()) &&
                 Objects.equals(this.formatsMoodle.get(), o.formatsMoodle.get()) &&
                 Objects.equals(this.fileServerType.get(), o.fileServerType.get()) &&
-                Objects.equals(this.ftpConfiguration.get(), o.ftpConfiguration.get()) &&
-                Objects.equals(this.panoptoConfiguration.get(), o.panoptoConfiguration.get()) &&
+                (this.ftpConfiguration.get().equals(o.ftpConfiguration.get())) &&
+                (this.panoptoConfiguration.get().equals(o.panoptoConfiguration.get())) &&
                 Objects.equals(this.showUnknownFormats.get(), o.showUnknownFormats.get()) &&
                 Objects.equals(this.locale.get(), o.locale.get());
     }

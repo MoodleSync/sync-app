@@ -27,6 +27,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<mainClass>moodle.sync.javafx.SyncApplication</mainClass>
+					<addModules>jdk.localedata,java.security.jgss,java.security.sasl,jdk.crypto.cryptoki,jdk.crypto.ec,jdk.zipfs</addModules>
 					<variables>
 						<appName>moodle-sync-fx</appName>
 						<appVersion>${package.version}</appVersion>

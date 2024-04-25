@@ -25,6 +25,12 @@ public class FileserverPanoptoConfiguration {
     private final ObjectProperty<PanoptoCourse> panoptoCourse = new ObjectProperty<>();
 
     public FileserverPanoptoConfiguration() {
+        this.panoptoServer.set("");
+        this.panoptoClientId.set("");
+        this.panoptoSecret.set("");
+        this.panoptoDefaultFolder.set("");
+        this.panoptoFormats.set("");
+        this.panoptoCourse.set(new PanoptoCourse());
     }
 
     public FileserverPanoptoConfiguration (FileserverPanoptoConfiguration config) {
@@ -111,5 +117,14 @@ public class FileserverPanoptoConfiguration {
     @Override
     public int hashCode() {
         return Objects.hash(panoptoServer, panoptoClientId, panoptoSecret, panoptoDefaultFolder, panoptoFormats, panoptoCourse);
+    }
+
+    public boolean equals(FileserverPanoptoConfiguration o) {
+        return Objects.equals(this.panoptoServer.get(), o.panoptoServer.get()) &&
+                Objects.equals(this.panoptoClientId.get(), o.panoptoClientId.get()) &&
+                Objects.equals(this.panoptoSecret.get(), o.panoptoSecret.get()) &&
+                Objects.equals(this.panoptoDefaultFolder.get(), o.panoptoDefaultFolder.get()) &&
+                Objects.equals(this.panoptoFormats.get(), o.panoptoFormats.get()) &&
+                Objects.equals(this.panoptoCourse.get(), o.panoptoCourse.get());
     }
 }
