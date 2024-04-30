@@ -4,6 +4,8 @@ import moodle.sync.core.app.ApplicationContext;
 import moodle.sync.core.app.LocaleProvider;
 import moodle.sync.core.config.DefaultConfiguration;
 import moodle.sync.core.config.MoodleSyncConfiguration;
+import moodle.sync.core.fileserver.ftp.FtpException;
+import moodle.sync.core.fileserver.panopto.PanoptoException;
 import moodle.sync.core.presenter.Presenter;
 import moodle.sync.core.view.ConsumerAction;
 import moodle.sync.core.view.DirectoryChooserView;
@@ -83,7 +85,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
         view.setSelectSyncRootPath(this::selectSyncPath);
         view.setShowUnknownFormats(settingsConfig.showUnknownFormatsProperty());
         view.setFileserver(settingsConfig.fileServerTypeProperty());
-        view.setFileservers(List.of("No", "FTP", "Panopto"));
+        view.setFileservers(List.of(context.getDictionary().get("settings.choosefileserver.none"), "FTP", "Panopto"));
 
         settingsConfig.fileServerTypeProperty().addListener((observable, oldType, newType) -> {
             if (newType.equals("Panopto")) {
@@ -123,7 +125,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                 if (settingsConfig.getPanoptoConfiguration().getPanoptoServer().isBlank() ||
                         settingsConfig.getPanoptoConfiguration().getPanoptoClientId().isBlank() ||
                         settingsConfig.getPanoptoConfiguration().getPanoptoSecret().isBlank()) {
-                    throw new Exception();
+                    throw new PanoptoException();
                 }
                 if (Objects.nonNull(this.closeAction) && this.isCloseable()) {
                     this.closeAction.execute(settingsConfig);
@@ -134,7 +136,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                         settingsConfig.getFtpConfiguration().getFtpUser().isBlank() ||
                         settingsConfig.getFtpConfiguration().getFtpPassword().isBlank() ||
                         settingsConfig.getFtpConfiguration().getFtpPort().isBlank()) {
-                    throw new Exception();
+                    throw new FtpException();
                 }
                 if (Objects.nonNull(this.closeAction) && this.isCloseable()) {
                     this.closeAction.execute(settingsConfig);
@@ -147,9 +149,16 @@ public class SettingsPresenter extends Presenter<SettingsView> {
                 }
                 super.close();
             }
-        } catch (Exception e) {
+        } catch (PanoptoException e) {
             logException(e, "Sync failed");
-            context.showNotification(NotificationType.ERROR, "settings.close.error.title", "settings.close.error" + ".panopto");
+            context.showNotification(NotificationType.ERROR, "settings.close.error.title",
+                    "settings.close.error" + ".panopto");
+        } catch (FtpException e) {
+            logException(e, "Sync failed");
+            context.showNotification(NotificationType.ERROR, "settings.close.error.title",
+                    "settings.close.error" + ".ftp");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

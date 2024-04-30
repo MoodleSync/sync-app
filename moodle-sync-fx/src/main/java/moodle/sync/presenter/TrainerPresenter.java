@@ -9,7 +9,9 @@ import moodle.sync.core.fileserver.panopto.PanoptoUploader;
 import moodle.sync.core.model.json.*;
 import moodle.sync.core.model.json.Module;
 import moodle.sync.core.presenter.Presenter;
+import moodle.sync.core.presenter.command.ClosePresenterCommand;
 import moodle.sync.core.presenter.command.ShowPresenterCommand;
+import moodle.sync.core.view.Action;
 import moodle.sync.core.view.NotificationType;
 import moodle.sync.core.view.ProgressView;
 import moodle.sync.core.view.ViewContextFactory;
@@ -337,7 +339,6 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
             config.setMoodleToken(settingsConfig.getMoodleToken());
             config.setMoodleUrl(settingsConfig.getMoodleUrl());
             config.setFormatsMoodle(settingsConfig.getFormatsMoodle());
-            //TODO fehlerquelle?
 
             config.setFtpConfiguration(settingsConfig.getFtpConfiguration());
             config.setPanoptoConfiguration(settingsConfig.getPanoptoConfiguration());
@@ -406,55 +407,82 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
     }
 
     //Method used when a course is changed or when it should be refreshed.
-    private void changeCourse(Course newCourse) {
-        try {
-            if(isNull(newCourse)) return;
-            else if (course != newCourse) {
-                courseChanged = true;
-                config.setRecentCourse(newCourse);
-                course = newCourse;
-                config.setRecentSection(null);
+    /*private void changeCourse(Course newCourse) {
+        context.getEventBus().post(new ShowPresenterCommand<>(ProgressPresenter.class) {
+            @Override
+            public void execute(ProgressPresenter presenter) {
+                ProgressView progressView = presenter.getView();
+                progressView.setTitle("Sync");
+                progressView.setMessage("Dateien werden synchronisiert");
+                progressView.setOnHideClose(new BooleanProperty(false));
+                progressView.setOnViewShown(() -> {
+                    onChangeCourse(newCourse ,progressView);
+                });
             }
-            section = config.getRecentSection();
-            //Check if Trainer or Student
-            if (moodleService.getPermissions(config.getMoodleToken(), course.getId())) {
-                guest = false;
-            } else {
-                guest = true;
-            }
-            courseContent = sections();
+        });
+    }*/
 
-            courseContent.add(0, new Section(-2, this.context.getDictionary().get("start.sync.showall"), 1, "all", -1, -1, -1, true, null));
-            //Add to Sectioncombo
-            List<Section> courseSections = courseContent;
-            if((courseSections.size() != sectionCount)) {
-                view.setSections(courseSections);
-                sectionCount = courseSections.size();
-                selectFirstSection();
-            }
-            if (isNull(section)) {
-                section = courseContent.get(0);
-                config.setRecentSection(section);
-                selectFirstSection();
-            }
-            if (section.getId() != -2) {
-                courseContent = section();
-            }
-            //next Step: setData according to Permissions
-            if (guest) {
-                view.setDataGuest(setGuestData());
-            } else {
-                view.setDataTrainer(setTrainerData());
-            }
-            //Update Bottom line
-            view.setProgress(0.0);
-            updateBottomLine();
-            //view.setCourse(config.recentCourseProperty());
-        } catch (Exception e) {
-            logException(e, "Sync failed");
-            context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
-        }
+    //private void onChangeCourse(Course newCourse, ProgressView progressView) {
+    private void changeCourse(Course newCourse) {
+        //CompletableFuture.runAsync(() -> {
+                    //progressView.setProgress(-1.0);
+                    try {
+                        if (isNull(newCourse))
+                            return;
+                        else if (course != newCourse) {
+                            courseChanged = true;
+                            config.setRecentCourse(newCourse);
+                            course = newCourse;
+                            config.setRecentSection(null);
+                        }
+                        section = config.getRecentSection();
+                        //Check if Trainer or Student
+                        if (moodleService.getPermissions(config.getMoodleToken(), course.getId())) {
+                            guest = false;
+                        } else {
+                            guest = true;
+                        }
+                        courseContent = sections();
+
+                        courseContent.add(0, new Section(-2, this.context.getDictionary().get("start.sync.showall"), 1, "all", -1, -1, -1, true, null));
+                        //Add to Sectioncombo
+                        List<Section> courseSections = courseContent;
+                        if ((courseSections.size() != sectionCount)) {
+                            view.setSections(courseSections);
+                            sectionCount = courseSections.size();
+                            selectFirstSection();
+                        }
+                        if (isNull(section)) {
+                            section = courseContent.get(0);
+                            config.setRecentSection(section);
+                            selectFirstSection();
+                        }
+                        if (section.getId() != -2) {
+                            courseContent = section();
+                        }
+                        //next Step: setData according to Permissions
+                        if (guest) {
+                            view.setDataGuest(setGuestData());
+                        } else {
+                            view.setDataTrainer(setTrainerData());
+                        }
+                        //Update Bottom line
+                        view.setProgress(0.0);
+                        updateBottomLine();
+                        //view.setCourse(config.recentCourseProperty());
+                    } catch (Exception e) {
+                        logException(e, "Sync failed");
+                        context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.message");
+                    }
+                //})
+                //.thenRun(this::endView);
     }
+
+    /*private void endView() {
+        context.getEventBus().post(new ClosePresenterCommand(ProgressPresenter.class));
+
+        System.out.println("Close Presenter Command");
+    }*/
 
     //Method used when a section is changed or when it should be refreshed.
     private void changeSection(Section newSection) {
@@ -960,16 +988,19 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                                     if(config.getFileServerType().equals("Panopto")) {
                                         progressView.setMessage("Uploading " + courseData.getExistingFileName());
                                         try {
+                                            System.out.println("Begin Upload");
                                             String sessionId = PanoptoUploader.uploadVideo(panoptoService,
                                                     config.getPanoptoConfiguration().getPanoptoServer()
                                                     , config.getPanoptoConfiguration().panoptoCourseProperty().get().getId(),
                                             Path.of(courseData.getExistingFile()),
                                                     courseData.getExistingFileName(), "Description");
+                                            System.out.println("Finished Upload");
                                             int state = Integer.parseInt(panoptoService.getStatusSession(sessionId).getState());
                                             int count = 0;
                                             while (count < 3) {
                                                 sleep(1000);
                                                 state = Integer.parseInt(panoptoService.getStatusSession(sessionId).getState());
+                                                System.out.println("State = " + state);
                                                 if (state == 3) {
                                                     count++;
                                                 }
@@ -977,6 +1008,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                                                     throw new Exception();
                                                 }
                                             }
+                                            System.out.println("Fertig mit State < 3");
                                             PanoptoFolderContent content =
                                                     panoptoService.getFolderContents(new PanoptoFolder(config.getPanoptoConfiguration().panoptoCourseProperty().get().getId()));
                                             SetModuleService.publishFileserverResource(moodleService, courseData, course, token, content.getResults().get(0).getUrls().getViewerUrl());

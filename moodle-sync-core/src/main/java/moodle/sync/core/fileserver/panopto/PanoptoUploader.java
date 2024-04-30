@@ -11,11 +11,15 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
+import java.io.RandomAccessFile;
 import java.net.URI;
+import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class PanoptoUploader {
 
@@ -51,7 +55,7 @@ public class PanoptoUploader {
         }
     }
 
-    private static void uploadSingleFile(String bucketName, String key, URI myURI, Path path) {
+    private static void uploadSingleFile(String bucketName, String key, URI myURI, Path path) throws Exception{
         s3 = S3Client.builder().region(Region.EU_CENTRAL_1).endpointOverride(myURI).build();
 
         CreateMultipartUploadRequest createRequest =
@@ -60,19 +64,45 @@ public class PanoptoUploader {
         CreateMultipartUploadResponse createResponse = s3.createMultipartUpload(createRequest);
         String uploadId = createResponse.uploadId();
 
-        UploadPartRequest uploadPartRequest1 = UploadPartRequest.builder()
-                .bucket(bucketName)
-                .key(key)
-                .uploadId(uploadId)
-                .partNumber(1).build();
+        //If file is larger than 25 MB, the panopto server may fail, so the file is split up in several parts.
 
-        String etag1 = s3.uploadPart(uploadPartRequest1, RequestBody.fromFile(path)).eTag();
+        List<CompletedPart> completedParts = new ArrayList<>();
+        int partNumber = 1;
+        ByteBuffer buffer = ByteBuffer.allocate(10 * 1024 * 1024);
+
+        RandomAccessFile file = new RandomAccessFile(path.toFile(), "r");
+        long fileSize = file.length();
+        long position = 0;
+
+        while (position < fileSize) {
+
+            file.seek(position);
+            int bytesRead = file.getChannel().read(buffer);
+
+            buffer.flip();
+            UploadPartRequest uploadPartRequest = UploadPartRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .uploadId(uploadId)
+                    .partNumber(partNumber)
+                    .contentLength((long) bytesRead)
+                    .build();
 
 
-        CompletedPart part1 = CompletedPart.builder().partNumber(1).eTag(etag1).build();
+            UploadPartResponse response = s3.uploadPart(uploadPartRequest, RequestBody.fromByteBuffer(buffer));
+
+            completedParts.add(CompletedPart.builder()
+                    .partNumber(partNumber)
+                    .eTag(response.eTag())
+                    .build());
+
+            buffer.clear();
+            position += bytesRead;
+            partNumber++;
+        }
 
         CompletedMultipartUpload completedMultipartUpload = CompletedMultipartUpload.builder()
-                .parts(part1)
+                .parts(completedParts)
                 .build();
 
         CompleteMultipartUploadRequest completeMultipartUploadRequest =
