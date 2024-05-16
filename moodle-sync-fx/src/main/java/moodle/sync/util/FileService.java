@@ -358,5 +358,9 @@ public class FileService {
         return Arrays.asList(arr).contains(key);
     }
 
+    public static String removeSlash(String string) {
+        string = string.replace("/","-");
+        return string;
+    }
 }
 

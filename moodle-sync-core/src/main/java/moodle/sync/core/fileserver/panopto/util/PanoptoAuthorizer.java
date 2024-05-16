@@ -114,7 +114,6 @@ public class PanoptoAuthorizer {
             StoredCredential cred = (StoredCredential) DATA_STORE_FACTORY.getDataStore("StoredCredential").get(
                     "user");
 
-            System.out.println("---------------- refreshToken -----------------");
             try {
                 TokenResponse response = new RefreshTokenRequest(HTTP_TRANSPORT, JSON_FACTORY, new GenericUrl(TOKEN_SERVER_URL), cred.getRefreshToken()).setClientAuthentication(new ClientParametersAuthentication(apiKey, apiSecret)).setScopes(SCOPE).setGrantType("refresh_token").execute();
 
@@ -146,7 +145,6 @@ public class PanoptoAuthorizer {
      * @return Credential
      */
     private static Credential newCredential(String apiKey, String apiSecret,String userId) {
-        System.out.println("---------------- new Credentials -----------------");
         try {
             Credential reCred = new Credential.Builder(BearerToken.authorizationHeaderAccessMethod()).setTransport(HTTP_TRANSPORT).setJsonFactory(JSON_FACTORY).setTokenServerUrl(new GenericUrl(TOKEN_SERVER_URL)).setClientAuthentication(new ClientParametersAuthentication(apiKey, apiSecret)).build();
             return reCred;

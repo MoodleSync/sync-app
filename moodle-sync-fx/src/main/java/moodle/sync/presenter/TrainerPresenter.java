@@ -148,6 +148,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         view.setOnOpenWiki(this::onWiki);
         view.setCourse(config.recentCourseProperty());
         view.setCourses(courses());
+        config.recentSectionProperty().set(null);
         view.setSection(config.recentSectionProperty());
         view.setOnCourseChanged(this::changeCourse);
         view.setOnSectionChanged(this::changeSection);
@@ -398,7 +399,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
     private void openCourseDirectory() {
         Desktop desktop = Desktop.getDesktop();
         try {
-            File dirToOpen =  Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname()).toFile();
+            File dirToOpen =  Paths.get(config.getSyncRootPath() + "/" + FileService.removeSlash(course.getDisplayname())).toFile();
             desktop.open(dirToOpen);
         } catch (Throwable e) {
             logException(e, "Sync failed");
@@ -447,11 +448,11 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                         courseContent.add(0, new Section(-2, this.context.getDictionary().get("start.sync.showall"), 1, "all", -1, -1, -1, true, null));
                         //Add to Sectioncombo
                         List<Section> courseSections = courseContent;
-                        if ((courseSections.size() != sectionCount)) {
+                        //if ((courseSections.size() != sectionCount)) {
                             view.setSections(courseSections);
                             sectionCount = courseSections.size();
                             selectFirstSection();
-                        }
+                        //}
                         if (isNull(section)) {
                             section = courseContent.get(0);
                             config.setRecentSection(section);
@@ -525,6 +526,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
 
     //Sets table-data corresponding to the users permissions.
     private ObservableList<SyncTableElement> setGuestData() {
+        view.removePanoptoFileserver();
         token = config.getMoodleToken();
         if (isNull(course))
             return FXCollections.observableArrayList();
@@ -545,7 +547,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         try {
             if (isNull(section) || section.getId() == -2) {
                 //Check if course-folder exists, otherwise create one.
-                Path courseDirectory = Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname());
+                Path courseDirectory = Paths.get(config.getSyncRootPath() + "/" + FileService.removeSlash(course.getDisplayname()));
                 FileService.directoryManager(courseDirectory);
                 //Initialize sectionList with folders inside course-directory.
                 sectionList = FileService.getPathsInDirectory(courseDirectory);
@@ -558,7 +560,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                             section.getId(), data.size(), section.getSummary(), "", false, false, MoodleAction.ExistingSection, section.getVisible() == 1, true));
 
                     Path execute =
-                            Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() +
+                            Paths.get(config.getSyncRootPath() + "/" + FileService.removeSlash(course.getDisplayname()) + "/" + section.getSection() +
                                     "_" + section.getName().trim());
                     //Create Section-Folder if not exists
                     FileService.directoryManager(execute);
@@ -612,7 +614,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
 
             courseData = data;
 
-            watcher = new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname()).toFile());
+            watcher = new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + FileService.removeSlash(course.getDisplayname())).toFile());
             watcher.addListener(this).watch();
 
         } catch (Exception e){
@@ -625,6 +627,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
     //Sets table-data corresponding to the users permissions.
     private ObservableList<SyncTableElement> setTrainerData() {
         if(config.fileServerTypeProperty().get().equals("Panopto")) {
+            view.setPanoptoFileserver();
             if(isNull(config.getPanoptoConfiguration().panoptoCourseProperty()) || courseChanged ) {
                 getPanoptoCourses();
                 view.setPanoptoCourses(panoptoCourses);
@@ -658,7 +661,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
             //If no section is selected, or "all" are selected, directories are checked and coursecontent is set.
             if (isNull(section) || section.getId() == -2) {
                 //Check if course-folder exists, otherwise create one.
-                Path courseDirectory = Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname());
+                Path courseDirectory = Paths.get(config.getSyncRootPath() + "/" + FileService.removeSlash(course.getDisplayname()));
                 FileService.directoryManager(courseDirectory);
                 //Initialize sectionList with folders inside course-directory.
                 sectionList = FileService.getPathsInDirectory(courseDirectory);
@@ -677,7 +680,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                     data.add(new SyncTableElement(sectionName, sectionId, sectionNum, sectionId, data.size(), section.getSummary(), "", false, false, MoodleAction.ExistingSection, section.getVisible() == 1, true));
 
                     //Create or sort section directory
-                    Path execute = Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() + "_" + sectionName);
+                    Path execute = Paths.get(config.getSyncRootPath() + "/" + FileService.removeSlash(course.getDisplayname()) + "/" + section.getSection() + "_" + sectionName);
                     sectionList = FileService.formatSectionFolder(sectionList, section); //Formats section
                     // folder-list -> if Section 3 in Moodle names "Test", inside the course directory, the
                     // sections-directory should be called 3_Test.
@@ -761,7 +764,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                                 int pos = FileService.findModuleInList(localContent.get(2), module);
                                 if (pos >= 0) {
                                     //If it exists, check if it should be updated.
-                                    watcher = new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() + "_" + section.getName().trim() + "/" + localContent.get(2).get(pos).getFileName()).toFile());
+                                    watcher = new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + FileService.removeSlash(course.getDisplayname()) + "/" + section.getSection() + "_" + section.getName().trim() + "/" + localContent.get(2).get(pos).getFileName()).toFile());
                                     watcher.addListener(this).watch();
                                     data.add(FileService.checkDirectoryForUpdates(localContent.get(2).get(pos), module, sectionNum, sectionId, data.size(), config.getFormatsMoodle()));
                                     localContent.get(2).remove(pos);
@@ -802,7 +805,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                             List<Path> content = FileService.getPathsInDirectory(directory);
                             content.removeIf(file -> !formatsMoodle.contains(FilenameUtils.getExtension(String.valueOf(file))));
                             data.add(new SyncTableElement(directory.getFileName().toString(), -1, sectionNum, sectionId, data.size(), "folder", directory, true, false, MoodleAction.FolderUpload, true, -1, null, content, -1, true));
-                            watcher = new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + section.getSection() + "_" + section.getName().trim() + "/" + directory.getFileName()).toFile());
+                            watcher = new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + FileService.removeSlash(course.getDisplayname()) + "/" + section.getSection() + "_" + section.getName().trim() + "/" + directory.getFileName()).toFile());
                             watcher.addListener(this).watch();
                         }
                     }
@@ -836,7 +839,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         courseData = data;
 
         //Add FileWatcher in course-directory to detect added sections.
-        watcher = new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + course.getDisplayname()).toFile());
+        watcher = new FileWatcher(Paths.get(config.getSyncRootPath() + "/" + FileService.removeSlash(course.getDisplayname())).toFile());
         watcher.addListener(this).watch();
 
         return data;
@@ -846,7 +849,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
     private void onDownloadFile(SyncTableElement file) {
         try {
             FileDownloadService.getFile(file.getContentsOnline().get(0).getFileurl(), token,
-                    config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + file.getSection() + "_"+ file.getSectionName(),
+                    config.getSyncRootPath() + "/" + FileService.removeSlash(course.getDisplayname()) + "/" + file.getSection() + "_"+ file.getSectionName(),
                     file.getExistingFileName(), file.getExistingFile());
         } catch (Exception e) {
             logException(e, "Sync failed");
@@ -859,7 +862,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         try {
             //First create folder
             String path =
-                    config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + folder.getSection() + "_"+ folder.getSectionName() + "/" + folder.getModuleName();
+                    config.getSyncRootPath() + "/" + FileService.removeSlash(course.getDisplayname()) + "/" + folder.getSection() + "_"+ folder.getSectionName() + "/" + folder.getModuleName();
             FileService.directoryManager(Path.of(path));
             for(Content content : folder.getContentsOnline()) {
                 FileDownloadService.getFile(content.getFileurl(), token,
@@ -877,7 +880,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         CompletableFuture
                 .supplyAsync(() -> {downloadCourse();
                     return null;} )
-                .thenRun(() -> {zipDirectory(Path.of(config.getSyncRootPath() + "/" + course.getDisplayname()));})
+                .thenRun(() -> {zipDirectory(Path.of(config.getSyncRootPath() + "/" + FileService.removeSlash(course.getDisplayname())));})
                 .thenRun(() -> {popUpDownload();})
                 .thenRun(() -> {changeCourse(course);})
                 .exceptionally(e -> {
@@ -906,11 +909,11 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                 if (courseData.getDownloadable()) {
                     if(courseData.getModuleType().equals("resource")) {
                         FileDownloadService.getFile(courseData.getContentsOnline().get(0).getFileurl(), token,
-                                config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + courseData.getSection() + "_" + courseData.getSectionName(), courseData.getExistingFileName(), courseData.getExistingFile());
+                                config.getSyncRootPath() + "/" + FileService.removeSlash(course.getDisplayname()) + "/" + courseData.getSection() + "_" + courseData.getSectionName(), courseData.getExistingFileName(), courseData.getExistingFile());
                     } else if (courseData.getModuleType().equals("folder")) {
                         //First create folder
                         String path =
-                                config.getSyncRootPath() + "/" + course.getDisplayname() + "/" + courseData.getSection() + "_"+ courseData.getSectionName() + "/" + courseData.getModuleName();
+                                config.getSyncRootPath() + "/" + FileService.removeSlash(course.getDisplayname()) + "/" + courseData.getSection() + "_"+ courseData.getSectionName() + "/" + courseData.getModuleName();
                         FileService.directoryManager(Path.of(path));
                         for(Content content : courseData.getContentsOnline()) {
                             FileDownloadService.getFile(content.getFileurl(), token,
@@ -934,7 +937,7 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                 ProgressView progressView = presenter.getView();
                 //progressView.setTitle(context.getDictionary().get("save.document.title"));
                 progressView.setTitle("Sync");
-                progressView.setMessage("Dateien werden synchronisiert");
+                progressView.setMessage(context.getDictionary().get("start.sync.progress"));
                 progressView.setOnHideClose(new BooleanProperty(false));
                 progressView.setOnViewShown(() -> {
                     executeSync(progressView);
@@ -948,11 +951,17 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         //Several security checks to prevent unwanted behaviour.
         if (config.getRecentCourse() == null) {
             context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.course.message");
+            progressView.setProgress(1.0);
+            progressView.setError(context.getDictionary().get("start.sync.error.title"));
+            progressView.setOnHideClose(new BooleanProperty(true));
             return;
         }
         //Checks whether Root-Directory is existing.
         if (!Files.isDirectory(Paths.get(config.getSyncRootPath()))) {
             context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.path.message");
+            progressView.setProgress(1.0);
+            progressView.setError(context.getDictionary().get("start.sync.error.title"));
+            progressView.setOnHideClose(new BooleanProperty(true));
             return;
         }
 
@@ -977,30 +986,26 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                         }
                     }
 
-
                     for (SyncTableElement courseData : courseData) {
                         try {
                             if (courseData.isSelected()) {
                                 if (courseData.getModuleType().equals("resource")) {
-                                    progressView.setMessage("Dateien werden synchronisiert");
+                                    progressView.setMessage(context.getDictionary().get("start.sync.progress"));
                                     SetModuleService.publishResource(moodleService, courseData, course, url, token);
                                 } else if (courseData.getAction() == MoodleAction.FTPUpload) {
                                     if(config.getFileServerType().equals("Panopto")) {
-                                        progressView.setMessage("Uploading " + courseData.getExistingFileName());
+                                        progressView.setMessage(context.getDictionary().get("start.sync.upload") + courseData.getExistingFileName());
                                         try {
-                                            System.out.println("Begin Upload");
                                             String sessionId = PanoptoUploader.uploadVideo(panoptoService,
                                                     config.getPanoptoConfiguration().getPanoptoServer()
                                                     , config.getPanoptoConfiguration().panoptoCourseProperty().get().getId(),
                                             Path.of(courseData.getExistingFile()),
                                                     courseData.getExistingFileName(), "Description");
-                                            System.out.println("Finished Upload");
-                                            int state = Integer.parseInt(panoptoService.getStatusSession(sessionId).getState());
+                                            int state;
                                             int count = 0;
                                             while (count < 3) {
                                                 sleep(1000);
                                                 state = Integer.parseInt(panoptoService.getStatusSession(sessionId).getState());
-                                                System.out.println("State = " + state);
                                                 if (state == 3) {
                                                     count++;
                                                 }
@@ -1008,9 +1013,9 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                                                     throw new Exception();
                                                 }
                                             }
-                                            System.out.println("Fertig mit State < 3");
                                             PanoptoFolderContent content =
                                                     panoptoService.getFolderContents(new PanoptoFolder(config.getPanoptoConfiguration().panoptoCourseProperty().get().getId()));
+                                            System.out.println(content.getResults().get(0).getUrls().getViewerUrl());
                                             SetModuleService.publishFileserverResource(moodleService, courseData, course, token, content.getResults().get(0).getUrls().getViewerUrl());
                                         } catch (PanoptoException e) {
                                                 context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.fileserver2.message");
@@ -1024,10 +1029,10 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                                     }
 
                                 } else if (courseData.getModuleType().equals("folder") && courseData.getAction() != MoodleAction.ExistingFile) {
-                                    progressView.setMessage("Dateien werden synchronisiert");
+                                    progressView.setMessage(context.getDictionary().get("start.sync.progress"));
                                     SetModuleService.handleFolderUpload(moodleService, courseData, course, url, token);
                                 } else if (courseData.getAction() != MoodleAction.UploadSection) {
-                                    progressView.setMessage("Dateien werden synchronisiert");
+                                    progressView.setMessage(context.getDictionary().get("start.sync.progress"));
                                     SetModuleService.moveResource(moodleService, courseData, token);
                                 }
                                 progress++;
@@ -1037,12 +1042,15 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                             logException(e, "Sync failed");
 
                             context.showNotification(NotificationType.ERROR, "start.sync.error.title", MessageFormat.format(context.getDictionary().get("start.sync.error.upload.message"), courseData.getModuleName()));
+                            progressView.setProgress(1.0);
+                            progressView.setError(context.getDictionary().get("start.sync.error.title"));
+                            progressView.setOnHideClose(new BooleanProperty(true));
                         }
                     }
                     //Adding of new sections at the end of the sync-process to prevent new section-numbers.
                     for (SyncTableElement courseData : courseData) {
                         if (courseData.getAction() == MoodleAction.UploadSection && courseData.isSelected()) {
-                            progressView.setMessage("Dateien werden synchronisiert");
+                            progressView.setMessage(context.getDictionary().get("start.sync.progress"));
                             //Logic for Section-Upload
                             try {
                                 SetModuleService.createSection(moodleService, courseData, course, token);
@@ -1050,25 +1058,27 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
                                 logException(e, "Sync failed");
 
                                 context.showNotification(NotificationType.ERROR, "start.sync.error.title", "start.sync.error.upload" + ".message");
+                                progressView.setProgress(1.0);
+                                progressView.setError(context.getDictionary().get("start.sync.error.title"));
+                                progressView.setOnHideClose(new BooleanProperty(true));
                             }
                             progress++;
-                            //progressView.setProgress(progress/progressSteps);
                         }
                     }
                 })
                 .thenRun(() -> {
-                    //progressView.setTitle(context.getDictionary().get("save.document.success"));
-                    //progressView.setTitle("Synchronisation fertig");
-                    progressView.setMessage("Synchronisation fertig");
+                    progressView.setMessage(context.getDictionary().get("start.sync.finished"));
+                    progressView.setProgress(1.0);
                     progressView.setOnHideClose(new BooleanProperty(true));
-                    //progressView.setProgress(0.0);
                 })
                 .thenRun(this::updateCourses)
                 .exceptionally(throwable -> {
                     logException(throwable, "Sync Failed");
 
                     //progressView.setError(context.getDictionary().get("save.document.error"));
-                    progressView.setError("Fehler");
+                    progressView.setProgress(1.0);
+                    progressView.setError(context.getDictionary().get("start.sync.error.title"));
+                    progressView.setOnHideClose(new BooleanProperty(true));
                     return null;
                 });
     }
@@ -1090,7 +1100,8 @@ public class TrainerPresenter extends Presenter<TrainerStartView> implements Fil
         try {
             List<Path> files = new ArrayList<>();
             files.add(source);
-            ZipUtil.zip(files, config.getSyncRootPath() + "/" + course.getDisplayname() +".zip");
+            ZipUtil.zip(files, config.getSyncRootPath() + "/" + FileService.removeSlash(course.getDisplayname()) +
+                    ".zip");
         }
         catch (Exception e) {
             logException(e, "Sync failed");

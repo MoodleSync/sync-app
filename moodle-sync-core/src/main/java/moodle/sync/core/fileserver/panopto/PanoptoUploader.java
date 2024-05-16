@@ -16,6 +16,8 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -152,7 +154,7 @@ public class PanoptoUploader {
     }
 
     private static String getZoneDateTime() {
-        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        /*SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");
 
         StringBuffer buff = new StringBuffer();
@@ -161,10 +163,12 @@ public class PanoptoUploader {
         buff.append('T');
         buff.append(format2.format(date));
 
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();*/
 
-        int offset = calendar.get(calendar.ZONE_OFFSET)
-                / (1000 * 60);
+        //int offset = calendar.get(calendar.ZONE_OFFSET)
+                /// (1000 * 60);
+        //TODO look into this
+        /*int offset = 0;
         if (offset < 0) {
             buff.append('-');
             offset *= -1;
@@ -185,6 +189,9 @@ public class PanoptoUploader {
             buff.append('0');
         }
         buff.append(s2);
-        return buff.toString();
+        System.out.println(buff.toString());
+        System.out.println(OffsetDateTime.now( ZoneOffset.UTC ));
+        //return buff.toString();*/
+        return OffsetDateTime.now( ZoneOffset.UTC ).toString();
     }
 }

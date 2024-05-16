@@ -62,7 +62,7 @@ public class SettingsPresenter extends Presenter<SettingsView> {
 
         //Initialising all functions of the "settings-page" with the help of the configuration.
         String type = settingsConfig.fileServerTypeProperty().get();
-        if (type.equals("No")) {
+        if (type.equals(context.getDictionary().get("settings.choosefileserver.none"))) {
             view.clearFileservers();
         } else if (type.equals("FTP")) {
             view.clearFileservers();

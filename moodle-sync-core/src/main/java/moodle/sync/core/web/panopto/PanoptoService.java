@@ -63,7 +63,7 @@ public class PanoptoService {
         return panoptoClient.statusSession(sessionId);
     }
 
-    public PanoptoResults getSearchFolder(String searchQuery) {
+    public PanoptoResults getSearchFolder(String searchQuery) throws Exception {
         return panoptoClient.searchFolder(searchQuery);
     }
 
