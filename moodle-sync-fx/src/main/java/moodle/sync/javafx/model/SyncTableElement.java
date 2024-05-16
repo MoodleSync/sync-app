@@ -267,6 +267,10 @@ public class SyncTableElement {
      */
     public MoodleAction getAction(){ return action;}
 
+    public void setAction(MoodleAction action) {
+        this.action = action;
+    }
+
     /**
      * Providing the messageProperty.
      *

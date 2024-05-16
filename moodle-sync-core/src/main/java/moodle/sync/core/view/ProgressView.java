@@ -18,6 +18,8 @@
 
 package moodle.sync.core.view;
 
+import moodle.sync.core.beans.BooleanProperty;
+
 public interface ProgressView extends View {
 
     void setTitle(String title);
@@ -29,6 +31,8 @@ public interface ProgressView extends View {
     void setProgress(double progress);
 
     void setOnClose(Action action);
+
+    void setOnHideClose(BooleanProperty hide);
 
     void setOnViewShown(Action action);
 

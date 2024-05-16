@@ -3,9 +3,8 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import moodle.sync.javafx.factory.LocaleListCell?>
-<?import moodle.sync.javafx.factory.LocaleCellFactory?>
+<?import moodle.sync.javafx.custom.*?>
+<?import moodle.sync.javafx.factory.*?>
 
 <!--
     In this document, the layout of the "settings-page" is defined
@@ -28,8 +27,8 @@
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
                 <Label prefHeight="17.0" prefWidth="156.0" text="%settings.language" />
@@ -48,8 +47,16 @@
                         <LocaleCellFactory />
                     </cellFactory>
                 </ComboBox>
-            <Label text="%settings.language.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="%settings.root.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                <Label text="%settings.language.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" />
+                    </GridPane.margin>
+                </Label>
+                <Label text="%settings.root.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                    <GridPane.margin>
+                        <Insets />
+                    </GridPane.margin>
+                </Label>
             </children>
         </GridPane>
         <Label prefWidth="612.0" styleClass="text-head" text="%settings.lmslabel">
@@ -70,9 +77,9 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
                 <Label text="%settings.lms" />
@@ -84,21 +91,36 @@
                         <Insets left="5.0" />
                     </GridPane.margin>
                 </Button>
-                <Label text="%settings.dataformatsmoodle" GridPane.rowIndex="4" />
+                <Label text="%settings.dataformatsmoodle" GridPane.rowIndex="4">
+                    <GridPane.margin>
+                        <Insets />
+                    </GridPane.margin>
+                </Label>
                 <TextArea fx:id="formatsMoodle" prefHeight="0.0" prefWidth="321.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                     <padding>
                         <Insets bottom="2.0" left="2.0" right="2.0" />
                     </padding>
                     <GridPane.margin>
-                        <Insets bottom="5.0" top="12.0" />
+                        <Insets />
                     </GridPane.margin>
                 </TextArea>
-            <Label text="%settings.lms.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-            <Label text="%settings.token.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-            <Label text="%settings.dataformatsmoodle.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+                <Label text="%settings.lms.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                    <GridPane.margin>
+                        <Insets bottom="5.0" />
+                    </GridPane.margin>
+                </Label>
+                <Label text="%settings.token.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                    <padding>
+                        <Insets bottom="5.0" />
+                    </padding>
+                    <GridPane.margin>
+                        <Insets bottom="5.0" />
+                    </GridPane.margin>
+                </Label>
+                <Label text="%settings.dataformatsmoodle.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
             </children>
         </GridPane>
-        <Label prefWidth="612.0" styleClass="text-head" text="%settings.ftplabel">
+        <Label prefWidth="612.0" styleClass="text-head" text="%settings.fileserverlabel">
             <VBox.margin>
                 <Insets top="10.0" />
             </VBox.margin>
@@ -106,54 +128,36 @@
                 <Insets bottom="5.0" right="5.0" top="10.0" />
             </padding>
         </Label>
-        <GridPane alignment="CENTER">
+        <GridPane>
             <columnConstraints>
-                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="330.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Label text="%settings.ftp" />
-                <Label text="%settings.ftpusername" GridPane.rowIndex="2" />
-                <Label text="%settings.ftppassword" GridPane.rowIndex="4" />
-                <TextField fx:id="ftpUser" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <TextField fx:id="ftpPassword" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                <Label text="%settings.dataformatsfileserver" GridPane.rowIndex="6" />
-                <TextArea fx:id="formatsFileserver" prefHeight="0.0" prefWidth="321.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                <Label text="%settings.choosefileserver" />
+                <Label text="%settings.choosefileserver.explain" textFill="#00000080" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <padding>
-                        <Insets bottom="2.0" left="2.0" right="2.0" />
+                        <Insets bottom="5.0" />
                     </padding>
-                    <GridPane.margin>
-                        <Insets bottom="5.0" top="15.0" />
-                    </GridPane.margin>
-                </TextArea>
-                <TextField fx:id="ftpPort" maxWidth="-Infinity" prefHeight="25.0" prefWidth="120.0" GridPane.columnIndex="2">
-                    <GridPane.margin>
-                        <Insets left="5.0" />
-                    </GridPane.margin>
-                </TextField>
-                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="300.0" GridPane.columnIndex="1">
-                    <children>
-                        <TextField fx:id="ftpField" prefHeight="25.0" prefWidth="290.0" />
-                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="25.0" prefWidth="60.0" text="%settings.port" />
-                    </children>
-                </HBox>
-            <Label text="%settings.ftp.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-            <Label text="%settings.ftpusername.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-            <Label text="%settings.ftppassword.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
-            <Label text="%settings.dataformatsfileserver.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+                </Label>
+                <ComboBox fx:id="fileserverCombo" prefWidth="150.0" GridPane.columnIndex="1">
+                    <buttonCell>
+                        <FileserverListCell />
+                    </buttonCell>
+                    <cellFactory>
+                        <FileserverCellFactory />
+                    </cellFactory>
+                </ComboBox>
             </children>
         </GridPane>
+
+        <VBox fx:id="fileserverContainer"/>
+
         <GridPane prefHeight="45.0" prefWidth="612.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

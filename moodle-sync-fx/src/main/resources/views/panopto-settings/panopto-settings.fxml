@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root type="StackPane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+
+    <GridPane fx:id="fileserverSettings" alignment="CENTER">
+        <columnConstraints>
+            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="330.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints fx:id="fileserverDefaultFolderColumn" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints fx:id="fileserverDefaultFolderColumnExplain" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+        </rowConstraints>
+        <children>
+            <Label text="%settings.panopto.url" />
+            <Label text="%settings.panopto.clientid" GridPane.rowIndex="2" />
+            <Label text="%settings.panopto.secret" GridPane.rowIndex="4" />
+            <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <children>
+                    <TextField fx:id="panoptoClient" layoutX="10.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
+                </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                <children>
+                    <TextField fx:id="panoptoSecret" layoutX="10.0" layoutY="10.0" HBox.hgrow="ALWAYS" />
+                </children>
+            </HBox>
+            <Button fx:id="checkPanopto" alignment="CENTER" contentDisplay="CENTER" maxWidth="-Infinity"
+                    mnemonicParsing="false" prefWidth="120.0" text="%settings.panopto.token.check"
+                    GridPane.columnIndex="2"
+                    GridPane.rowIndex="4">
+                <GridPane.margin>
+                    <Insets left="5.0" />
+                </GridPane.margin>
+            </Button>
+            <Label text="%settings.dataformatsfileserver" GridPane.rowIndex="8" />
+            <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                <GridPane.margin>
+                    <Insets bottom="5.0" top="5.0" />
+                </GridPane.margin>
+                <children>
+                    <TextArea fx:id="formatsPanopto" layoutX="10.0" layoutY="10.0">
+                        <padding>
+                            <Insets bottom="2.0" left="2.0" right="2.0" />
+                        </padding>
+                    </TextArea>
+                </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="300.0" GridPane.columnIndex="1">
+                <children>
+                    <TextField fx:id="panoptoField" HBox.hgrow="ALWAYS" />
+                </children>
+            </HBox>
+            <Label text="%settings.panopto.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1"
+                   GridPane.columnSpan="2" GridPane.rowIndex="1">
+                <padding>
+                    <Insets bottom="5.0" />
+                </padding></Label>
+            <Label text="%settings.panopto.clientid.explain" textFill="#00000080" wrapText="true"
+                   GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                <padding>
+                    <Insets bottom="5.0" />
+                </padding></Label>
+            <Label text="%settings.panopto.secret.explain" textFill="#00000080" wrapText="true"
+                   GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                <padding>
+                    <Insets bottom="5.0" />
+                </padding>
+            </Label>
+            <Label text="%settings.dataformatsfileserver.explain" textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9">
+                <GridPane.margin>
+                    <Insets bottom="5.0" />
+                </GridPane.margin></Label>
+            <Label fx:id="fileserverDefaultFolderLabel" text="%settings.panopto.fileserverDefaultFolder"
+                   GridPane.rowIndex="6" />
+            <Label fx:id="fileserverDefaultFolderExplain" text="%settings.panopto.fileserverDefaultFolder.explain"
+                   textFill="#00000080" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                <padding>
+                    <Insets bottom="3.0" />
+                </padding>
+            </Label>
+            <TextField fx:id="panoptoDefaultFolder" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        </children>
+    </GridPane>
+</fx:root>

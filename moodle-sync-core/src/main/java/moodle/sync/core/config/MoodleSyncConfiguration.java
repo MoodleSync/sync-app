@@ -16,6 +16,9 @@ import java.util.Objects;
  */
 public class MoodleSyncConfiguration extends Configuration {
 
+    //Language
+    private final ObjectProperty<Locale> locale = new ObjectProperty<>();
+
     //The path where the synchronized files are stored at.
     private final StringProperty syncRootPath = new StringProperty();
 
@@ -34,45 +37,33 @@ public class MoodleSyncConfiguration extends Configuration {
     //If a file belongs to this format, it should be synchronized with the Moodle-plattform.
     private final StringProperty formatsMoodle = new StringProperty();
 
-    //If a file belongs to this format, it should be synchronized with the fileserver.
-    private final StringProperty formatsFileserver = new StringProperty();
+    private final StringProperty fileServerType = new StringProperty();
 
-    //The Url of the fileserver.
-    private final StringProperty ftpserver = new StringProperty();
+    private final ObjectProperty<FileserverFTPConfiguration> ftpConfiguration = new ObjectProperty<>();
 
-    //The users fileserver-username.
-    private final StringProperty ftpuser = new StringProperty();
-
-    //The users fileserver-password.
-    private final StringProperty ftppassword = new StringProperty();
-
-    //The choosen port for the fileserver-communication.
-    private final StringProperty ftpport = new StringProperty();
+    private final ObjectProperty<FileserverPanoptoConfiguration> panoptoConfiguration = new ObjectProperty<>();
 
     //Whether files of unknown fileformat should be displayed.
     private final BooleanProperty showUnknownFormats = new BooleanProperty();
 
-    //Language
-    private final ObjectProperty<Locale> locale = new ObjectProperty<>();
 
     public MoodleSyncConfiguration() {
     }
 
 
     public MoodleSyncConfiguration (MoodleSyncConfiguration config) {
+        this.locale.set(config.locale.get());
         this.syncRootPath.set(config.syncRootPath.get());
         this.recentCourse.set(config.recentCourse.get());
         this.moodleToken.set(config.moodleToken.get());
         this.recentSection.set(config.recentSection.get());
         this.moodleUrl.set(config.moodleUrl.get());
         this.formatsMoodle.set(config.formatsMoodle.get());
-        this.formatsFileserver.set(config.formatsFileserver.get());
-        this.ftpserver.set(config.ftpserver.get());
-        this.ftpuser.set(config.ftpuser.get());
-        this.ftppassword.set(config.ftppassword.get());
-        this.ftpport.set(config.ftpport.get());
+        this.fileServerType.set(config.fileServerType.get());
+        this.ftpConfiguration.set(new FileserverFTPConfiguration(config.ftpConfiguration.get()));
+        this.panoptoConfiguration.set(new FileserverPanoptoConfiguration(config.panoptoConfiguration.get()));
         this.showUnknownFormats.set(config.showUnknownFormats.get());
-        this.locale.set(config.locale.get());
+
     }
 
     public String getSyncRootPath() {
@@ -147,64 +138,40 @@ public class MoodleSyncConfiguration extends Configuration {
         return formatsMoodle;
     }
 
-    public String getFormatsFileserver() {
-        return formatsFileserver.get();
+    public String getFileServerType() {
+        return fileServerType.get();
     }
 
-    public void setFormatsFileserver(String formats) {
-        this.formatsFileserver.set(formats);
+    public void setRecentFileServerType(String fileServerType) {
+        this.fileServerType.set(fileServerType);
     }
 
-    public StringProperty formatsFileserverProperty() {
-        return formatsFileserver;
+    public StringProperty fileServerTypeProperty() {
+        return fileServerType;
     }
 
-    public String getFileserver() {
-        return ftpserver.get();
+    public FileserverFTPConfiguration getFtpConfiguration() {
+        return ftpConfiguration.get();
     }
 
-    public void setFileserver(String fileserver) {
-        this.ftpserver.set(fileserver);
+    public void setFtpConfiguration(FileserverFTPConfiguration ftpConfiguration) {
+        this.ftpConfiguration.set(ftpConfiguration);
     }
 
-    public StringProperty FileserverProperty() {
-        return ftpserver;
+    public ObjectProperty<FileserverFTPConfiguration> FtpConfigurationProperty() {
+        return ftpConfiguration;
     }
 
-    public String getUserFileserver() {
-        return ftpuser.get();
+    public FileserverPanoptoConfiguration getPanoptoConfiguration() {
+        return panoptoConfiguration.get();
     }
 
-    public void setUserFileserver(String user) {
-        this.ftpuser.set(user);
+    public void setPanoptoConfiguration(FileserverPanoptoConfiguration panoptoConfiguration) {
+        this.panoptoConfiguration.set(panoptoConfiguration);
     }
 
-    public StringProperty userFileserverProperty() {
-        return ftpuser;
-    }
-
-    public String getPasswordFileserver() {
-        return ftppassword.get();
-    }
-
-    public void setPasswordFileserver(String formats) {
-        this.ftppassword.set(formats);
-    }
-
-    public StringProperty passwordFileserverProperty() {
-        return ftppassword;
-    }
-
-    public String getPortFileserver() {
-        return ftpport.get();
-    }
-
-    public void setPortFileserver(String port) {
-        this.ftpport.set(port);
-    }
-
-    public StringProperty portFileserverProperty() {
-        return ftpport;
+    public ObjectProperty<FileserverPanoptoConfiguration> PanoptoConfigurationProperty() {
+        return panoptoConfiguration;
     }
 
     public Boolean getShowUnknownFormats() {
@@ -232,16 +199,15 @@ public class MoodleSyncConfiguration extends Configuration {
     }
 
     public boolean equals(MoodleSyncConfiguration o) {
-        return Objects.equals(this.syncRootPath.get(), o.syncRootPath.get()) && Objects.equals(this.recentCourse.get(),
-                o.recentCourse.get()) && Objects.equals(this.moodleToken.get(), o.moodleToken.get()) &&
+        return Objects.equals(this.syncRootPath.get(), o.syncRootPath.get()) &&
+                Objects.equals(this.recentCourse.get(), o.recentCourse.get()) &&
+                Objects.equals(this.moodleToken.get(), o.moodleToken.get()) &&
                 Objects.equals(this.recentSection.get(), o.recentSection.get()) &&
                 Objects.equals(this.moodleUrl.get(), o.moodleUrl.get()) &&
                 Objects.equals(this.formatsMoodle.get(), o.formatsMoodle.get()) &&
-                Objects.equals(this.formatsFileserver.get(), o.formatsFileserver.get()) &&
-                Objects.equals(this.ftpserver.get(), o.ftpserver.get()) &&
-                Objects.equals(this.ftpuser.get(), o.ftpuser.get()) &&
-                Objects.equals(this.ftppassword.get(), o.ftppassword.get()) &&
-                Objects.equals(this.ftpport.get(), o.ftpport.get()) &&
+                Objects.equals(this.fileServerType.get(), o.fileServerType.get()) &&
+                (this.ftpConfiguration.get().equals(o.ftpConfiguration.get())) &&
+                (this.panoptoConfiguration.get().equals(o.panoptoConfiguration.get())) &&
                 Objects.equals(this.showUnknownFormats.get(), o.showUnknownFormats.get()) &&
                 Objects.equals(this.locale.get(), o.locale.get());
     }
@@ -249,7 +215,7 @@ public class MoodleSyncConfiguration extends Configuration {
     @Override
     public int hashCode() {
         return Objects.hash(syncRootPath, recentCourse, moodleToken, recentSection, moodleUrl, formatsMoodle,
-                formatsFileserver, ftpserver, ftpuser, ftppassword, ftpport, showUnknownFormats, locale);
+                ftpConfiguration, panoptoConfiguration, showUnknownFormats, locale);
     }
 
 }

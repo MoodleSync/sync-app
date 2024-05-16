@@ -22,6 +22,7 @@ public class DragAndDropRowFactory implements Callback<TableView<SyncTableElemen
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
 
     private final ApplicationContext context;
+
     @Inject
     public DragAndDropRowFactory(ApplicationContext context) {
         this.context = context;
@@ -36,10 +37,12 @@ public class DragAndDropRowFactory implements Callback<TableView<SyncTableElemen
         row = new TableRow<>();
 
         row.setOnMouseClicked(event -> {
-            SyncTableElement sectionElement = tableView.getItems().get(row.getIndex());
-            context.getEventBus().post(sectionElement);
+            if(row.getIndex() < tableView.getItems().size()) {
+                SyncTableElement sectionElement = tableView.getItems().get(row.getIndex());
+                context.getEventBus().post(sectionElement);
 
-            event.consume();
+                event.consume();
+            }
         });
 
 

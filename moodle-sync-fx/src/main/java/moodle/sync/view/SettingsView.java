@@ -6,6 +6,8 @@ import java.util.Locale;
 import moodle.sync.core.beans.BooleanProperty;
 import moodle.sync.core.beans.ObjectProperty;
 import moodle.sync.core.beans.StringProperty;
+import moodle.sync.core.fileserver.FileServerClient;
+import moodle.sync.core.fileserver.FileServerType;
 import moodle.sync.core.view.Action;
 import moodle.sync.core.view.View;
 
@@ -26,15 +28,9 @@ public interface SettingsView extends View {
 
     void setFormatsMoodle(StringProperty moodleformats);
 
-    void setFormatsFileserver(StringProperty fileserverformats);
+    void setFileserver(StringProperty client);
 
-    void setFtpField(StringProperty ftpURL);
-
-    void setFtpPort(StringProperty ftpPort);
-
-    void setFtpUser(StringProperty ftpUser);
-
-    void setFtpPassword(StringProperty ftpPassword);
+    void setFileservers(List<String> clients);
 
     void setMoodleToken(StringProperty moodleToken);
 
@@ -47,4 +43,10 @@ public interface SettingsView extends View {
     void setSelectSyncRootPath(Action action);
 
     void setShowUnknownFormats(BooleanProperty unknownFormats);
+
+    void setPanopto(PanoptoSettingsView panoptoSettingsView);
+
+    void setFtp(FtpSettingsView ftpSettingsView);
+
+    void clearFileservers();
 }

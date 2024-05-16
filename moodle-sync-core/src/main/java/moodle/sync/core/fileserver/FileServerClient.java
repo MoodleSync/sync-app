@@ -9,6 +9,7 @@ import java.util.List;
  */
 public interface FileServerClient {
 
+    String getName();
     //Retrieve list of FileServerFiles from dedicated directory
     List<FileServerFile> getFiles(String pathname) throws Exception;
 

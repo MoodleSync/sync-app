@@ -64,10 +64,9 @@ public final class SetModuleService {
      *  NOT FUNCTIONAL -> LINK IS NOT CORRECT.
      */
     public static void publishFileserverResource(MoodleService moodleService, SyncTableElement courseData,
-                                                 Course course, String token) throws Exception {
+                                                 Course course, String token, String url) {
         //TODO: Implement dynamic URLs, depends on fileserver
         // url = fileservice.....
-        String url = "https://wikipedia.org";
         if (courseData.getUnixTimeStamp() > System.currentTimeMillis() / 1000L) {
             moodleService.setUrl(token, course.getId(), courseData.getSection(), courseData.getModuleName(), url,
                     courseData.getUnixTimeStamp(), courseData.getVisible(), courseData.getBeforemod());

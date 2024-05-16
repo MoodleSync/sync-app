@@ -2,11 +2,16 @@ package moodle.sync.javafx.view;
 
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.util.converter.IntegerStringConverter;
+import moodle.sync.core.fileserver.FileServerClient;
+import moodle.sync.core.fileserver.FileServerType;
 import moodle.sync.presenter.SettingsPresenter;
 import moodle.sync.util.UserInputValidations;
+import moodle.sync.view.FtpSettingsView;
+import moodle.sync.view.PanoptoSettingsView;
 import moodle.sync.view.SettingsView;
 import moodle.sync.core.beans.BooleanProperty;
 import moodle.sync.core.beans.ObjectProperty;
@@ -18,6 +23,7 @@ import moodle.sync.javafx.core.beans.LectStringProperty;
 import moodle.sync.javafx.core.util.FxUtils;
 import moodle.sync.javafx.core.view.FxView;
 import moodle.sync.javafx.core.view.FxmlView;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -33,8 +39,10 @@ import java.util.Locale;
 public class FxSettingsView extends VBox implements SettingsView, FxView {
 
     @FXML
-    private Button closesettingsButton;
+    private VBox generalVbox;
 
+    @FXML
+    private Button closesettingsButton;
     @FXML
     private ComboBox<Locale> languageCombo;
 
@@ -48,31 +56,28 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
     private TextField syncRootPath;
 
     @FXML
-    private TextField ftpField;
-
-    @FXML
-    private TextField ftpUser;
-
-    @FXML
-    private TextField ftpPassword;
-
-    @FXML
     private TextField moodleField;
 
     @FXML
+    private ComboBox fileserverCombo;
+
+    @FXML
     private TextArea formatsMoodle;
-
-    @FXML
-    private TextField ftpPort;
-
-    @FXML
-    private TextArea formatsFileserver;
 
     @FXML
     private Button syncRootPathButton;
 
     @FXML
     private CheckBox showUnknownFormats;
+
+    @FXML
+    private StackPane ftpSettingsPane;
+
+    @FXML
+    private StackPane panoptoSettingsPane;
+
+    @FXML
+    private Pane fileserverContainer;
 
     public FxSettingsView() {
         super();
@@ -167,52 +172,44 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
         );
     }
 
+
     /**
-     * Input and input-validation of the fileserver url.
+     * Setting the chosen fileserver type property.
      *
-     * @param ftpURL User input.
+     * @param type chosen fileserver type.
      */
     @Override
-    public void setFtpField(StringProperty ftpURL) {
-        ftpField.textProperty().bindBidirectional(new LectStringProperty(ftpURL));
-        ftpField.textProperty().addListener(event -> {
-            ftpField.pseudoClassStateChanged(
-                    PseudoClass.getPseudoClass("error"),
-                    (!ftpField.getText().isEmpty() &&
-                            !ftpField.getText().matches("^(((https?|ftp)://)|(ftp\\.))[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]"))
-            );
-        });
+    public void setFileserver(StringProperty type) {
+        FxUtils.invoke(() -> fileserverCombo.valueProperty().bindBidirectional(new LectObjectProperty<>(type)));
     }
 
     /**
-     * Input and inputvalidation of the used port.
+     * Sets the possible values of the fileserver type.
      *
-     * @param ftpport User input.
+     * @param types possible fileserver types.
      */
     @Override
-    public void setFtpPort(StringProperty ftpport) {
-        ftpPort.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, UserInputValidations.numberValidationFormatter));
-        ftpPort.textProperty().bindBidirectional(new LectStringProperty(ftpport));
+    public void setFileservers(List<String> types) {
+        FxUtils.invoke(() -> fileserverCombo.getItems().setAll(types));
     }
 
-    /**
-     * Input of the fileserver username.
-     *
-     * @param ftpuser User input.
-     */
     @Override
-    public void setFtpUser(StringProperty ftpuser) {
-        ftpUser.textProperty().bindBidirectional(new LectStringProperty(ftpuser));
+    public void setPanopto(PanoptoSettingsView panoptoSettingsView) {
+        if (Node.class.isAssignableFrom(panoptoSettingsView.getClass())) {
+            FxUtils.invoke(() -> fileserverContainer.getChildren().add((Node) panoptoSettingsView));
+        }
     }
 
-    /**
-     * Input of the fileserver password.
-     *
-     * @param ftppassword User input.
-     */
     @Override
-    public void setFtpPassword(StringProperty ftppassword) {
-        ftpPassword.textProperty().bindBidirectional(new LectStringProperty(ftppassword));
+    public void setFtp(FtpSettingsView ftpSettingsView) {
+        if (Node.class.isAssignableFrom(ftpSettingsView.getClass())) {
+            FxUtils.invoke(() -> fileserverContainer.getChildren().add((Node) ftpSettingsView));
+        }
+    }
+
+    @Override
+    public void clearFileservers() {
+        FxUtils.invoke(() -> fileserverContainer.getChildren().clear());
     }
 
     /**
@@ -223,16 +220,6 @@ public class FxSettingsView extends VBox implements SettingsView, FxView {
     @Override
     public void setFormatsMoodle(StringProperty moodleformats) {
         formatsMoodle.textProperty().bindBidirectional(new LectStringProperty(moodleformats));
-    }
-
-    /**
-     * Input of formats used to upload to the fileserver.
-     *
-     * @param fileserverformats User input.
-     */
-    @Override
-    public void setFormatsFileserver(StringProperty fileserverformats) {
-        formatsFileserver.textProperty().bindBidirectional(new LectStringProperty(fileserverformats));
     }
 
     /**

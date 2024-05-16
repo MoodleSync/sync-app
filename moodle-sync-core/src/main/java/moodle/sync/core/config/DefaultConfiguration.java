@@ -1,5 +1,8 @@
 package moodle.sync.core.config;
 
+import moodle.sync.core.fileserver.FileServerType;
+import moodle.sync.core.fileserver.LanguageSupport;
+
 import java.util.Locale;
 
 /**
@@ -15,10 +18,14 @@ public class DefaultConfiguration extends MoodleSyncConfiguration {
 		setStartMaximized(false);
 		setAdvancedUIMode(false);
 		setSyncRootPath(System.getProperty("user.dir"));
-		setFormatsFileserver("");
-		setFormatsMoodle("pdf,png,pptx,docx");
-		setPortFileserver("21");
 		setMoodleUrl("https://localhost");
+		setFormatsMoodle("pdf,png,pptx,docx");
+		setRecentFileServerType(LanguageSupport.getDefaultFileserver(Locale.getDefault()));
+		setFtpConfiguration(new FileserverFTPConfiguration());
+		getFtpConfiguration().setFtpFormats("avi,mp4,mpg,wmv,mov");
+		setPanoptoConfiguration(new FileserverPanoptoConfiguration());
+		getPanoptoConfiguration().setPanoptoFormats("avi,mp4,mpg,wmv,mov");
+		getFtpConfiguration().setFtpPort("21");
 	}
 
 }

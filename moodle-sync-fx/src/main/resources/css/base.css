@@ -201,3 +201,9 @@
     -fx-background-color: -fx-box-border, -fx-inner-border;
     -fx-background-insets: 0, 1 0 1 0;
 }
+
+.scroll-pane-focus,
+.scroll-pane-focus:focused {
+    -fx-background-color: -fx-box-border, -fx-control-inner-background;
+    -fx-background-insets: 0, 1;
+}
