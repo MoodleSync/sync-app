@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import moodle.sync.javafx.custom.DragAndDropRowFactory?>
+<?import moodle.sync.javafx.layout.DynamicResizePolicy?>
+<?import moodle.sync.javafx.layout.ColumnSizeConstraints?>
+<?import moodle.sync.javafx.custom.HighlightSectionCellFactory?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import moodle.sync.javafx.custom.StatusCellFactory?>
+<?import moodle.sync.javafx.custom.CheckBoxTableCellFactory?>
+<?import moodle.sync.javafx.custom.UploadElementCellValueFactory?>
+<?import moodle.sync.javafx.custom.AvailabilityCellFactory?>
+<?import moodle.sync.javafx.custom.AvailabilityCellValueFactory?>
+<?import moodle.sync.javafx.custom.AvailableDateTimeTableCellFactory?>
+<?import moodle.sync.javafx.custom.DownloadableTableCellFactory?>
+<fx:root type="StackPane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <TableView fx:id="trainerTable" editable="true" >
+        <rowFactory>
+            <DragAndDropRowFactory/>
+        </rowFactory>
+        <columnResizePolicy>
+            <DynamicResizePolicy tableView="$trainerTable" fx:id="policy">
+                <columnConstraints>
+                    <ColumnSizeConstraints percentWidth="0.495" />
+                    <ColumnSizeConstraints percentWidth="0.495" />
+                    <ColumnSizeConstraints prefWidth="90.0" />
+                    <ColumnSizeConstraints prefWidth="85.0" />
+                    <ColumnSizeConstraints prefWidth="200.0" />
+                    <ColumnSizeConstraints prefWidth="35.0" />
+                </columnConstraints>
+            </DynamicResizePolicy>
+        </columnResizePolicy>
+        <columns>
+            <TableColumn fx:id="courseViewTableColumn" text="Moodle">
+                <cellFactory>
+                    <HighlightSectionCellFactory />
+                </cellFactory>
+                <cellValueFactory>
+                    <PropertyValueFactory property="moduleName" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="localViewTableColumn" text="%start.local">
+                <cellFactory>
+                    <StatusCellFactory />
+                </cellFactory>
+                <cellValueFactory>
+                    <PropertyValueFactory property="existingFileName" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="executeTableColumn" styleClass="CENTER" text="%start.execute">
+                <graphic>
+                    <CheckBox fx:id="allSelected" mnemonicParsing="false" />
+                </graphic>
+                <cellFactory>
+                    <CheckBoxTableCellFactory />
+                </cellFactory>
+                <cellValueFactory>
+                    <UploadElementCellValueFactory />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="availabilityTableColumn" styleClass="CENTER" text="%start.visible">
+                <cellFactory>
+                    <AvailabilityCellFactory />
+                </cellFactory>
+                <cellValueFactory>
+                    <AvailabilityCellValueFactory />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="availabilityTimeTableColumn" styleClass="CENTER" text="%start.availability">
+                <cellFactory>
+                    <AvailableDateTimeTableCellFactory />
+                </cellFactory>
+                <cellValueFactory>
+                    <PropertyValueFactory property="availabilityDateTime" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="downloadColumn" styleClass="CENTER">
+                <cellFactory>
+                    <DownloadableTableCellFactory />
+                </cellFactory>
+                <cellValueFactory>
+                    <PropertyValueFactory property="downloadable" />
+                </cellValueFactory>
+            </TableColumn>
+        </columns>
+    </TableView>
+</fx:root>

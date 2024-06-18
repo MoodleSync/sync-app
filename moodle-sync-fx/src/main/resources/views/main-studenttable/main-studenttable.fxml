@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.TableView?>
+<?import moodle.sync.javafx.custom.DragAndDropRowFactory?>
+<?import moodle.sync.javafx.layout.DynamicResizePolicy?>
+<?import moodle.sync.javafx.custom.HighlightSectionCellFactory?>
+<?import javafx.scene.control.TableColumn?>
+<?import moodle.sync.javafx.layout.ColumnSizeConstraints?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import moodle.sync.javafx.custom.StatusCellFactory?>
+<?import moodle.sync.javafx.custom.DownloadableTableCellFactory?>
+
+<fx:root type="StackPane" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <TableView fx:id="studentTable" editable="true" BorderPane.alignment="CENTER">
+        <rowFactory>
+            <DragAndDropRowFactory />
+        </rowFactory>
+        <columnResizePolicy>
+            <DynamicResizePolicy tableView="$studentTable">
+                <columnConstraints>
+                    <ColumnSizeConstraints percentWidth="0.495" />
+                    <ColumnSizeConstraints percentWidth="0.495" />
+                    <ColumnSizeConstraints prefWidth="35.0" />
+                </columnConstraints>
+            </DynamicResizePolicy>
+        </columnResizePolicy>
+        <columns>
+            <TableColumn fx:id="courseViewTableColumn2" text="Moodle">
+                <cellFactory>
+                    <HighlightSectionCellFactory />
+                </cellFactory>
+                <cellValueFactory>
+                    <PropertyValueFactory property="moduleName" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="localViewTableColumn2" text="%start.local">
+                <cellFactory>
+                    <StatusCellFactory />
+                </cellFactory>
+                <cellValueFactory>
+                    <PropertyValueFactory property="existingFileName" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="downloadColumn2" styleClass="CENTER">
+                <cellFactory>
+                    <DownloadableTableCellFactory />
+                </cellFactory>
+                <cellValueFactory>
+                    <PropertyValueFactory property="downloadable" />
+                </cellValueFactory>
+            </TableColumn>
+        </columns>
+    </TableView>
+</fx:root>

@@ -2,36 +2,36 @@ package moodle.sync.javafx.view;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import moodle.sync.core.beans.BooleanProperty;
 import moodle.sync.core.beans.ObjectProperty;
 import moodle.sync.core.model.json.Course;
 import moodle.sync.core.model.json.PanoptoCourse;
 import moodle.sync.core.model.json.Section;
 import moodle.sync.core.view.Action;
 import moodle.sync.core.view.ConsumerAction;
-import moodle.sync.javafx.core.beans.LectBooleanProperty;
 import moodle.sync.javafx.core.beans.LectObjectProperty;
 import moodle.sync.javafx.core.util.FxUtils;
 import moodle.sync.javafx.core.view.FxmlView;
 import moodle.sync.javafx.core.view.FxView;
 import moodle.sync.javafx.model.SyncTableElement;
-import moodle.sync.presenter.TrainerPresenter;
-import moodle.sync.view.TrainerStartView;
+import moodle.sync.presenter.SyncPresenter;
+import moodle.sync.view.StudentTableView;
+import moodle.sync.view.SyncStartView;
+import moodle.sync.view.TrainerTableView;
 
 
 import java.util.List;
-
-import static java.util.Objects.isNull;
 
 /**
  * Class implementing the functions of the "start-page".
  *
  * @author Daniel Schröter
  */
-@FxmlView(name = "main-trainerstart", presenter = TrainerPresenter.class)
-public class FxTrainerStartView extends VBox implements TrainerStartView, FxView {
+@FxmlView(name = "main-syncstart", presenter = SyncPresenter.class)
+public class FxSyncStartView extends VBox implements SyncStartView, FxView {
 
     @FXML
     private Button syncButton;
@@ -58,9 +58,6 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
     private Label courseidlabel;
 
     @FXML
-    private CheckBox allSelected;
-
-    @FXML
     private ProgressBar progressbar;
 
     @FXML
@@ -76,14 +73,12 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
     private Label fileserverCourseLabel;
 
     @FXML
-    private TableView<SyncTableElement> syncTableTrainer;
-
-    @FXML
-    private TableView<SyncTableElement> syncTableGuest;
+    private Pane tableContainer;
 
 
 
-    public FxTrainerStartView() {
+
+    public FxSyncStartView() {
         super();
     }
 
@@ -95,16 +90,16 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
     @Override
     public void setDataTrainer(ObservableList<SyncTableElement> data) {
         FxUtils.invoke(() -> {
-            syncTableGuest.setManaged(false);
-            syncTableGuest.setVisible(false);
-            syncTableTrainer.setVisible(true);
-            syncTableTrainer.setManaged(true);
+            //syncTableGuest.setManaged(false);
+            //syncTableGuest.setVisible(false);
+            //syncTableTrainer.setVisible(true);
+            //syncTableTrainer.setManaged(true);
             syncButton.setManaged(true);
             syncButton.setVisible(true);
-            if(!isNull(syncTableTrainer.getItems())) {
-                syncTableTrainer.getItems().clear();
-            }
-            syncTableTrainer.setItems(data);
+            //if(!isNull(syncTableTrainer.getItems())) {
+            //    syncTableTrainer.getItems().clear();
+            //}
+            //syncTableTrainer.setItems(data);
         });
     }
 
@@ -116,17 +111,36 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
     @Override
     public void setDataGuest(ObservableList<SyncTableElement> data) {
         FxUtils.invoke(() -> {
-            syncTableTrainer.setVisible(false);
-            syncTableTrainer.setManaged(false);
-            syncTableGuest.setVisible(true);
-            syncTableGuest.setManaged(true);
+            //syncTableTrainer.setVisible(false);
+            //syncTableTrainer.setManaged(false);
+            //syncTableGuest.setVisible(true);
+            //syncTableGuest.setManaged(true);
             syncButton.setManaged(false);
             syncButton.setVisible(false);
-            if(!isNull(syncTableGuest.getItems())) {
-                syncTableGuest.getItems().clear();
-            }
-            syncTableGuest.setItems(data);
+            //if(!isNull(syncTableGuest.getItems())) {
+            //    syncTableGuest.getItems().clear();
+            //}
+            //syncTableGuest.setItems(data);
         });
+    }
+
+    @Override
+    public void clearTable() {
+        FxUtils.invoke(() -> tableContainer.getChildren().clear());
+    }
+
+    @Override
+    public void setStudent(StudentTableView studentTableView) {
+        if (Node.class.isAssignableFrom(studentTableView.getClass())) {
+            FxUtils.invoke(() -> tableContainer.getChildren().add((Node) studentTableView));
+        }
+    }
+
+    @Override
+    public void setTrainer(TrainerTableView trainerTableView) {
+        if (Node.class.isAssignableFrom(trainerTableView.getClass())) {
+            FxUtils.invoke(() -> tableContainer.getChildren().add((Node) trainerTableView));
+        }
     }
 
     /**
@@ -172,16 +186,6 @@ public class FxTrainerStartView extends VBox implements TrainerStartView, FxView
     @Override
     public void setOnOpenWiki(Action action) {
         FxUtils.bindAction(helpButton, action);
-    }
-
-    /**
-     * Method to select all possible "execute"-boxes.
-     *
-     * @param selectAll boolean param.
-     */
-    @Override
-    public void setSelectAll(BooleanProperty selectAll) {
-        FxUtils.invoke(() -> allSelected.selectedProperty().bindBidirectional(new LectBooleanProperty(selectAll)));
     }
 
     /**

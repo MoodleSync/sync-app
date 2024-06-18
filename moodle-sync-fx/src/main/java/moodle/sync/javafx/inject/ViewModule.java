@@ -37,7 +37,9 @@ public class ViewModule extends AbstractModule {
 
 		bind(MainView.class).to(FxMainView.class);
 		bind(SettingsView.class).to(FxSettingsView.class);
-		bind(TrainerStartView.class).to(FxTrainerStartView.class);
+		bind(SyncStartView.class).to(FxSyncStartView.class);
+		bind(StudentTableView.class).to(FxStudentTableView.class);
+		bind(TrainerTableView.class).to(FxTrainerTableView.class);
 		bind(PanoptoSettingsView.class).to(FxPanoptoSettingsView.class);
 		bind(FtpSettingsView.class).to(FxFtpSettingsView.class);
 

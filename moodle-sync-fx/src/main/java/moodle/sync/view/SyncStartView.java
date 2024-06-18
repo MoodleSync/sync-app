@@ -1,7 +1,6 @@
 package moodle.sync.view;
 
 import javafx.collections.ObservableList;
-import moodle.sync.core.beans.BooleanProperty;
 import moodle.sync.core.beans.ObjectProperty;
 import moodle.sync.core.model.json.Course;
 import moodle.sync.core.model.json.PanoptoCourse;
@@ -9,7 +8,6 @@ import moodle.sync.core.model.json.Section;
 import moodle.sync.core.view.Action;
 import moodle.sync.core.view.ConsumerAction;
 import moodle.sync.core.view.View;
-import moodle.sync.javafx.core.util.FxUtils;
 import moodle.sync.javafx.model.SyncTableElement;
 
 
@@ -20,7 +18,7 @@ import java.util.List;
  *
  * @author Daniel Schröter
  */
-public interface TrainerStartView extends View {
+public interface SyncStartView extends View {
 
     void setOnUpdate(Action action);
 
@@ -33,8 +31,6 @@ public interface TrainerStartView extends View {
     void setOnSettings(Action action);
 
     void setOnFolder(Action action);
-
-    void setSelectAll(BooleanProperty selectAll);
 
     void setProgress(double progress);
 
@@ -59,6 +55,12 @@ public interface TrainerStartView extends View {
     void setOnPanoptoChanged(ConsumerAction<PanoptoCourse> action);
 
     void setDataTrainer(ObservableList<SyncTableElement> data);
+
+    void clearTable();
+
+    void setStudent(StudentTableView studentTableView);
+
+    void setTrainer(TrainerTableView trainerTableView);
 
     void setDataGuest(ObservableList<SyncTableElement> data);
 
